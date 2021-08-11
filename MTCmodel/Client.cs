@@ -20,10 +20,10 @@ namespace MTCmodel
 
 
         //=============================== foreign key's =========================================
-
+        [Required]
         [MaxLength(36)]
-        public string UserId { get; set; } //int changed to string 
-        //public User User { get; set; } //tempory setted to comment, on this moment it's unclear
+        public string UserId { get; set; } 
+        public User User { get; set; } 
 
 
 

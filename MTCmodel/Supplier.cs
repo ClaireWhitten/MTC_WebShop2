@@ -15,6 +15,7 @@ namespace MTCmodel
         [Required]
         [MaxLength(36)]
         public string UserID { get; set; }
+        public User User { get; set; }
         //-------------------------------------------------------------------
         [Required(ErrorMessage ="Name can't be empty!")]
         [MaxLength(50)]

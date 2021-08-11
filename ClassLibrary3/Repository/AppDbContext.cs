@@ -174,8 +174,8 @@ namespace MTCrepository.Repository
             // Tranporter-User
             modelBuilder.Entity<Transporter>()
                 .HasOne<User>(t => t.User)
-                .WithMany(u => u.Tranporters)
-                .HasForeignKey(t => t.UserId);
+                .WithOne(u => u.Transporter)
+                .HasForeignKey<User>(t => t.UserId);
 
 
             // Tranporter-Zone
@@ -187,14 +187,14 @@ namespace MTCrepository.Repository
             //Adress-User
             modelBuilder.Entity<Address>()
                 .HasOne<User>(a => a.User)
-                .WithMany(u => u.Adresses)
+                .WithMany(u => u.Addresses)
                 .HasForeignKey(a => a.UserID);
 
             //Client-User
             modelBuilder.Entity<Client>()
                 .HasOne<User>(c => c.User)
-                .WithMany(u => u.Clients)
-                .HasForeignKey(c => c.UserId);
+                .WithOne(u => u.Client)
+                .HasForeignKey<User>(c => c.UserId);
 
 
             //OrderlineOUT-OrderOUT
@@ -224,8 +224,8 @@ namespace MTCrepository.Repository
             //Supplier-User
             modelBuilder.Entity<Supplier>()
                 .HasOne<User>(s => s.User)
-                .WithMany(u => u.Suppliers)
-                .HasForeignKey(s => s.UserID);
+                .WithOne(u => u.Supplier)
+                .HasForeignKey<User>(s => s.UserID);
 
             //ProductSupplier-Supplier
             modelBuilder.Entity<ProductSupplier>()
