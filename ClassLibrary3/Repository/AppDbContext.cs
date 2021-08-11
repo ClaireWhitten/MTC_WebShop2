@@ -146,7 +146,116 @@ namespace MTCrepository.Repository
             //    .IsRequired();
 
 
+            // Categorie-CategorieParent
+            modelBuilder.Entity<ProductCategorie>()
+                .HasOne<ProductCategorie>(pc => pc.ParentCategorie)
+                .WithMany(pc => pc.SubCategories)
+                .HasForeignKey(pc => pc.ParentCategorieID)
+                .IsRequired(false);
 
+            //Product-ProductCategorie
+            modelBuilder.Entity<Product>()
+                .HasOne<ProductCategorie>(pc => pc.Categorie)
+                .WithMany(p => p.Products)
+                .HasForeignKey(pc => pc.CategorieId);
+
+            // Productreview-Product
+            modelBuilder.Entity<ProductReview>()
+                .HasOne<Product>(pr => pr.Product)
+                .WithMany(p => p.ProductReviews)
+                .HasForeignKey(pr => pr.ProductEAN);
+
+            //ProductReview-User
+            modelBuilder.Entity<ProductReview>()
+                .HasOne<User>(pr => pr.User)
+                .WithMany(u => u.ProductReviews)
+                .HasForeignKey(pr => pr.UserId);
+
+            // Tranporter-User
+            modelBuilder.Entity<Transporter>()
+                .HasOne<User>(t => t.User)
+                .WithMany(u => u.Tranporters)
+                .HasForeignKey(t => t.UserId);
+
+
+            // Tranporter-Zone
+            modelBuilder.Entity<Zone>()
+                .HasOne<Transporter>(z => z.Transporter)
+                .WithMany(t => t.Zones)
+                .HasForeignKey(z => z.TransporterID);
+
+            //Adress-User
+            modelBuilder.Entity<Address>()
+                .HasOne<User>(a => a.User)
+                .WithMany(u => u.Adresses)
+                .HasForeignKey(a => a.UserID);
+
+            //Client-User
+            modelBuilder.Entity<Client>()
+                .HasOne<User>(c => c.User)
+                .WithMany(u => u.Clients)
+                .HasForeignKey(c => c.UserId);
+
+
+            //OrderlineOUT-OrderOUT
+            modelBuilder.Entity<OrderLineOUT>()
+                .HasOne<OrderOUT>(ol => ol.OrderOUT)
+                .WithMany(o => o.OrderLineOUTs)
+                .HasForeignKey(ol => ol.OrderOUTId);
+
+            //OrderlineOUT-Product
+            modelBuilder.Entity<OrderLineOUT>()
+                .HasOne<Product>(ol => ol.Product)
+                .WithMany(p => p.OrderLineOUTs)
+                .HasForeignKey(ol => ol.ProductEAN);
+
+            //OrderlineOUT-Transporter
+            modelBuilder.Entity<OrderLineOUT>()
+                .HasOne<Transporter>(ol => ol.Transporter)
+                .WithMany(t => t.orderLineOUTs)
+                .HasForeignKey(ol => ol.TransporterId);
+
+            //OrderOUT-Client
+            modelBuilder.Entity<OrderOUT>()
+                .HasOne<Client>(oo => oo.Client)
+                .WithMany(c => c.OrderOUTs)
+                .HasForeignKey(oo => oo.ClientId);
+
+            //Supplier-User
+            modelBuilder.Entity<Supplier>()
+                .HasOne<User>(s => s.User)
+                .WithMany(u => u.Suppliers)
+                .HasForeignKey(s => s.UserID);
+
+            //ProductSupplier-Supplier
+            modelBuilder.Entity<ProductSupplier>()
+                .HasOne<Supplier>(ps => ps.Supplier)
+                .WithMany(s => s.SupplierProducts)
+                .HasForeignKey(ps => ps.SupplierID);
+
+            //ProductSupplier-Product
+            modelBuilder.Entity<ProductSupplier>()
+                .HasOne<Product>(ps => ps.Product)
+                .WithMany(p => p.ProductSuppliers)
+                .HasForeignKey(ps => ps.ProductEAN);
+
+            //OrderIN-Supplier
+            modelBuilder.Entity<OrderIN>()
+                .HasOne<Supplier>(oi => oi.Supplier)
+                .WithMany(s => s.OrdersINs)
+                .HasForeignKey(oi => oi.SupplierID);
+
+            //OrderLineIN-OrderIN
+            modelBuilder.Entity<OrderLineIN>()
+                .HasOne<OrderIN>(ol => ol.OrderIN)
+                .WithMany(oi => oi.OrderLinesINs)
+                .HasForeignKey(ol => ol.OrderINID);
+
+            //OrderLineIN-Product
+            modelBuilder.Entity<OrderLineIN>()
+                .HasOne<Product>(ol => ol.Product)
+                .WithMany(p => p.OrderLineINs)
+                .HasForeignKey(ol => ol.ProductID);
 
 
             //===============================================================================================================

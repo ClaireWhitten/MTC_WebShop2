@@ -32,6 +32,7 @@ namespace MTCmodel
         //=============================== foreign key's =========================================
 
         //[ForeignKey("Product")]
+        [Required(ErrorMessage = "Product cannot be empty")]
         public string ProductEAN { get; set; }
 
         public Product Product { get; set; }
@@ -41,6 +42,8 @@ namespace MTCmodel
         [Required(ErrorMessage = "User cannot be empty")]
         [MaxLength(36)]
         public string UserId { get; set; }
+
+       //==============>> public User User { get; set; }
 
         //public User User { get; set; } //ff in commentaar om te debuggen
 

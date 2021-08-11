@@ -41,6 +41,7 @@ namespace MTCmodel
 
         public ICollection<Product> Products { get; set; }
         public ICollection<OrderIN> OrdersINs { get; set; }
+        public ICollection<ProductSupplier> SupplierProducts { get; set; }
 
         //================================ Extra's ==============================================
     }
