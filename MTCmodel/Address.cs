@@ -61,10 +61,10 @@ namespace MTCmodel
         [Required]
         //identity use nvarchar(450) for the key but save all userskeys in format string(36) 
         //if this give a problem, change it to MaxLength 450 
-        [MaxLength(36)] 
+        [MaxLength(450)] 
         public string UserID { get; set; }
 
- 
+        public ApplicationUser ApplicationUser { get; set; }
 
         //=============================== navigation property's =================================
 

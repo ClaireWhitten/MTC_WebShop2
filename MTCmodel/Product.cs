@@ -69,9 +69,11 @@ namespace MTCmodel
         public int CategorieId { get; set; }
         public ProductCategorie Categorie { get; set; }
 
-        [Required(ErrorMessage = "Supplier cannot be empty")]
-        public int SupplierId { get; set; }
-        public Supplier Supplier { get; set; }
+        //-------------------------------------------------------------------
+        //[Required(ErrorMessage = "Supplier cannot be empty")]
+        //[MaxLength(450)]
+        //public string SupplierId { get; set; }
+        //public Supplier Supplier { get; set; }
 
         //=============================== navigation property's =================================
 
@@ -83,6 +85,7 @@ namespace MTCmodel
 
         public ICollection<ProductReview> ProductReviews { get; set; }
         public ICollection<ProductSupplier> ProductSuppliers { get; set; }
+        public ICollection<ReturnedProduct> ReturnedProducts { get; set; }
 
 
         //-------------------------------------------------------------------

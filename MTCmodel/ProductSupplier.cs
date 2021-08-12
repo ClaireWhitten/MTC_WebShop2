@@ -5,13 +5,15 @@ using System.Text;
 
 namespace MTCmodel
 {
-   public class ProductSupplier
+    public class ProductSupplier
     {
-        [Key]
+        //[Key]
         public string ProductEAN { get; set; }
         public Product Product { get; set; }
-        [Key]
-        public int SupplierID { get; set; }
+        //-------------------------------------------------------------
+        //[Key]
+        [MaxLength(450)]
+        public string SuppliersID { get; set; }
         public Supplier Supplier { get; set; }
     }
 }

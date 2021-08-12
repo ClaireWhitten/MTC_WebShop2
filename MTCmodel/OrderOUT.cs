@@ -52,8 +52,7 @@ namespace MTCmodel
         public double? Longitude { get; set; }
 
 
-
-
+        public double DiscountClientPercentage { get; set; } = 0;
 
 
 
@@ -62,7 +61,7 @@ namespace MTCmodel
         [Required(ErrorMessage = "ClientId cannot be empty")]
         //identity use nvarchar(450) for the key but save all userskeys in format string(36) 
         //if this give a problem, change it to MaxLength 450 
-        [MaxLength(36)]
+        [MaxLength(450)]
         public string ClientId { get; set; }
         public Client Client { get; set; }
         //-------------------------------------------------------------------
@@ -71,6 +70,7 @@ namespace MTCmodel
 
         public ICollection<OrderLineOUT> OrderLineOUTs { get; set; }
 
+        public ICollection<Bonus> Bonusses { get; set; } 
 
         //================================ Extra's ==============================================
 

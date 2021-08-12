@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,12 +33,28 @@ namespace MTCmodel
         //TypeOfUser TypeOfUser { get; set; }
 
         //=============================== foreign key's =========================================
+        [MaxLength(450)]
+
+        public string? ClientId { get; set; }
+        public Client Client { get; set; }
+
+        //-------------------------------------------------------------
+        [MaxLength(450)]
+        public string TransporterId { get; set; }
+        public Transporter Transporter { get; set; }
+        //-----------------------------------------------------------
+        [MaxLength(450)]
+        public string SupplierId { get; set; }
+        public Supplier Supplier { get; set; }
+
 
 
         //=============================== navigation property's =================================
 
 
-        ICollection<Address> Addresses { get; set; }
+        public ICollection<Address> Addresses { get; set; }
+
+        //=========================
 
         //================================ Extra's ==============================================
     }

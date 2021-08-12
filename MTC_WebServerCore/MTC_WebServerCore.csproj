@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Bussiness\" />
     <Folder Include="ViewModels\Administration\" />
   </ItemGroup>
 

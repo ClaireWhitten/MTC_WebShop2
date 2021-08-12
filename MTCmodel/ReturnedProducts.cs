@@ -33,8 +33,9 @@ namespace MTCmodel
 
 
         //=============================== foreign key's =========================================
-
+        [Required]
         public string EAN { get; set; }
+        public Product Product { get; set; }
 
         //-------------------------------------------------------------------
         public int OrderLineOUTID { get; set; }
@@ -42,11 +43,20 @@ namespace MTCmodel
         //-------------------------------------------------------------------
 
         public int NewOrderLineOUTID { get; set; } //hier nog eens over nadenken
-        //-------------------------------------------------------------------
 
+         //-------------------------------------------------------------------
+
+
+        [Required(ErrorMessage = "ClientId cannot be empty")]
+        //identity use nvarchar(450) for the key but save all userskeys in format string(36) 
+        //if this give a problem, change it to MaxLength 450 
+        [MaxLength(450)]
+        public string ClientId { get; set; }
+        public Client Client { get; set; }
 
 
         //=============================== navigation property's =================================
+
 
 
         //================================ Extra's ==============================================

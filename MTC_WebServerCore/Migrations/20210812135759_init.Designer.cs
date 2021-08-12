@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MTC_WebServerCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210811103044_init")]
+    [Migration("20210812135759_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,8 +58,8 @@ namespace MTC_WebServerCore.Migrations
 
                     b.Property<string>("UserID")
                         .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ZipCode")
                         .IsRequired()
@@ -68,7 +68,184 @@ namespace MTC_WebServerCore.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("UserID");
+
                     b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("MTCmodel.ApplicationRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRemovable")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
+                            ConcurrencyStamp = "c9ef7c55-2199-4533-9318-85a420cd488b",
+                            IsRemovable = false,
+                            Name = "SuperAdmin",
+                            NormalizedName = "SUPERADMIN"
+                        },
+                        new
+                        {
+                            Id = "c6aaef1a-8312-4185-8b51-1e3a09421ff7",
+                            ConcurrencyStamp = "7022b766-1bc6-4e83-93ec-2f31dd2ecaf0",
+                            IsRemovable = false,
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "6ee9e763-1f51-4d0d-a463-b7a8a791234b",
+                            ConcurrencyStamp = "38e8757a-0a85-423c-a6f6-f3cccac612be",
+                            IsRemovable = false,
+                            Name = "Moderator",
+                            NormalizedName = "MODERATOR"
+                        },
+                        new
+                        {
+                            Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd",
+                            ConcurrencyStamp = "9f6b646f-dacc-4ef5-a14f-337ea35ddb57",
+                            IsRemovable = false,
+                            Name = "Basic",
+                            NormalizedName = "BASIC"
+                        });
+                });
+
+            modelBuilder.Entity("MTCmodel.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClientId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRemovable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SupplierId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TransporterId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId")
+                        .IsUnique()
+                        .HasFilter("[ClientId] IS NOT NULL");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("SupplierId")
+                        .IsUnique()
+                        .HasFilter("[SupplierId] IS NOT NULL");
+
+                    b.HasIndex("TransporterId")
+                        .IsUnique()
+                        .HasFilter("[TransporterId] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "875b5c4d-404a-4f89-9b65-864dbdaae16d",
+                            Email = "super@user.com",
+                            EmailConfirmed = true,
+                            IsRemovable = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SUPER@USER.COM",
+                            NormalizedUserName = "SUPER@USER.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOs9ueDWSiC73amgEZ5BNlAwQhWYyNaQqXV7NdSFqiothKAx29DzdEu46KrT8KFZIQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "ee5972c8-3652-485d-a58c-d39e6ba507b6",
+                            TwoFactorEnabled = false,
+                            UserName = "super@user.com"
+                        });
                 });
 
             modelBuilder.Entity("MTCmodel.Bonus", b =>
@@ -76,33 +253,40 @@ namespace MTC_WebServerCore.Migrations
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ClientID")
-                        .HasColumnType("int");
+                    b.Property<string>("ClientID")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsPercentage")
                         .HasColumnType("bit");
+
+                    b.Property<int>("OrderOUTId")
+                        .HasColumnType("int");
 
                     b.Property<double>("Value")
                         .HasColumnType("float");
 
                     b.HasKey("Code");
 
+                    b.HasIndex("ClientID");
+
+                    b.HasIndex("OrderOUTId");
+
                     b.ToTable("Bonusses");
                 });
 
             modelBuilder.Entity("MTCmodel.Client", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("DiscountPercentage")
+                        .HasColumnType("float");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("UserId")
-                        .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
 
                     b.HasKey("Id");
 
@@ -122,8 +306,10 @@ namespace MTC_WebServerCore.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("SupplierID")
-                        .HasColumnType("int");
+                    b.Property<string>("SupplierID")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
 
@@ -184,8 +370,10 @@ namespace MTC_WebServerCore.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("TransporterId")
-                        .HasColumnType("int");
+                    b.Property<string>("TransporterId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("UnitPrice")
                         .HasColumnType("float");
@@ -213,8 +401,10 @@ namespace MTC_WebServerCore.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("ClientId")
-                        .HasColumnType("int");
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Country")
                         .IsRequired()
@@ -223,6 +413,9 @@ namespace MTC_WebServerCore.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<double>("DiscountClientPercentage")
+                        .HasColumnType("float");
 
                     b.Property<int>("HouseNumber")
                         .HasMaxLength(4)
@@ -330,6 +523,11 @@ namespace MTC_WebServerCore.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -339,21 +537,35 @@ namespace MTC_WebServerCore.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ProductEAN")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("ProductEAN");
 
                     b.ToTable("ProductReviews");
+                });
+
+            modelBuilder.Entity("MTCmodel.ProductSupplier", b =>
+                {
+                    b.Property<string>("ProductEAN")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SuppliersID")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ProductEAN", "SuppliersID");
+
+                    b.HasIndex("SuppliersID");
+
+                    b.ToTable("ProductSuppliers");
                 });
 
             modelBuilder.Entity("MTCmodel.ReturnedProduct", b =>
@@ -363,11 +575,17 @@ namespace MTC_WebServerCore.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EAN")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("NewOrderLineOUTID")
                         .HasColumnType("int");
@@ -387,15 +605,18 @@ namespace MTC_WebServerCore.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("EAN");
+
                     b.ToTable("ReturnedProducts");
                 });
 
             modelBuilder.Entity("MTCmodel.Supplier", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("BTW")
                         .IsRequired()
@@ -415,34 +636,23 @@ namespace MTC_WebServerCore.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("UserID")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
-
                     b.Property<string>("WebSite")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("MTCmodel.Transporter", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
 
                     b.HasKey("Id");
 
@@ -461,165 +671,16 @@ namespace MTC_WebServerCore.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
-                    b.Property<int?>("TransporterId")
-                        .HasColumnType("int");
+                    b.Property<string>("TransporterID")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TransporterId");
+                    b.HasIndex("TransporterID");
 
                     b.ToTable("Zones");
-                });
-
-            modelBuilder.Entity("MTCrepository.test.ApplicationRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsRemovable")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "7877d576-014a-4716-9d36-5e05e32bf5be",
-                            IsRemovable = false,
-                            Name = "SuperAdmin",
-                            NormalizedName = "SUPERADMIN"
-                        },
-                        new
-                        {
-                            Id = "c6aaef1a-8312-4185-8b51-1e3a09421ff7",
-                            ConcurrencyStamp = "16f49fd4-1a2f-4c22-a776-db595426e7db",
-                            IsRemovable = false,
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "6ee9e763-1f51-4d0d-a463-b7a8a791234b",
-                            ConcurrencyStamp = "d7cc4a20-51da-406e-b0b1-f95e727c1a50",
-                            IsRemovable = false,
-                            Name = "Moderator",
-                            NormalizedName = "MODERATOR"
-                        },
-                        new
-                        {
-                            Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd",
-                            ConcurrencyStamp = "e8a9f45a-1f02-4ff4-a1fa-c4914fa83e46",
-                            IsRemovable = false,
-                            Name = "Basic",
-                            NormalizedName = "BASIC"
-                        });
-                });
-
-            modelBuilder.Entity("MTCrepository.test.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRemovable")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "342d1130-8cbe-459b-af5f-73de83bc0372",
-                            Email = "super@user.com",
-                            EmailConfirmed = true,
-                            IsRemovable = false,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "SUPER@USER.COM",
-                            NormalizedUserName = "SUPER@USER.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEN6RN7k8Rf8+9qo8CX6budYuK9bX9ec0ADvkPJ2ZC1v0ITnhjDoWUZxDU0N7bjyrXQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "9ee5905e-a019-403d-b433-0ac4b4e5e4c2",
-                            TwoFactorEnabled = false,
-                            UserName = "super@user.com"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -731,38 +792,95 @@ namespace MTC_WebServerCore.Migrations
                     b.Property<string>("ProductsEAN")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("SuppliersID")
-                        .HasColumnType("int");
+                    b.Property<string>("SuppliersId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ProductsEAN", "SuppliersID");
+                    b.HasKey("ProductsEAN", "SuppliersId");
 
-                    b.HasIndex("SuppliersID");
+                    b.HasIndex("SuppliersId");
 
                     b.ToTable("ProductSupplier");
                 });
 
+            modelBuilder.Entity("MTCmodel.Address", b =>
+                {
+                    b.HasOne("MTCmodel.ApplicationUser", "ApplicationUser")
+                        .WithMany("Addresses")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("MTCmodel.ApplicationUser", b =>
+                {
+                    b.HasOne("MTCmodel.Client", "Client")
+                        .WithOne("ApplicationUser")
+                        .HasForeignKey("MTCmodel.ApplicationUser", "ClientId");
+
+                    b.HasOne("MTCmodel.Supplier", "Supplier")
+                        .WithOne("ApplicationUser")
+                        .HasForeignKey("MTCmodel.ApplicationUser", "SupplierId");
+
+                    b.HasOne("MTCmodel.Transporter", "Transporter")
+                        .WithOne("ApplicationUser")
+                        .HasForeignKey("MTCmodel.ApplicationUser", "TransporterId");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Supplier");
+
+                    b.Navigation("Transporter");
+                });
+
+            modelBuilder.Entity("MTCmodel.Bonus", b =>
+                {
+                    b.HasOne("MTCmodel.Client", "Client")
+                        .WithMany("Bonuses")
+                        .HasForeignKey("ClientID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("MTCmodel.OrderOUT", "OrderOUT")
+                        .WithMany("Bonusses")
+                        .HasForeignKey("OrderOUTId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("OrderOUT");
+                });
+
             modelBuilder.Entity("MTCmodel.OrderIN", b =>
                 {
-                    b.HasOne("MTCmodel.Supplier", null)
+                    b.HasOne("MTCmodel.Supplier", "Supplier")
                         .WithMany("OrdersINs")
                         .HasForeignKey("SupplierID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("MTCmodel.OrderLineIN", b =>
                 {
-                    b.HasOne("MTCmodel.OrderIN", null)
+                    b.HasOne("MTCmodel.OrderIN", "OrderIN")
                         .WithMany("OrderLinesINs")
                         .HasForeignKey("OrderINID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("MTCmodel.Product", null)
+                    b.HasOne("MTCmodel.Product", "Product")
                         .WithMany("OrderLineINs")
                         .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("OrderIN");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("MTCmodel.OrderLineOUT", b =>
@@ -770,19 +888,19 @@ namespace MTC_WebServerCore.Migrations
                     b.HasOne("MTCmodel.OrderOUT", "OrderOUT")
                         .WithMany("OrderLineOUTs")
                         .HasForeignKey("OrderOUTId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MTCmodel.Product", "Product")
                         .WithMany("OrderLineOUTs")
                         .HasForeignKey("ProductEAN")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MTCmodel.Transporter", "Transporter")
-                        .WithMany()
+                        .WithMany("orderLineOUTs")
                         .HasForeignKey("TransporterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("OrderOUT");
@@ -797,7 +915,7 @@ namespace MTC_WebServerCore.Migrations
                     b.HasOne("MTCmodel.Client", "Client")
                         .WithMany("OrderOUTs")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -806,9 +924,9 @@ namespace MTC_WebServerCore.Migrations
             modelBuilder.Entity("MTCmodel.Product", b =>
                 {
                     b.HasOne("MTCmodel.ProductCategorie", "Categorie")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("CategorieId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Categorie");
@@ -825,23 +943,75 @@ namespace MTC_WebServerCore.Migrations
 
             modelBuilder.Entity("MTCmodel.ProductReview", b =>
                 {
+                    b.HasOne("MTCmodel.Client", "Client")
+                        .WithMany("ProductReviews")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("MTCmodel.Product", "Product")
                         .WithMany("ProductReviews")
-                        .HasForeignKey("ProductEAN");
+                        .HasForeignKey("ProductEAN")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("MTCmodel.ProductSupplier", b =>
+                {
+                    b.HasOne("MTCmodel.Product", "Product")
+                        .WithMany("ProductSuppliers")
+                        .HasForeignKey("ProductEAN")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("MTCmodel.Supplier", "Supplier")
+                        .WithMany("SupplierProducts")
+                        .HasForeignKey("SuppliersID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("MTCmodel.ReturnedProduct", b =>
+                {
+                    b.HasOne("MTCmodel.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MTCmodel.Product", "Product")
+                        .WithMany("ReturnedProducts")
+                        .HasForeignKey("EAN")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Client");
 
                     b.Navigation("Product");
                 });
 
             modelBuilder.Entity("MTCmodel.Zone", b =>
                 {
-                    b.HasOne("MTCmodel.Transporter", null)
+                    b.HasOne("MTCmodel.Transporter", "Transporter")
                         .WithMany("Zones")
-                        .HasForeignKey("TransporterId");
+                        .HasForeignKey("TransporterID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Transporter");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("MTCrepository.test.ApplicationRole", null)
+                    b.HasOne("MTCmodel.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -850,7 +1020,7 @@ namespace MTC_WebServerCore.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("MTCrepository.test.ApplicationUser", null)
+                    b.HasOne("MTCmodel.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -859,7 +1029,7 @@ namespace MTC_WebServerCore.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("MTCrepository.test.ApplicationUser", null)
+                    b.HasOne("MTCmodel.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -868,13 +1038,13 @@ namespace MTC_WebServerCore.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("MTCrepository.test.ApplicationRole", null)
+                    b.HasOne("MTCmodel.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MTCrepository.test.ApplicationUser", null)
+                    b.HasOne("MTCmodel.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -883,7 +1053,7 @@ namespace MTC_WebServerCore.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("MTCrepository.test.ApplicationUser", null)
+                    b.HasOne("MTCmodel.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -900,14 +1070,25 @@ namespace MTC_WebServerCore.Migrations
 
                     b.HasOne("MTCmodel.Supplier", null)
                         .WithMany()
-                        .HasForeignKey("SuppliersID")
+                        .HasForeignKey("SuppliersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MTCmodel.ApplicationUser", b =>
+                {
+                    b.Navigation("Addresses");
+                });
+
             modelBuilder.Entity("MTCmodel.Client", b =>
                 {
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Bonuses");
+
                     b.Navigation("OrderOUTs");
+
+                    b.Navigation("ProductReviews");
                 });
 
             modelBuilder.Entity("MTCmodel.OrderIN", b =>
@@ -917,6 +1098,8 @@ namespace MTC_WebServerCore.Migrations
 
             modelBuilder.Entity("MTCmodel.OrderOUT", b =>
                 {
+                    b.Navigation("Bonusses");
+
                     b.Navigation("OrderLineOUTs");
                 });
 
@@ -927,20 +1110,34 @@ namespace MTC_WebServerCore.Migrations
                     b.Navigation("OrderLineOUTs");
 
                     b.Navigation("ProductReviews");
+
+                    b.Navigation("ProductSuppliers");
+
+                    b.Navigation("ReturnedProducts");
                 });
 
             modelBuilder.Entity("MTCmodel.ProductCategorie", b =>
                 {
+                    b.Navigation("Products");
+
                     b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("MTCmodel.Supplier", b =>
                 {
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("OrdersINs");
+
+                    b.Navigation("SupplierProducts");
                 });
 
             modelBuilder.Entity("MTCmodel.Transporter", b =>
                 {
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("orderLineOUTs");
+
                     b.Navigation("Zones");
                 });
 #pragma warning restore 612, 618

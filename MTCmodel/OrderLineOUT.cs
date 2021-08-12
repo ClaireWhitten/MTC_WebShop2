@@ -31,9 +31,9 @@ namespace MTCmodel
 
 
         //=============================== foreign key's =========================================
-        //foreign key
+        [MaxLength(450)]
         [Required(ErrorMessage = "Transporter cannot be empty")]
-        public int TransporterId { get; set; }
+        public string TransporterId { get; set; }
         public Transporter Transporter { get; set; }
 
         //-------------------------------------------------------------------

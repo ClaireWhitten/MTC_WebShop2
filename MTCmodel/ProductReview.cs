@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MTCmodel.CustomAnnotationAttributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -33,6 +34,7 @@ namespace MTCmodel
 
         //[ForeignKey("Product")]
         [Required(ErrorMessage = "Product cannot be empty")]
+        //[EAN]
         public string ProductEAN { get; set; }
 
         public Product Product { get; set; }
@@ -40,7 +42,7 @@ namespace MTCmodel
         //-------------------------------------------------------------------
 
         [Required(ErrorMessage = "User cannot be empty")]
-        [MaxLength(36)]
+        [MaxLength(450)]
         public string ClientId { get; set; }
 
         public Client Client { get; set; }

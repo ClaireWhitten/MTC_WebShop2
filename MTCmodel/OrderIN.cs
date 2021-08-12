@@ -26,7 +26,9 @@ namespace MTCmodel
 
 
         //=============================== foreign key's =========================================
-        public int SupplierID { get; set; } 
+        [Required]
+        [MaxLength(450)]
+        public string SupplierID { get; set; } 
         public Supplier Supplier { get; set; }
 
 

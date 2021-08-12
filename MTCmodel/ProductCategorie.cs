@@ -17,6 +17,9 @@ namespace MTCmodel
         [Required(ErrorMessage ="Name can't be Empty")]
         [MaxLength(50)]
         public string Name { get; set; }
+        //public string NameNL { get; set;}
+        //public string NameFR { get; set; }
+
 
         //-------------------------------------------------------------------
 
@@ -27,7 +30,7 @@ namespace MTCmodel
 
 
         //=============================== foreign key's =========================================
-        public int ParentCategorieID { get; set; }
+        public int? ParentCategorieID { get; set; }
         public ProductCategorie ParentCategorie { get; set; }
 
 

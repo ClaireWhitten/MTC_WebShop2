@@ -20,10 +20,13 @@ namespace MTCmodel
 
         //=============================== foreign key's =========================================
 
+        [Required]
+        [MaxLength(450)]
+        public string TransporterID { get; set; }
+        public Transporter Transporter { get; set; }
 
         //=============================== navigation property's =================================
-        public int TransporterID { get; set; }
-        public Transporter Transporter { get; set; }
+
 
         //================================ Extra's ==============================================
     }

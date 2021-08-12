@@ -26,7 +26,14 @@ namespace MTCmodel
 
 
         //=============================== foreign key's =========================================
-        public int ClientID { get; set; }
+        [Required]
+        [MaxLength(450)]
+        public string  ClientID { get; set; }
+        public  Client Client { get; set; }
+        //-------------------------------------------------------------------
+        [Required]
+        public int OrderOUTId { get; set; }
+        public OrderOUT OrderOUT { get; set; }
 
         //=============================== navigation property's =================================
 

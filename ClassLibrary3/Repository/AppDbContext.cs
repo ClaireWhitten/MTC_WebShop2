@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using MTCrepository.test;
 using MTCmodel;
 //using BookApplicatie.Domain;
 
@@ -30,7 +29,8 @@ namespace MTCrepository.Repository
         public DbSet<Transporter> Transporters { get; set; }
         public DbSet<Zone> Zones { get; set; }
 
-
+        public DbSet<ProductSupplier> ProductSuppliers { get; set; }
+        
 
         //===================================================================================================================
 
@@ -130,56 +130,47 @@ namespace MTCrepository.Repository
 
 
 
+            //===============================================================================================================
+            // Keys aanpassen
+            //---------------------------------------------------------------------------------------------------------------
+
+
+            modelBuilder.Entity<ProductSupplier>().HasKey(x => new {x.ProductEAN,x.SuppliersID });
+
 
             //===============================================================================================================
             // relaties aanpassen
             //---------------------------------------------------------------------------------------------------------------
 
-            //modelBuilder.Entity<Author>()
-            //     .HasMany(c => c.Books)
-            //     .WithOne(e => e.Author)
-            //     .IsRequired();
-
-            //modelBuilder.Entity<BookGenre>()
-            //    .HasMany(c => c.Books)
-            //    .WithOne(e => e.BookGenre)
-            //    .IsRequired();
-
-            //modelBuilder.Entity<Publicher>()
-            //    .HasMany(c => c.Books)
-            //    .WithOne(e => e.Publicher)
-            //    .IsRequired();
-
-            //modelBuilder.Entity<Language>()
-            //    .HasMany(c => c.Books)
-            //    .WithOne(e => e.Language)
-            //    .IsRequired();
 
 
             // Categorie-CategorieParent
             modelBuilder.Entity<ProductCategorie>()
                 .HasOne<ProductCategorie>(pc => pc.ParentCategorie)
                 .WithMany(pc => pc.SubCategories)
-                .HasForeignKey(pc => pc.ParentCategorieID)
-                .IsRequired(false);
+                .HasForeignKey(pc => pc.ParentCategorieID);
+                //.OnDelete(DeleteBehavior.Restrict);
 
             //Product-ProductCategorie
             modelBuilder.Entity<Product>()
                 .HasOne<ProductCategorie>(pc => pc.Categorie)
                 .WithMany(p => p.Products)
-                .HasForeignKey(pc => pc.CategorieId);
+                .HasForeignKey(pc => pc.CategorieId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             // Productreview-Product
             modelBuilder.Entity<ProductReview>()
                 .HasOne<Product>(pr => pr.Product)
                 .WithMany(p => p.ProductReviews)
-                .HasForeignKey(pr => pr.ProductEAN);
+                .HasForeignKey(pr => pr.ProductEAN)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //ProductReview-Client
             modelBuilder.Entity<ProductReview>()
                 .HasOne<Client>(pr => pr.Client)
                 .WithMany(u => u.ProductReviews)
-                .HasForeignKey(pr => pr.ClientId);
+                .HasForeignKey(pr => pr.ClientId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //// Tranporter-User
             //modelBuilder.Entity<Transporter>()
@@ -192,13 +183,15 @@ namespace MTCrepository.Repository
             modelBuilder.Entity<Zone>()
                 .HasOne<Transporter>(z => z.Transporter)
                 .WithMany(t => t.Zones)
-                .HasForeignKey(z => z.TransporterID);
+                .HasForeignKey(z => z.TransporterID)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //Adress-User
             modelBuilder.Entity<Address>()
                 .HasOne<ApplicationUser>(a => a.ApplicationUser)
                 .WithMany(u => u.Addresses)
-                .HasForeignKey(a => a.UserID);
+                .HasForeignKey(a => a.UserID)
+                .OnDelete(DeleteBehavior.NoAction);
 
             ////Client-User
             //modelBuilder.Entity<Client>()
@@ -211,25 +204,37 @@ namespace MTCrepository.Repository
             modelBuilder.Entity<OrderLineOUT>()
                 .HasOne<OrderOUT>(ol => ol.OrderOUT)
                 .WithMany(o => o.OrderLineOUTs)
-                .HasForeignKey(ol => ol.OrderOUTId);
+                .HasForeignKey(ol => ol.OrderOUTId)
+                .OnDelete(DeleteBehavior.NoAction)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //OrderlineOUT-Product
             modelBuilder.Entity<OrderLineOUT>()
                 .HasOne<Product>(ol => ol.Product)
                 .WithMany(p => p.OrderLineOUTs)
-                .HasForeignKey(ol => ol.ProductEAN);
+                .HasForeignKey(ol => ol.ProductEAN)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //OrderlineOUT-Transporter
             modelBuilder.Entity<OrderLineOUT>()
                 .HasOne<Transporter>(ol => ol.Transporter)
                 .WithMany(t => t.orderLineOUTs)
-                .HasForeignKey(ol => ol.TransporterId);
+                .HasForeignKey(ol => ol.TransporterId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //OrderOUT-Client
             modelBuilder.Entity<OrderOUT>()
                 .HasOne<Client>(oo => oo.Client)
                 .WithMany(c => c.OrderOUTs)
-                .HasForeignKey(oo => oo.ClientId);
+                .HasForeignKey(oo => oo.ClientId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            //OrderOUT-Bonus
+            modelBuilder.Entity<Bonus>()
+                .HasOne<OrderOUT>(b => b.OrderOUT)
+                .WithMany(oo => oo.Bonusses)
+                .HasForeignKey(b => b.OrderOUTId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             ////Supplier-User
             //modelBuilder.Entity<Supplier>()
@@ -237,40 +242,92 @@ namespace MTCrepository.Repository
             //    .WithOne(u => u.Supplier)
             //    .HasForeignKey<User>(s => s.UserID);
 
+
+
+            //==============================================bridge table
             //ProductSupplier-Supplier
             modelBuilder.Entity<ProductSupplier>()
-                .HasOne<Supplier>(ps => ps.Supplier)
+                .HasOne(ps => ps.Supplier)
                 .WithMany(s => s.SupplierProducts)
-                .HasForeignKey(ps => ps.SupplierID);
+                .HasForeignKey(ps => ps.SuppliersID)
+                .OnDelete(DeleteBehavior.NoAction);
+
 
             //ProductSupplier-Product
             modelBuilder.Entity<ProductSupplier>()
-                .HasOne<Product>(ps => ps.Product)
+                .HasOne(ps => ps.Product)
                 .WithMany(p => p.ProductSuppliers)
-                .HasForeignKey(ps => ps.ProductEAN);
+                .HasForeignKey(ps => ps.ProductEAN)
+                .OnDelete(DeleteBehavior.NoAction);
+            //=============================================================
 
             //OrderIN-Supplier
             modelBuilder.Entity<OrderIN>()
                 .HasOne<Supplier>(oi => oi.Supplier)
                 .WithMany(s => s.OrdersINs)
-                .HasForeignKey(oi => oi.SupplierID);
+                .HasForeignKey(oi => oi.SupplierID)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //OrderLineIN-OrderIN
             modelBuilder.Entity<OrderLineIN>()
                 .HasOne<OrderIN>(ol => ol.OrderIN)
                 .WithMany(oi => oi.OrderLinesINs)
-                .HasForeignKey(ol => ol.OrderINID);
+                .HasForeignKey(ol => ol.OrderINID)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //OrderLineIN-Product
             modelBuilder.Entity<OrderLineIN>()
                 .HasOne<Product>(ol => ol.Product)
                 .WithMany(p => p.OrderLineINs)
-                .HasForeignKey(ol => ol.ProductID);
+                .HasForeignKey(ol => ol.ProductID)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            //bonus-client
+            modelBuilder.Entity<Bonus>()
+                .HasOne<Client>(b => b.Client)
+                .WithMany(c => c.Bonuses)
+                .HasForeignKey(b => b.ClientID)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            //product-returnedProduct
+            modelBuilder.Entity<ReturnedProduct>()
+                .HasOne<Product>(rp => rp.Product)
+                .WithMany(p => p.ReturnedProducts)
+                .HasForeignKey(rp => rp.EAN)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            //Transporter-Zone
+            modelBuilder.Entity<Zone>()
+                .HasOne<Transporter>(z => z.Transporter)
+                .WithMany(t => t.Zones)
+                .HasForeignKey(z => z.TransporterID)
+                .OnDelete(DeleteBehavior.NoAction);
+
 
 
             //===============================================================================================================
             // Delete gedrag aanpassen 
             //---------------------------------------------------------------------------------------------------------------
+
+            //{
+            //    table.PrimaryKey("PK_Bonusses", x => x.Code);
+            //    table.ForeignKey(
+            //        name: "FK_Bonusses_AspNetUsers_ClientID",
+            //        column: x => x.ClientID,
+            //        principalTable: "AspNetUsers",
+            //        principalColumn: "Id",
+            //        onDelete: ReferentialAction.Cascade);
+            //    table.ForeignKey(
+            //        name: "FK_Bonusses_OrderOUTs_OrderOUTId",
+            //        column: x => x.OrderOUTId,
+            //        principalTable: "OrderOUTs",
+            //        principalColumn: "Id",
+            //        onDelete: ReferentialAction.Cascade); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //});
+
+            //modelBuilder.Entity<OrderOUT>().
+
 
             // standaard worden verwijzigen gedelete in sql on cascading
             // met deze setten we de standaardgedrag voor het verwijderen van child-rows op 
@@ -291,6 +348,12 @@ namespace MTCrepository.Repository
             //        foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
             //    if (foreignKey.GetDefaultName() == "FK_Books_Publichers_PublicherId")
             //        foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
+            //}
+
+            //foreach (var forkkey in modelBuilder.Model.GetEntityTypes().SelectMany(e=> e.GetForeignKeys()))
+            //{
+            //    forkkey.DeleteBehavior = DeleteBehavior.SetNull;
+            //    //forkkey.o
             //}
 
 
