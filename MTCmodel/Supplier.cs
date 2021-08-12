@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace MTCmodel
 {
-    public class Supplier : ApplicationUser
+    public class Supplier : UserFactoryHelper
     {
         //-------------------------------------------------------------------
         [Key]
-        public int ID { get; set; }
-        //-------------------------------------------------------------------
-        [Required]
-        [MaxLength(36)]
-        public string UserID { get; set; }
-        public User User { get; set; }
+        [MaxLength(450)]
+        public string Id { get; set; }
+
+        public ApplicationUser ApplicationUser { get; set; }
         //-------------------------------------------------------------------
         [Required(ErrorMessage ="Name can't be empty!")]
         [MaxLength(50)]

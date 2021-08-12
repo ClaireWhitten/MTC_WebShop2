@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 
 namespace MTCmodel
 {
-    public class Transporter
+    public class Transporter : UserFactoryHelper
     {
 
         //-------------------------------------------------------------------
         [Key]
-        public int Id { get; set; }
+        [MaxLength(450)]
+        public string Id { get; set; }
+
+        public ApplicationUser ApplicationUser { get; set; }
 
         //-------------------------------------------------------------------
         [Required(ErrorMessage="Name cannot be empty")]
@@ -23,9 +26,9 @@ namespace MTCmodel
 
 
         //=============================== foreign key's =========================================
-        [Required]
-        [MaxLength(36)]
-        public string UserId { get; set; } //changed to string (from int)
+        //[Required]
+        //[MaxLength(450)]
+        //public string UserId { get; set; } //changed to string (from int)
 
         //public User user { get; set; } ff in comment, komt goed :-)
 

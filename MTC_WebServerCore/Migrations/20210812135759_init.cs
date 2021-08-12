@@ -8,27 +8,6 @@ namespace MTC_WebServerCore.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Addresses",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Street = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    HouseNumber = table.Column<int>(type: "int", nullable: false),
-                    HouseNumberAdditional = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
-                    ZipCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(56)", maxLength: 56, nullable: false),
-                    Latitude = table.Column<double>(type: "float", nullable: true),
-                    Longitude = table.Column<double>(type: "float", nullable: true),
-                    UserID = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Addresses", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -44,53 +23,12 @@ namespace MTC_WebServerCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IsRemovable = table.Column<bool>(type: "bit", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Bonusses",
-                columns: table => new
-                {
-                    Code = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IsPercentage = table.Column<bool>(type: "bit", nullable: false),
-                    Value = table.Column<double>(type: "float", nullable: false),
-                    ClientID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bonusses", x => x.Code);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Clients",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true)
+                    DiscountPercentage = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,31 +56,10 @@ namespace MTC_WebServerCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReturnedProducts",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Reason = table.Column<int>(type: "int", maxLength: 1000, nullable: false),
-                    Outlet = table.Column<bool>(type: "bit", nullable: false),
-                    EAN = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OrderLineOUTID = table.Column<int>(type: "int", nullable: false),
-                    NewOrderLineOUTID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ReturnedProducts", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Suppliers",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserID = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     BTW = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     WebSite = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -151,17 +68,15 @@ namespace MTC_WebServerCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Suppliers", x => x.ID);
+                    table.PrimaryKey("PK_Suppliers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Transporters",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,6 +102,362 @@ namespace MTC_WebServerCore.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderOUTs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HouseNumber = table.Column<int>(type: "int", maxLength: 4, nullable: false),
+                    HouseNumberAdditional = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
+                    Zipcode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: true),
+                    Longitude = table.Column<double>(type: "float", nullable: true),
+                    DiscountClientPercentage = table.Column<double>(type: "float", nullable: false),
+                    ClientId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderOUTs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderOUTs_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    EAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ExtraInfo = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    BTWPercentage = table.Column<double>(type: "float", nullable: false),
+                    CountInStock = table.Column<int>(type: "int", nullable: false),
+                    MaxStock = table.Column<int>(type: "int", nullable: false),
+                    MinStock = table.Column<int>(type: "int", nullable: false),
+                    AverageRating = table.Column<double>(type: "float", nullable: true),
+                    RecommendedUnitPrice = table.Column<double>(type: "float", nullable: false),
+                    SolderPrice = table.Column<double>(type: "float", nullable: true),
+                    CategorieId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.EAN);
+                    table.ForeignKey(
+                        name: "FK_Products_ProductCategories_CategorieId",
+                        column: x => x.CategorieId,
+                        principalTable: "ProductCategories",
+                        principalColumn: "ID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderINs",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    SupplierID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderINs", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_OrderINs_Suppliers_SupplierID",
+                        column: x => x.SupplierID,
+                        principalTable: "Suppliers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsRemovable = table.Column<bool>(type: "bit", nullable: false),
+                    ClientId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    TransporterId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    SupplierId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "Suppliers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Transporters_TransporterId",
+                        column: x => x.TransporterId,
+                        principalTable: "Transporters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Zones",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    TransporterID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Zones", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Zones_Transporters_TransporterID",
+                        column: x => x.TransporterID,
+                        principalTable: "Transporters",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bonusses",
+                columns: table => new
+                {
+                    Code = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsPercentage = table.Column<bool>(type: "bit", nullable: false),
+                    Value = table.Column<double>(type: "float", nullable: false),
+                    ClientID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    OrderOUTId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bonusses", x => x.Code);
+                    table.ForeignKey(
+                        name: "FK_Bonusses_Clients_ClientID",
+                        column: x => x.ClientID,
+                        principalTable: "Clients",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Bonusses_OrderOUTs_OrderOUTId",
+                        column: x => x.OrderOUTId,
+                        principalTable: "OrderOUTs",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderLineOUTs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<double>(type: "float", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    TransporterId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    ProductEAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    OrderOUTId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderLineOUTs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderLineOUTs_OrderOUTs_OrderOUTId",
+                        column: x => x.OrderOUTId,
+                        principalTable: "OrderOUTs",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_OrderLineOUTs_Products_ProductEAN",
+                        column: x => x.ProductEAN,
+                        principalTable: "Products",
+                        principalColumn: "EAN");
+                    table.ForeignKey(
+                        name: "FK_OrderLineOUTs_Transporters_TransporterId",
+                        column: x => x.TransporterId,
+                        principalTable: "Transporters",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductReviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Comment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProductEAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClientId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductReviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductReviews_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProductReviews_Products_ProductEAN",
+                        column: x => x.ProductEAN,
+                        principalTable: "Products",
+                        principalColumn: "EAN");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductSupplier",
+                columns: table => new
+                {
+                    ProductsEAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SuppliersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductSupplier", x => new { x.ProductsEAN, x.SuppliersId });
+                    table.ForeignKey(
+                        name: "FK_ProductSupplier_Products_ProductsEAN",
+                        column: x => x.ProductsEAN,
+                        principalTable: "Products",
+                        principalColumn: "EAN",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductSupplier_Suppliers_SuppliersId",
+                        column: x => x.SuppliersId,
+                        principalTable: "Suppliers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductSuppliers",
+                columns: table => new
+                {
+                    ProductEAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SuppliersID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductSuppliers", x => new { x.ProductEAN, x.SuppliersID });
+                    table.ForeignKey(
+                        name: "FK_ProductSuppliers_Products_ProductEAN",
+                        column: x => x.ProductEAN,
+                        principalTable: "Products",
+                        principalColumn: "EAN");
+                    table.ForeignKey(
+                        name: "FK_ProductSuppliers_Suppliers_SuppliersID",
+                        column: x => x.SuppliersID,
+                        principalTable: "Suppliers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReturnedProducts",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Reason = table.Column<int>(type: "int", maxLength: 1000, nullable: false),
+                    Outlet = table.Column<bool>(type: "bit", nullable: false),
+                    EAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    OrderLineOUTID = table.Column<int>(type: "int", nullable: false),
+                    NewOrderLineOUTID = table.Column<int>(type: "int", nullable: false),
+                    ClientId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReturnedProducts", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_ReturnedProducts_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReturnedProducts_Products_EAN",
+                        column: x => x.EAN,
+                        principalTable: "Products",
+                        principalColumn: "EAN");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderLineINs",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<double>(type: "float", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    OrderINID = table.Column<int>(type: "int", nullable: false),
+                    ProductID = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderLineINs", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_OrderLineINs_OrderINs_OrderINID",
+                        column: x => x.OrderINID,
+                        principalTable: "OrderINs",
+                        principalColumn: "ID");
+                    table.ForeignKey(
+                        name: "FK_OrderLineINs_Products_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "Products",
+                        principalColumn: "EAN");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Street = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    HouseNumber = table.Column<int>(type: "int", nullable: false),
+                    HouseNumberAdditional = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
+                    ZipCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(56)", maxLength: 56, nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: true),
+                    Longitude = table.Column<double>(type: "float", nullable: true),
+                    UserID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Addresses_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -274,230 +545,26 @@ namespace MTC_WebServerCore.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "OrderOUTs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Street = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HouseNumber = table.Column<int>(type: "int", maxLength: 4, nullable: false),
-                    HouseNumberAdditional = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
-                    Zipcode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Latitude = table.Column<double>(type: "float", nullable: true),
-                    Longitude = table.Column<double>(type: "float", nullable: true),
-                    ClientId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderOUTs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_OrderOUTs_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    EAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ExtraInfo = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    BTWPercentage = table.Column<double>(type: "float", nullable: false),
-                    CountInStock = table.Column<int>(type: "int", nullable: false),
-                    MaxStock = table.Column<int>(type: "int", nullable: false),
-                    MinStock = table.Column<int>(type: "int", nullable: false),
-                    AverageRating = table.Column<double>(type: "float", nullable: true),
-                    RecommendedUnitPrice = table.Column<double>(type: "float", nullable: false),
-                    SolderPrice = table.Column<double>(type: "float", nullable: true),
-                    CategorieId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.EAN);
-                    table.ForeignKey(
-                        name: "FK_Products_ProductCategories_CategorieId",
-                        column: x => x.CategorieId,
-                        principalTable: "ProductCategories",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderINs",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    SupplierID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderINs", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_OrderINs_Suppliers_SupplierID",
-                        column: x => x.SupplierID,
-                        principalTable: "Suppliers",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Zones",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
-                    TransporterId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Zones", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Zones_Transporters_TransporterId",
-                        column: x => x.TransporterId,
-                        principalTable: "Transporters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderLineOUTs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    UnitPrice = table.Column<double>(type: "float", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    TransporterId = table.Column<int>(type: "int", nullable: false),
-                    ProductEAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    OrderOUTId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderLineOUTs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_OrderLineOUTs_OrderOUTs_OrderOUTId",
-                        column: x => x.OrderOUTId,
-                        principalTable: "OrderOUTs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderLineOUTs_Products_ProductEAN",
-                        column: x => x.ProductEAN,
-                        principalTable: "Products",
-                        principalColumn: "EAN",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderLineOUTs_Transporters_TransporterId",
-                        column: x => x.TransporterId,
-                        principalTable: "Transporters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductReviews",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Comment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Rating = table.Column<int>(type: "int", nullable: false),
-                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ProductEAN = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductReviews", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductReviews_Products_ProductEAN",
-                        column: x => x.ProductEAN,
-                        principalTable: "Products",
-                        principalColumn: "EAN",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductSupplier",
-                columns: table => new
-                {
-                    ProductsEAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SuppliersID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductSupplier", x => new { x.ProductsEAN, x.SuppliersID });
-                    table.ForeignKey(
-                        name: "FK_ProductSupplier_Products_ProductsEAN",
-                        column: x => x.ProductsEAN,
-                        principalTable: "Products",
-                        principalColumn: "EAN",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductSupplier_Suppliers_SuppliersID",
-                        column: x => x.SuppliersID,
-                        principalTable: "Suppliers",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderLineINs",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    UnitPrice = table.Column<double>(type: "float", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    OrderINID = table.Column<int>(type: "int", nullable: false),
-                    ProductID = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderLineINs", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_OrderLineINs_OrderINs_OrderINID",
-                        column: x => x.OrderINID,
-                        principalTable: "OrderINs",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderLineINs_Products_ProductID",
-                        column: x => x.ProductID,
-                        principalTable: "Products",
-                        principalColumn: "EAN",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "IsRemovable", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "2c5e174e-3b0e-446f-86af-483d56fd7210", "7877d576-014a-4716-9d36-5e05e32bf5be", false, "SuperAdmin", "SUPERADMIN" },
-                    { "c6aaef1a-8312-4185-8b51-1e3a09421ff7", "16f49fd4-1a2f-4c22-a776-db595426e7db", false, "Admin", "ADMIN" },
-                    { "6ee9e763-1f51-4d0d-a463-b7a8a791234b", "d7cc4a20-51da-406e-b0b1-f95e727c1a50", false, "Moderator", "MODERATOR" },
-                    { "7e19e371-55db-4c16-b9c0-4103de5b39fd", "e8a9f45a-1f02-4ff4-a1fa-c4914fa83e46", false, "Basic", "BASIC" }
+                    { "2c5e174e-3b0e-446f-86af-483d56fd7210", "c9ef7c55-2199-4533-9318-85a420cd488b", false, "SuperAdmin", "SUPERADMIN" },
+                    { "c6aaef1a-8312-4185-8b51-1e3a09421ff7", "7022b766-1bc6-4e83-93ec-2f31dd2ecaf0", false, "Admin", "ADMIN" },
+                    { "6ee9e763-1f51-4d0d-a463-b7a8a791234b", "38e8757a-0a85-423c-a6f6-f3cccac612be", false, "Moderator", "MODERATOR" },
+                    { "7e19e371-55db-4c16-b9c0-4103de5b39fd", "9f6b646f-dacc-4ef5-a14f-337ea35ddb57", false, "Basic", "BASIC" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsRemovable", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "8e445865-a24d-4543-a6c6-9443d048cdb9", 0, "342d1130-8cbe-459b-af5f-73de83bc0372", "super@user.com", true, false, false, null, "SUPER@USER.COM", "SUPER@USER.COM", "AQAAAAEAACcQAAAAEN6RN7k8Rf8+9qo8CX6budYuK9bX9ec0ADvkPJ2ZC1v0ITnhjDoWUZxDU0N7bjyrXQ==", null, false, "9ee5905e-a019-403d-b433-0ac4b4e5e4c2", false, "super@user.com" });
+                columns: new[] { "Id", "AccessFailedCount", "ClientId", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsRemovable", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "SupplierId", "TransporterId", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "8e445865-a24d-4543-a6c6-9443d048cdb9", 0, null, "875b5c4d-404a-4f89-9b65-864dbdaae16d", "super@user.com", true, false, false, null, "SUPER@USER.COM", "SUPER@USER.COM", "AQAAAAEAACcQAAAAEOs9ueDWSiC73amgEZ5BNlAwQhWYyNaQqXV7NdSFqiothKAx29DzdEu46KrT8KFZIQ==", null, false, "ee5972c8-3652-485d-a58c-d39e6ba507b6", null, null, false, "super@user.com" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_UserID",
+                table: "Addresses",
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -532,11 +599,42 @@ namespace MTC_WebServerCore.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_ClientId",
+                table: "AspNetUsers",
+                column: "ClientId",
+                unique: true,
+                filter: "[ClientId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_SupplierId",
+                table: "AspNetUsers",
+                column: "SupplierId",
+                unique: true,
+                filter: "[SupplierId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_TransporterId",
+                table: "AspNetUsers",
+                column: "TransporterId",
+                unique: true,
+                filter: "[TransporterId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bonusses_ClientID",
+                table: "Bonusses",
+                column: "ClientID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bonusses_OrderOUTId",
+                table: "Bonusses",
+                column: "OrderOUTId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderINs_SupplierID",
@@ -579,6 +677,11 @@ namespace MTC_WebServerCore.Migrations
                 column: "ParentCategorieID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductReviews_ClientId",
+                table: "ProductReviews",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductReviews_ProductEAN",
                 table: "ProductReviews",
                 column: "ProductEAN");
@@ -589,14 +692,29 @@ namespace MTC_WebServerCore.Migrations
                 column: "CategorieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductSupplier_SuppliersID",
+                name: "IX_ProductSupplier_SuppliersId",
                 table: "ProductSupplier",
+                column: "SuppliersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductSuppliers_SuppliersID",
+                table: "ProductSuppliers",
                 column: "SuppliersID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Zones_TransporterId",
+                name: "IX_ReturnedProducts_ClientId",
+                table: "ReturnedProducts",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReturnedProducts_EAN",
+                table: "ReturnedProducts",
+                column: "EAN");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Zones_TransporterID",
                 table: "Zones",
-                column: "TransporterId");
+                column: "TransporterID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -633,6 +751,9 @@ namespace MTC_WebServerCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductSupplier");
+
+            migrationBuilder.DropTable(
+                name: "ProductSuppliers");
 
             migrationBuilder.DropTable(
                 name: "ReturnedProducts");

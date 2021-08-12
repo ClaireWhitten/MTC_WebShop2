@@ -7,18 +7,19 @@ namespace MTCmodel.Identity
 {
     public class UserFactory
     {
-        public ApplicationUser Create(ClaimsPrincipal aApplicationUser)
+        public UserFactoryHelper Create(ClaimsPrincipal aApplicationUser, IApplicationRepository aRepos)
         {
-            if (aApplicationUser.IsInRole("Client")){
+            if (aApplicationUser.IsInRole("Client"))
+            {
                 return new Client();
             }
             if (aApplicationUser.IsInRole("Supplier"))
             {
                 return new Supplier();
             }
-            if (aApplicationUser.IsInRole("Supplier"))
+            if (aApplicationUser.IsInRole("Transporter"))
             {
-                return new Supplier();
+                return new Transporter();
             }
 
             throw new NotImplementedException("Critical error, the Role for the user not found");

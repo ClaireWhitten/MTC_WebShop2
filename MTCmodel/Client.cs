@@ -6,17 +6,22 @@ using System.Threading.Tasks;
 
 namespace MTCmodel
 {
-    public class Client : ApplicationUser
+    public class Client : UserFactoryHelper
     {
         //-------------------------------------------------------------------
-        //[Key]
-        //public int Id { get; set; }
+
+        [Key]
+        [MaxLength(450)]
+        public string Id { get; set; }
+       
+        public ApplicationUser ApplicationUser { get; set; }
 
         //-------------------------------------------------------------------
-        [Required]
+
         public bool IsActive { get; set; } = true;
 
 
+        public double DiscountPercentage { get; set; } = 0;
 
 
         //=============================== foreign key's =========================================
@@ -27,7 +32,8 @@ namespace MTCmodel
 
         //=============================== navigation property's =================================
 
-        //public ICollection<Bonus> Bonuses { get; set; } // i think, it's better here a global discount???
+        public ICollection<Bonus> Bonuses { get; set; } // i think, it's better here a global discount???
+
         public ICollection<OrderOUT> OrderOUTs { get; set; }
         public ICollection<ProductReview> ProductReviews { get; set; }
 
