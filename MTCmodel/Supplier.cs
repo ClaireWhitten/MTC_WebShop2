@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MTCmodel
 {
-    public class Supplier
+    public class Supplier : ApplicationUser
     {
         //-------------------------------------------------------------------
         [Key]

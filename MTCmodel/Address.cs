@@ -64,6 +64,8 @@ namespace MTCmodel
         [MaxLength(36)] 
         public string UserID { get; set; }
 
+ 
+
         //=============================== navigation property's =================================
 
 

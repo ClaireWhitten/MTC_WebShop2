@@ -62,8 +62,8 @@ namespace MTCmodel
         [Required(ErrorMessage = "ClientId cannot be empty")]
         //identity use nvarchar(450) for the key but save all userskeys in format string(36) 
         //if this give a problem, change it to MaxLength 450 
-        //[MaxLength(36)]
-        public int ClientId { get; set; }
+        [MaxLength(36)]
+        public string ClientId { get; set; }
         public Client Client { get; set; }
         //-------------------------------------------------------------------
 

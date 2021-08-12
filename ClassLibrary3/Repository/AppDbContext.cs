@@ -61,6 +61,16 @@ namespace MTCrepository.Repository
                 new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
 
 
+            //modelBuilder.Entity<ApplicationRole>().HasData(
+            //    new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
+            //modelBuilder.Entity<ApplicationRole>().HasData(
+            //    new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
+            //modelBuilder.Entity<ApplicationRole>().HasData(
+            //    new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
+            //modelBuilder.Entity<ApplicationRole>().HasData(
+            //    new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
+
+
 
 
             //===============================================================================================================
@@ -185,10 +195,10 @@ namespace MTCrepository.Repository
 
 
 
+
             //===============================================================================================================
             // seed data toevoegen
             //---------------------------------------------------------------------------------------------------------------
-
 
             //modelBuilder.Entity<Product>().HasData(
             //    new Product { EAN = "123", Description = "onderbroek" },
@@ -196,6 +206,7 @@ namespace MTCrepository.Repository
             //    new Product { EAN = "345", Description = "speelbal" },
             //    new Product { EAN = "456", Description = "vogelkooi" }
             //    );
+
 
         }
     }
