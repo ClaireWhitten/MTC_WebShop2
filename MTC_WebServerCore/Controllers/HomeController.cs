@@ -86,6 +86,32 @@ namespace MTC_WebServerCore.Controllers
         }
 
 
+        public async Task<IActionResult> ProductsAsync([FromRoute] int categoryId)
+
+        {
+            //Get chosen category
+            //var
+            TSDreposResultOneObject<ProductCategorie> result = await _repos.ProductCategories.GetByIdAsync(categoryId);
+
+            ProductCategorie chosenCategory = result.Data;
+
+            //var
+            TSDreposResultIenumerable<Product> resultProducts = await _repos.Products.GetByConditionAsync(p => p.CategorieId == categoryId);
+
+            //Make into viewModel instead
+            IEnumerable<Product> allCategoryProducts = resultProducts.Data;
+
+            //Make viewmodel with needed properties 
+            //Make view with page layout and bootstrap
+
+
+        }
+
+
+
+
+
+
         public IActionResult Privacy()
         {
             return View();

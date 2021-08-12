@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Product>
+@{ 
+    ViewData["Title"] = "Products Page";
+}
+
+<div class="card">
+    ¨@*<div class="card-header">
+            Patient @Model.Name
+        </div>
+        <div class="card-body">
+            <div>
+                <p><strong>Identiteitskaart</strong></p>
+                <img src="@Model.PhotoUrl1" class="m-2" />
+            </div>
+            <p><strong>Voornaam: </strong>@Model.Voornaam</p>
+            <p><strong>Achternaam: </strong>@Model.Achternaam</p>
+            <p><strong>Patient Nummer: </strong>@Model.Id</p>
+            <p><strong>Geboortedatum: </strong>@Model.DOB</p>
+            <p><strong>Geslacht: </strong>@Model.Geslacht</p>
+            <div>
+                <p>
+                    <strong>Adres: </strong>
+                    <ul>
+                        <li><strong>Straat: </strong>@Model.Straat</li>
+                        <li><strong>@Model.Huisnummer</strong> </li>
+                        @if (Model.Bus != null)
+                        {
+                            <li><strong> @Model.Bus</strong></li>
+                        }
+                        <li><strong>@Model.Stad</strong></li>
+                        <li><strong>@Model.Postcode</strong></li>
+                    </ul>
+            </div>
+        </div>*@
+</div>
