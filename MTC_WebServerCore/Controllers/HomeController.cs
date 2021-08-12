@@ -39,21 +39,21 @@ namespace MTC_WebServerCore.Controllers
             //};
             //var testCategegoryAdded = await _repos.ProductCategories.AddAsync(testCategorie);
 
-            Product testProduct = new Product
-            {
-                EAN = "8888888888888",
-                AverageRating = 3,
-                BTWPercentage = 21,
-                //CategorieId = 1,
-                Categorie = new ProductCategorie { Name = "testcat"},
-                CountInStock = 0,
-                ExtraInfo = "dit is een geweldig produkt",
-                Name = "testProduct",
-                MinStock = 5,
-                MaxStock = 100,
-                RecommendedUnitPrice = 22.5,
+            //Product testProduct = new Product
+            //{
+            //    EAN = "8888888888888",
+            //    AverageRating = 3,
+            //    BTWPercentage = 21,
+            //    //CategorieId = 1,
+            //    Categorie = new ProductCategorie { Name = "testcat"},
+            //    CountInStock = 0,
+            //    ExtraInfo = "dit is een geweldig produkt",
+            //    Name = "testProduct",
+            //    MinStock = 5,
+            //    MaxStock = 100,
+            //    RecommendedUnitPrice = 22.5,
 
-            };
+            //};
 
             //var testProductReview = new ProductReview()
             //{
@@ -67,7 +67,7 @@ namespace MTC_WebServerCore.Controllers
 
            // var resultProductView = await _repos.ProductReviews.AddAsync(testProductReview);
 
-            var resultAdd = await _repos.Products.AddAsync(testProduct);
+            //var resultAdd = await _repos.Products.AddAsync(testProduct);
             
 
             //if(resultAdd.ErrorCode != TDSreposErrCode.OK)

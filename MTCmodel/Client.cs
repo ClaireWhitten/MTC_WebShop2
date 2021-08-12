@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MTCmodel
 {
-    public class Client
+    public class Client : ApplicationUser
     {
         //-------------------------------------------------------------------
-        [Key]
-        public int Id { get; set; }
+        //[Key]
+        //public int Id { get; set; }
 
         //-------------------------------------------------------------------
         [Required]
@@ -20,10 +20,7 @@ namespace MTCmodel
 
 
         //=============================== foreign key's =========================================
-        [Required]
-        [MaxLength(36)]
-        public string UserId { get; set; } 
-        public User User { get; set; } 
+
 
 
 
@@ -34,7 +31,7 @@ namespace MTCmodel
         public ICollection<OrderOUT> OrderOUTs { get; set; }
         public ICollection<ProductReview> ProductReviews { get; set; }
 
-
+        
 
         //================================ Extra's ==============================================
 

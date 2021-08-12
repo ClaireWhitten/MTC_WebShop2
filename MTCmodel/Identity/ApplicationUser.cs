@@ -4,8 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MTCrepository.test
+namespace MTCmodel
 {
+    //public enum TypeOfUser
+    //{
+    //    Client,
+    //    Transporter,
+    //    Supplier,
+    //}
+
     public class ApplicationUser : IdentityUser
     {
         public bool IsRemovable { get; set; } = true;
@@ -21,5 +28,17 @@ namespace MTCrepository.test
         //[MaxLength(9, ErrorMessage = "Postcode mag maximum 9 tekens lang zijn")]
         //public string Zipcode { get; set; }
 
+
+        //TypeOfUser TypeOfUser { get; set; }
+
+        //=============================== foreign key's =========================================
+
+
+        //=============================== navigation property's =================================
+
+
+        ICollection<Address> Addresses { get; set; }
+
+        //================================ Extra's ==============================================
     }
 }

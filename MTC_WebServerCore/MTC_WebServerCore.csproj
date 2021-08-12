@@ -18,4 +18,8 @@
     <ProjectReference Include="..\ClassLibrary3\MTCrepository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\Administration\" />
+  </ItemGroup>
+
 </Project>
