@@ -165,17 +165,17 @@ namespace MTCrepository.Repository
                 .WithMany(p => p.ProductReviews)
                 .HasForeignKey(pr => pr.ProductEAN);
 
-            //ProductReview-User
+            //ProductReview-Client
             modelBuilder.Entity<ProductReview>()
-                .HasOne<User>(pr => pr.User)
+                .HasOne<Client>(pr => pr.Client)
                 .WithMany(u => u.ProductReviews)
-                .HasForeignKey(pr => pr.UserId);
+                .HasForeignKey(pr => pr.ClientId);
 
-            // Tranporter-User
-            modelBuilder.Entity<Transporter>()
-                .HasOne<User>(t => t.User)
-                .WithOne(u => u.Transporter)
-                .HasForeignKey<User>(t => t.UserId);
+            //// Tranporter-User
+            //modelBuilder.Entity<Transporter>()
+            //    .HasOne<User>(t => t.User)
+            //    .WithOne(u => u.Transporter)
+            //    .HasForeignKey<User>(t => t.UserId);
 
 
             // Tranporter-Zone
@@ -186,15 +186,15 @@ namespace MTCrepository.Repository
 
             //Adress-User
             modelBuilder.Entity<Address>()
-                .HasOne<User>(a => a.User)
+                .HasOne<ApplicationUser>(a => a.ApplicationUser)
                 .WithMany(u => u.Addresses)
                 .HasForeignKey(a => a.UserID);
 
-            //Client-User
-            modelBuilder.Entity<Client>()
-                .HasOne<User>(c => c.User)
-                .WithOne(u => u.Client)
-                .HasForeignKey<User>(c => c.UserId);
+            ////Client-User
+            //modelBuilder.Entity<Client>()
+            //    .HasOne<User>(c => c.User)
+            //    .WithOne(u => u.Client)
+            //    .HasForeignKey<User>(c => c.UserId);
 
 
             //OrderlineOUT-OrderOUT
@@ -221,11 +221,11 @@ namespace MTCrepository.Repository
                 .WithMany(c => c.OrderOUTs)
                 .HasForeignKey(oo => oo.ClientId);
 
-            //Supplier-User
-            modelBuilder.Entity<Supplier>()
-                .HasOne<User>(s => s.User)
-                .WithOne(u => u.Supplier)
-                .HasForeignKey<User>(s => s.UserID);
+            ////Supplier-User
+            //modelBuilder.Entity<Supplier>()
+            //    .HasOne<User>(s => s.User)
+            //    .WithOne(u => u.Supplier)
+            //    .HasForeignKey<User>(s => s.UserID);
 
             //ProductSupplier-Supplier
             modelBuilder.Entity<ProductSupplier>()
