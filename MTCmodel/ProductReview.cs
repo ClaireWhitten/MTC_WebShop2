@@ -41,9 +41,9 @@ namespace MTCmodel
 
         [Required(ErrorMessage = "User cannot be empty")]
         [MaxLength(36)]
-        public string UserId { get; set; }
+        public string ClientId { get; set; }
 
-       //==============>> public User User { get; set; }
+        public Client Client { get; set; }
 
         //public User User { get; set; } //ff in commentaar om te debuggen
 
