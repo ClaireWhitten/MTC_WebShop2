@@ -15,6 +15,7 @@ namespace MTCmodel
         [Required]
         [MaxLength(36)]
         public string UserID { get; set; }
+        public User User { get; set; }
         //-------------------------------------------------------------------
         [Required(ErrorMessage ="Name can't be empty!")]
         [MaxLength(50)]
@@ -41,6 +42,7 @@ namespace MTCmodel
 
         public ICollection<Product> Products { get; set; }
         public ICollection<OrderIN> OrdersINs { get; set; }
+        public ICollection<ProductSupplier> SupplierProducts { get; set; }
 
         //================================ Extra's ==============================================
     }

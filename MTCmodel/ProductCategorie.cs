@@ -27,13 +27,14 @@ namespace MTCmodel
 
 
         //=============================== foreign key's =========================================
-
+        public int ParentCategorieID { get; set; }
         public ProductCategorie ParentCategorie { get; set; }
 
 
         //=============================== navigation property's =================================
 
         public ICollection<ProductCategorie> SubCategories { get; set; }
+        public ICollection<Product> Products { get; set; }
 
         //================================ Extra's ==============================================
         public override string ToString()
