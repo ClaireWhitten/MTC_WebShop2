@@ -34,6 +34,8 @@ namespace MTCmodel
         //=============================== navigation property's =================================
 
         public ICollection<Zone> Zones { get; set; }
+        public ICollection<OrderLineOUT> orderLineOUTs { get; set; }
+            
 
 
         //================================ Extra's ==============================================

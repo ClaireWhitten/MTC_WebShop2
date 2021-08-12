@@ -27,7 +27,7 @@ namespace MTCmodel
 
         //=============================== foreign key's =========================================
         public int SupplierID { get; set; } 
-
+        public Supplier Supplier { get; set; }
 
 
         //=============================== navigation property's =================================

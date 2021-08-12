@@ -22,7 +22,8 @@ namespace MTCmodel
 
 
         //=============================== navigation property's =================================
-
+        public int TransporterID { get; set; }
+        public Transporter Transporter { get; set; }
 
         //================================ Extra's ==============================================
     }

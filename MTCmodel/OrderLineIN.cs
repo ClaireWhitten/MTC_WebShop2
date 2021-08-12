@@ -26,9 +26,11 @@ namespace MTCmodel
         //=============================== foreign key's =========================================
         [Required]
         public int OrderINID { get; set; }
+        public OrderIN OrderIN { get; set; }
         //-------------------------------------------------------------------
         [Required]
         public string ProductID { get; set; }
+        public Product Product { get; set; }
         //-------------------------------------------------------------------
 
 
