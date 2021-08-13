@@ -93,9 +93,9 @@ namespace MTCmodel
         //-------------------------------------------------------------------many to many
 
         //https://stackoverflow.com/questions/46184678/fluent-api-many-to-many-in-entity-framework-core
-        public ICollection<ProductSupplier> ProductSuppliers { get; set; }
+        //public ICollection<ProductSupplier> ProductSuppliers { get; set; }
 
-
+        public virtual ICollection<Supplier> Suppliers { get; set; }
 
         //================================ Extra's ==============================================
 

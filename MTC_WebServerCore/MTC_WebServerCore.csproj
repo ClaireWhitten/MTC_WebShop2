@@ -23,4 +23,10 @@
     <Folder Include="ViewModels\Administration\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="MTCmailServer">
+      <HintPath>..\..\..\..\Desktop\MTCmailServer.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

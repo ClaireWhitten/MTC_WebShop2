@@ -45,8 +45,8 @@ namespace MTC_WebServerCore
                 //options.Password.RequiredUniqueChars = 3;
             }
             )
-            .AddEntityFrameworkStores<AppDbContext>();
-            //.AddDefaultTokenProviders();//wachtwoord resetten
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();//wachtwoord resetten, emailconfirmation
 
             //====================== Repositorys ============================
             services.AddDbContextPool<AppDbContext>(

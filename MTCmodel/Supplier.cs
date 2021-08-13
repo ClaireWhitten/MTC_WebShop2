@@ -15,7 +15,7 @@ namespace MTCmodel
 
         public ApplicationUser ApplicationUser { get; set; }
         //-------------------------------------------------------------------
-        [Required(ErrorMessage ="Name can't be empty!")]
+        [Required(ErrorMessage = "Name can't be empty!")]
         [MaxLength(50)]
         public string Name { get; set; }
         //-------------------------------------------------------------------
@@ -45,8 +45,9 @@ namespace MTCmodel
         //-------------------------------------------------------------------many to many
 
         //https://stackoverflow.com/questions/46184678/fluent-api-many-to-many-in-entity-framework-core
-        public ICollection<ProductSupplier> SupplierProducts { get; set; }
+        //public ICollection<ProductSupplier> SupplierProducts { get; set; }
 
+        public virtual ICollection<Product>Products {get;set;}
 
         //================================ Extra's ==============================================
     }
