@@ -55,7 +55,12 @@ namespace MTCrepository.TDSrepository
         private IZoneRepository _IZoneRepository;
         public IZoneRepository Zones => _IZoneRepository ?? new SqlZoneRepository(_context);
         //-------------------------------------------------------------------
-
+        private IProductImageRepository _IProductImageRepository;
+        public IProductImageRepository ProductImages => _IProductImageRepository ?? new SqlProductImageRepository(_context);
+        //-------------------------------------------------------------------
+        private IITestModelRepository _IITestModelRepository;
+        public IITestModelRepository TestModel => _IITestModelRepository ?? new SqlTestModelRepository(_context);
+        //-------------------------------------------------------------------
         //================================================================================================ ctor
 
         public ApplicationRepository(AppDbContext aApplicationContext)

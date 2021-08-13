@@ -77,21 +77,24 @@ namespace MTCmodel
 
         //=============================== navigation property's =================================
 
-        public ICollection<Supplier> Suppliers { get; set; }
+        //public  ICollection<Supplier> Suppliers { get; set; }
 
         public ICollection<OrderLineOUT> OrderLineOUTs { get; set; }
 
         public ICollection<OrderLineIN> OrderLineINs { get; set; }
 
         public ICollection<ProductReview> ProductReviews { get; set; }
-        public ICollection<ProductSupplier> ProductSuppliers { get; set; }
+
         public ICollection<ReturnedProduct> ReturnedProducts { get; set; }
 
 
-        //-------------------------------------------------------------------
+        public ICollection<ProductImage> Images { get; set; }
 
-        //[NotMapped] //deze is niet ondersteund, we vinden hier later wel een oplossing voor
-        //public ICollection<string> ImageURLs { get; set; }
+        //-------------------------------------------------------------------many to many
+
+        //https://stackoverflow.com/questions/46184678/fluent-api-many-to-many-in-entity-framework-core
+        public ICollection<ProductSupplier> ProductSuppliers { get; set; }
+
 
 
         //================================ Extra's ==============================================

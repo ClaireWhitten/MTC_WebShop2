@@ -9,12 +9,15 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-@foreach (var item in Model)
+@if (Model != null)
 {
-    <h1>@item.Name</h1>
-    <h3>@item.EAN</h3>
-    <h3>@item.AverageRating</h3>
-    <hr />
+    @foreach (var item in Model)
+    {
+        <h1>@item.Name</h1>
+        <h3>@item.EAN</h3>
+        <h3>@item.AverageRating</h3>
+        <hr />
+    }
 }
 
 
