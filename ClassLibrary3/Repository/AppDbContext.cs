@@ -140,7 +140,7 @@ namespace MTCrepository.Repository
             //---------------------------------------------------------------------------------------------------------------
 
 
-            modelBuilder.Entity<ProductSupplier>().HasKey(x => new {x.ProductEAN,x.SupplierID });
+            //modelBuilder.Entity<ProductSupplier>().HasKey(x => new {x.ProductEAN,x.SupplierID });
        
 
             //===============================================================================================================
@@ -251,19 +251,19 @@ namespace MTCrepository.Repository
 
             //==============================================bridge table
             //ProductSupplier-Supplier
-            modelBuilder.Entity<ProductSupplier>()
-                .HasOne(ps => ps.Supplier)
-                .WithMany(s => s.SupplierProducts)
-                .HasForeignKey(ps => ps.SupplierID)
-                .OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<ProductSupplier>()
+            //    .HasOne(ps => ps.Supplier)
+            //    .WithMany(s => s.SupplierProducts)
+            //    .HasForeignKey(ps => ps.SupplierID)
+            //    .OnDelete(DeleteBehavior.NoAction);
 
 
-            //ProductSupplier-Product
-            modelBuilder.Entity<ProductSupplier>()
-                .HasOne(ps => ps.Product)
-                .WithMany(p => p.ProductSuppliers)
-                .HasForeignKey(ps => ps.ProductEAN)
-                .OnDelete(DeleteBehavior.NoAction);
+            ////ProductSupplier-Product
+            //modelBuilder.Entity<ProductSupplier>()
+            //    .HasOne(ps => ps.Product)
+            //    .WithMany(p => p.ProductSuppliers)
+            //    .HasForeignKey(ps => ps.ProductEAN)
+            //    .OnDelete(DeleteBehavior.NoAction);
             //=============================================================
 
 
