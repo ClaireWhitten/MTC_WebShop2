@@ -1,0 +1,49 @@
+﻿@model IEnumerable<MTC_WebServerCore.ViewModels.Product.ProductIndexViewModel>
+
+<h1>Products overview</h1>
+<a asp-area="" asp-controller="ProductAdminController" asp-action="CreateProductAdmin">Add </a>
+
+@if (Model.Count() == null || Model.Count() == 0)
+{
+    <p>There is no available products</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th style="width:300px">Image</th>
+                <th style="width:300px">Name</th>
+                <th style="width:300px">EAN</th>
+                <th style="width:300px">Unit Price</th>
+                <th style="width:300px">Solde</th>
+                <th style="width:300px">Categorie</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductImage</td>
+                    <td>@item.Name</td>
+
+                    <td>
+                        <a asp-controller="ProductAdminController" asp-action="DetailProductAdmin" asp-route-id="@item.EAN">
+                            <input type="button" class="btn btn-primary" value="Detail" />
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-controller="ProductAdminController" asp-action="UpdateProductAdmin" asp-route-id="@item.EAN">
+                            <input type="button" class="btn btn-primary" value="Update" />
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-controller="ProductAdminController" asp-action="DeleteProductAdmin" asp-route-id="@item.EAN">
+                            <input type="button" class="btn btn-danger" value="Delete" />
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
