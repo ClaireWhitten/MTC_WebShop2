@@ -365,22 +365,24 @@ namespace MTC_WebServerCore.Migrations
                 name: "ProductSupplier",
                 columns: table => new
                 {
-                    ProductEAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SupplierID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                    ProductsEAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SuppliersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductSupplier", x => new { x.ProductEAN, x.SupplierID });
+                    table.PrimaryKey("PK_ProductSupplier", x => new { x.ProductsEAN, x.SuppliersId });
                     table.ForeignKey(
-                        name: "FK_ProductSupplier_Products_ProductEAN",
-                        column: x => x.ProductEAN,
+                        name: "FK_ProductSupplier_Products_ProductsEAN",
+                        column: x => x.ProductsEAN,
                         principalTable: "Products",
-                        principalColumn: "EAN");
+                        principalColumn: "EAN",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductSupplier_Suppliers_SupplierID",
-                        column: x => x.SupplierID,
+                        name: "FK_ProductSupplier_Suppliers_SuppliersId",
+                        column: x => x.SuppliersId,
                         principalTable: "Suppliers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -555,7 +557,7 @@ namespace MTC_WebServerCore.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ClientId", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsRemovable", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "SupplierId", "TransporterId", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "8e445865-a24d-4543-a6c6-9443d048cdb9", 0, null, "4f9982e2-0177-423e-86ae-224e6759009c", "super@user.com", true, false, false, null, "SUPER@USER.COM", "SUPER@USER.COM", "AQAAAAEAACcQAAAAENQubsWUlqme7Xy/6FL8MtV5TarWfHrdns7GxPPpUPwGMzYLbHGUtKbI/N8LfoVSzQ==", null, false, "51d420d8-78f7-4fb8-867b-0ec2958d7b0a", null, null, false, "super@user.com" });
+                values: new object[] { "8e445865-a24d-4543-a6c6-9443d048cdb9", 0, null, "4516cc41-90e9-4ac9-9975-4d8c7ae06845", "super@user.com", true, false, false, null, "SUPER@USER.COM", "SUPER@USER.COM", "AQAAAAEAACcQAAAAEABaQ1Iy/sRocSPwcvv6Nx4vNoJmtJABn4UHsxeqE9bNKzbWTPpF5Wwu8PDnavkt4g==", null, false, "5a430e38-c37f-4d16-ab3d-9b5ef08c7bca", null, null, false, "super@user.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_UserID",
@@ -695,9 +697,9 @@ namespace MTC_WebServerCore.Migrations
                 column: "CategorieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductSupplier_SupplierID",
+                name: "IX_ProductSupplier_SuppliersId",
                 table: "ProductSupplier",
-                column: "SupplierID");
+                column: "SuppliersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReturnedProducts_ClientId",

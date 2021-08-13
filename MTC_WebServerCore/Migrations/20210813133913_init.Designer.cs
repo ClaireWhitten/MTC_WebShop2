@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MTC_WebServerCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210813112133_init")]
+    [Migration("20210813133913_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -199,16 +199,16 @@ namespace MTC_WebServerCore.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4f9982e2-0177-423e-86ae-224e6759009c",
+                            ConcurrencyStamp = "4516cc41-90e9-4ac9-9975-4d8c7ae06845",
                             Email = "super@user.com",
                             EmailConfirmed = true,
                             IsRemovable = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPER@USER.COM",
                             NormalizedUserName = "SUPER@USER.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENQubsWUlqme7Xy/6FL8MtV5TarWfHrdns7GxPPpUPwGMzYLbHGUtKbI/N8LfoVSzQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEABaQ1Iy/sRocSPwcvv6Nx4vNoJmtJABn4UHsxeqE9bNKzbWTPpF5Wwu8PDnavkt4g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "51d420d8-78f7-4fb8-867b-0ec2958d7b0a",
+                            SecurityStamp = "5a430e38-c37f-4d16-ab3d-9b5ef08c7bca",
                             TwoFactorEnabled = false,
                             UserName = "super@user.com"
                         });
@@ -539,22 +539,6 @@ namespace MTC_WebServerCore.Migrations
                     b.ToTable("ProductReviews");
                 });
 
-            modelBuilder.Entity("MTCmodel.ProductSupplier", b =>
-                {
-                    b.Property<string>("ProductEAN")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("SupplierID")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ProductEAN", "SupplierID");
-
-                    b.HasIndex("SupplierID");
-
-                    b.ToTable("ProductSupplier");
-                });
-
             modelBuilder.Entity("MTCmodel.ReturnedProduct", b =>
                 {
                     b.Property<int>("ID")
@@ -790,6 +774,21 @@ namespace MTC_WebServerCore.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("ProductSupplier", b =>
+                {
+                    b.Property<string>("ProductsEAN")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SuppliersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ProductsEAN", "SuppliersId");
+
+                    b.HasIndex("SuppliersId");
+
+                    b.ToTable("ProductSupplier");
+                });
+
             modelBuilder.Entity("MTCmodel.Address", b =>
                 {
                     b.HasOne("MTCmodel.ApplicationUser", "ApplicationUser")
@@ -959,25 +958,6 @@ namespace MTC_WebServerCore.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("MTCmodel.ProductSupplier", b =>
-                {
-                    b.HasOne("MTCmodel.Product", "Product")
-                        .WithMany("ProductSuppliers")
-                        .HasForeignKey("ProductEAN")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("MTCmodel.Supplier", "Supplier")
-                        .WithMany("SupplierProducts")
-                        .HasForeignKey("SupplierID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Supplier");
-                });
-
             modelBuilder.Entity("MTCmodel.ReturnedProduct", b =>
                 {
                     b.HasOne("MTCmodel.Client", "Client")
@@ -1059,6 +1039,21 @@ namespace MTC_WebServerCore.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProductSupplier", b =>
+                {
+                    b.HasOne("MTCmodel.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsEAN")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MTCmodel.Supplier", null)
+                        .WithMany()
+                        .HasForeignKey("SuppliersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MTCmodel.ApplicationUser", b =>
                 {
                     b.Navigation("Addresses");
@@ -1097,8 +1092,6 @@ namespace MTC_WebServerCore.Migrations
 
                     b.Navigation("ProductReviews");
 
-                    b.Navigation("ProductSuppliers");
-
                     b.Navigation("ReturnedProducts");
                 });
 
@@ -1114,8 +1107,6 @@ namespace MTC_WebServerCore.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("OrdersINs");
-
-                    b.Navigation("SupplierProducts");
                 });
 
             modelBuilder.Entity("MTCmodel.Transporter", b =>

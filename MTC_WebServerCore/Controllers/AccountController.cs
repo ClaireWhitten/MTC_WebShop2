@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MTC_WebServerCore.ViewModels.Account;
+using MTCmailServer;
 using MTCmodel;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace MTC_WebServerCore.Controllers
             return View();
         }
 
-        [ValidateAntiForgeryToken] //mss ValidateAntiforgeryToken
+        [ValidateAntiForgeryToken] 
         [HttpPost]
         public async Task<IActionResult> Register([FromForm] RegisterViewModel model)
         {
@@ -88,14 +89,14 @@ namespace MTC_WebServerCore.Controllers
                     // nieuwe async versie geschreven, deze ff in commentaar
                     // nieuwe versie controlleerd nog niet op geldig email
                     //-------------------------------------------------------
-                    // new TDSmail(
-                    //    model.Email,
-                    //    "registreer je emailadres",
-                    //    sbBody.ToString())
-                    //.SendHTML();
+                   // new MTCmail(
+                   //    model.Email,
+                   //    "registreer je emailadres",
+                   //    sbBody.ToString())
+                   //.SendHTML();
 
-                    //TDSmail mail = new TDSmail(model.Email, "registreer je emailadres", sbBody.ToString());
-                    //var emailResult = await mail.SendHtmlAsync();
+                    MTCmail mail = new MTCmail(model.Email, "registreer je emailadres", sbBody.ToString());
+                    var emailResult = await mail.SendHtmlAsync();
                     //if (emailResult.Succeeded)
                     //{
                     //}
