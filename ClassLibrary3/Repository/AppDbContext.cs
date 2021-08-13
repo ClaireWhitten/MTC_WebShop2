@@ -29,13 +29,8 @@ namespace MTCrepository.Repository
         public DbSet<Transporter> Transporters { get; set; }
         public DbSet<Zone> Zones { get; set; }
 
-        //public DbSet<ProductSupplier> ProductSuppliers { get; set; }
-
-
-        public DbSet<ProductImage> ProductImages { get; set; }
-
-        //----------------------------------------------testing
-        public DbSet<TestModel> TestModel { get; set; }
+        public DbSet<ProductSupplier> ProductSuppliers { get; set; }
+        
 
         //===================================================================================================================
 
@@ -56,14 +51,14 @@ namespace MTCrepository.Repository
             // standaard roles seeden
             //---------------------------------------------------------------------------------------------------------------
 
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "2c5e174e-3b0e-446f-86af-483d56fd7210", Name = "SuperAdmin", NormalizedName = "SUPERADMIN" });
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", Name = "Admin", NormalizedName = "ADMIN" });
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", Name = "Moderator", NormalizedName = "MODERATOR" });
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
+            modelBuilder.Entity<ApplicationRole>().HasData(
+                new ApplicationRole { IsRemovable = false, Id = "2c5e174e-3b0e-446f-86af-483d56fd7210", Name = "SuperAdmin", NormalizedName = "SUPERADMIN" });
+            modelBuilder.Entity<ApplicationRole>().HasData(
+                new ApplicationRole { IsRemovable = false, Id = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", Name = "Admin", NormalizedName = "ADMIN" });
+            modelBuilder.Entity<ApplicationRole>().HasData(
+                new ApplicationRole { IsRemovable = false, Id = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", Name = "Moderator", NormalizedName = "MODERATOR" });
+            modelBuilder.Entity<ApplicationRole>().HasData(
+                new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
 
 
             //modelBuilder.Entity<ApplicationRole>().HasData(
@@ -140,8 +135,8 @@ namespace MTCrepository.Repository
             //---------------------------------------------------------------------------------------------------------------
 
 
-            modelBuilder.Entity<ProductSupplier>().HasKey(x => new {x.ProductEAN,x.SupplierID });
-       
+            modelBuilder.Entity<ProductSupplier>().HasKey(x => new {x.ProductEAN,x.SuppliersID });
+
 
             //===============================================================================================================
             // relaties aanpassen
@@ -254,7 +249,7 @@ namespace MTCrepository.Repository
             modelBuilder.Entity<ProductSupplier>()
                 .HasOne(ps => ps.Supplier)
                 .WithMany(s => s.SupplierProducts)
-                .HasForeignKey(ps => ps.SupplierID)
+                .HasForeignKey(ps => ps.SuppliersID)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -265,19 +260,6 @@ namespace MTCrepository.Repository
                 .HasForeignKey(ps => ps.ProductEAN)
                 .OnDelete(DeleteBehavior.NoAction);
             //=============================================================
-
-
-
-            //modelBuilder.Entity<PersonClub>()
-            //    .HasOne(pc => pc.Person)
-            //    .WithMany(p => p.PersonClubs)
-            //    .HasForeignKey(pc => pc.PersonId);
-
-            //modelBuilder.Entity<PersonClub>()
-            //    .HasOne(pc => pc.Club)
-            //    .WithMany(c => c.PersonClubs)
-            //    .HasForeignKey(pc => pc.ClubId);
-
 
             //OrderIN-Supplier
             modelBuilder.Entity<OrderIN>()
@@ -320,13 +302,6 @@ namespace MTCrepository.Repository
                 .HasOne<Transporter>(z => z.Transporter)
                 .WithMany(t => t.Zones)
                 .HasForeignKey(z => z.TransporterID)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            //Product-ProductImages
-            modelBuilder.Entity<ProductImage>()
-                .HasOne(PI => PI.Product)
-                .WithMany(P => P.Images)
-                .HasForeignKey(PI => PI.ProductEAN)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -386,10 +361,9 @@ namespace MTCrepository.Repository
             // unieke sleutels maken
             //---------------------------------------------------------------------------------------------------------------
 
-            modelBuilder.Entity<ProductCategorie>(entity =>
-            {
-                entity.HasIndex(e => new { e.ParentCategorieID, e.Name }).IsUnique();
-            });
+            //modelBuilder.Entity<Book>(entity => {
+            //    entity.HasIndex(e => e.ISBN).IsUnique();
+            //});
 
 
 

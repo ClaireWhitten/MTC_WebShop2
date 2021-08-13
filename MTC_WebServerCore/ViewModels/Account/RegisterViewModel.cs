@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace MTC_WebServerCore.ViewModels.Account
     {
         [Required]
         [EmailAddress]
-        [Remote(action: "IsEmailInUse", controller: "Account")]
+        //[Remote(action: "IsEmailInUse", controller: "Account")]
         public string Email { get; set; }
 
 

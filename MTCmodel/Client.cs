@@ -9,6 +9,7 @@ namespace MTCmodel
     public class Client : UserFactoryHelper
     {
         //-------------------------------------------------------------------
+
         [Key]
         [MaxLength(450)]
         public string Id { get; set; }
@@ -34,7 +35,6 @@ namespace MTCmodel
         public ICollection<Bonus> Bonuses { get; set; } // i think, it's better here a global discount???
 
         public ICollection<OrderOUT> OrderOUTs { get; set; }
-
         public ICollection<ProductReview> ProductReviews { get; set; }
 
         

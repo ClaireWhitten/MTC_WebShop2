@@ -13,7 +13,7 @@ namespace MTCmodel
         //-------------------------------------------------------------
         //[Key]
         [MaxLength(450)]
-        public string SupplierID { get; set; }
+        public string SuppliersID { get; set; }
         public Supplier Supplier { get; set; }
     }
 }

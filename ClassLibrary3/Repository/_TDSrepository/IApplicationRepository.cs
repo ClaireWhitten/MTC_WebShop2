@@ -25,9 +25,6 @@ namespace MTCrepository.TDSrepository
         ITransporterRepository Transporters { get; }
         IZoneRepository Zones { get; }
 
-        IITestModelRepository TestModel { get; }
-
-        IProductImageRepository ProductImages { get; }
 
         //void SaveChanged();
     }

@@ -29,55 +29,8 @@
 
 
 
-
-                        @*=========================================================================
-                        tempory Testbuttons for the mega super developpers :-)
-                        =========================================================================*@
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                TestPages
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-
-
-                                @*================ testpages for Claire ===============*@
-
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Claire_testPage_1</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Claire_testPage_2</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Claire_testPage_3</a>
-
-
-                                @*================ testpages for Mohammed ===============*@
-
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Mohammed_testPage_1</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Mohammed_testPage_2</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Mohammed_testPage_3</a>
-
-
-                                @*================ testpages for Tom ===============*@
-                                <a class="dropdown-item" asp-controller="Account"
-                                   asp-action="_test_Authorize">Tom_authorizePage</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Tom_testPage_2</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Tom_testPage_3</a>
-                            </div>
-                        </li>
                     </ul>
 
-
-
-                    @*=========================================================================
-                    login, logout and register buttons on the right site of the navigationbar
-                    =========================================================================*@
 
                     <ul class="navbar-nav ml-auto">
                         @*If the user is signed-in display Logout link*@
@@ -108,8 +61,6 @@
                     </ul>
 
 
-
-
                 </div>
             </div>
         </nav>
@@ -127,10 +78,6 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
