@@ -38,9 +38,15 @@ namespace MTCmodel
 
         //=============================== navigation property's =================================
 
-        public ICollection<Product> Products { get; set; }
+        //public ICollection<Product> Products { get; set; }
         public ICollection<OrderIN> OrdersINs { get; set; }
+
+
+        //-------------------------------------------------------------------many to many
+
+        //https://stackoverflow.com/questions/46184678/fluent-api-many-to-many-in-entity-framework-core
         public ICollection<ProductSupplier> SupplierProducts { get; set; }
+
 
         //================================ Extra's ==============================================
     }

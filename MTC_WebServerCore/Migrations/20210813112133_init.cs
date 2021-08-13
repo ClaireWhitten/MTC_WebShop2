@@ -72,6 +72,19 @@ namespace MTC_WebServerCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TestModel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestModel", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transporters",
                 columns: table => new
                 {
@@ -304,6 +317,24 @@ namespace MTC_WebServerCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductImages",
+                columns: table => new
+                {
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    ProductEAN = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductImages", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_ProductImages_Products_ProductEAN",
+                        column: x => x.ProductEAN,
+                        principalTable: "Products",
+                        principalColumn: "EAN");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductReviews",
                 columns: table => new
                 {
@@ -334,44 +365,20 @@ namespace MTC_WebServerCore.Migrations
                 name: "ProductSupplier",
                 columns: table => new
                 {
-                    ProductsEAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SuppliersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductSupplier", x => new { x.ProductsEAN, x.SuppliersId });
-                    table.ForeignKey(
-                        name: "FK_ProductSupplier_Products_ProductsEAN",
-                        column: x => x.ProductsEAN,
-                        principalTable: "Products",
-                        principalColumn: "EAN",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductSupplier_Suppliers_SuppliersId",
-                        column: x => x.SuppliersId,
-                        principalTable: "Suppliers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductSuppliers",
-                columns: table => new
-                {
                     ProductEAN = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SuppliersID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                    SupplierID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductSuppliers", x => new { x.ProductEAN, x.SuppliersID });
+                    table.PrimaryKey("PK_ProductSupplier", x => new { x.ProductEAN, x.SupplierID });
                     table.ForeignKey(
-                        name: "FK_ProductSuppliers_Products_ProductEAN",
+                        name: "FK_ProductSupplier_Products_ProductEAN",
                         column: x => x.ProductEAN,
                         principalTable: "Products",
                         principalColumn: "EAN");
                     table.ForeignKey(
-                        name: "FK_ProductSuppliers_Suppliers_SuppliersID",
-                        column: x => x.SuppliersID,
+                        name: "FK_ProductSupplier_Suppliers_SupplierID",
+                        column: x => x.SupplierID,
                         principalTable: "Suppliers",
                         principalColumn: "Id");
                 });
@@ -546,20 +553,9 @@ namespace MTC_WebServerCore.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "IsRemovable", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "2c5e174e-3b0e-446f-86af-483d56fd7210", "c9ef7c55-2199-4533-9318-85a420cd488b", false, "SuperAdmin", "SUPERADMIN" },
-                    { "c6aaef1a-8312-4185-8b51-1e3a09421ff7", "7022b766-1bc6-4e83-93ec-2f31dd2ecaf0", false, "Admin", "ADMIN" },
-                    { "6ee9e763-1f51-4d0d-a463-b7a8a791234b", "38e8757a-0a85-423c-a6f6-f3cccac612be", false, "Moderator", "MODERATOR" },
-                    { "7e19e371-55db-4c16-b9c0-4103de5b39fd", "9f6b646f-dacc-4ef5-a14f-337ea35ddb57", false, "Basic", "BASIC" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ClientId", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsRemovable", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "SupplierId", "TransporterId", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "8e445865-a24d-4543-a6c6-9443d048cdb9", 0, null, "875b5c4d-404a-4f89-9b65-864dbdaae16d", "super@user.com", true, false, false, null, "SUPER@USER.COM", "SUPER@USER.COM", "AQAAAAEAACcQAAAAEOs9ueDWSiC73amgEZ5BNlAwQhWYyNaQqXV7NdSFqiothKAx29DzdEu46KrT8KFZIQ==", null, false, "ee5972c8-3652-485d-a58c-d39e6ba507b6", null, null, false, "super@user.com" });
+                values: new object[] { "8e445865-a24d-4543-a6c6-9443d048cdb9", 0, null, "4f9982e2-0177-423e-86ae-224e6759009c", "super@user.com", true, false, false, null, "SUPER@USER.COM", "SUPER@USER.COM", "AQAAAAEAACcQAAAAENQubsWUlqme7Xy/6FL8MtV5TarWfHrdns7GxPPpUPwGMzYLbHGUtKbI/N8LfoVSzQ==", null, false, "51d420d8-78f7-4fb8-867b-0ec2958d7b0a", null, null, false, "super@user.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_UserID",
@@ -672,9 +668,16 @@ namespace MTC_WebServerCore.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductCategories_ParentCategorieID",
+                name: "IX_ProductCategories_ParentCategorieID_Name",
                 table: "ProductCategories",
-                column: "ParentCategorieID");
+                columns: new[] { "ParentCategorieID", "Name" },
+                unique: true,
+                filter: "[ParentCategorieID] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductImages_ProductEAN",
+                table: "ProductImages",
+                column: "ProductEAN");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductReviews_ClientId",
@@ -692,14 +695,9 @@ namespace MTC_WebServerCore.Migrations
                 column: "CategorieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductSupplier_SuppliersId",
+                name: "IX_ProductSupplier_SupplierID",
                 table: "ProductSupplier",
-                column: "SuppliersId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductSuppliers_SuppliersID",
-                table: "ProductSuppliers",
-                column: "SuppliersID");
+                column: "SupplierID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReturnedProducts_ClientId",
@@ -747,16 +745,19 @@ namespace MTC_WebServerCore.Migrations
                 name: "OrderLineOUTs");
 
             migrationBuilder.DropTable(
+                name: "ProductImages");
+
+            migrationBuilder.DropTable(
                 name: "ProductReviews");
 
             migrationBuilder.DropTable(
                 name: "ProductSupplier");
 
             migrationBuilder.DropTable(
-                name: "ProductSuppliers");
+                name: "ReturnedProducts");
 
             migrationBuilder.DropTable(
-                name: "ReturnedProducts");
+                name: "TestModel");
 
             migrationBuilder.DropTable(
                 name: "Zones");

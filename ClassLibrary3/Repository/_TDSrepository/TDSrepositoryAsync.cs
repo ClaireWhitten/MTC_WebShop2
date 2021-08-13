@@ -233,6 +233,10 @@ namespace MTCrepository.TDSrepository
                 terug.Succeeded = false;
                 terug.DbUpdateException = ex;
             }
+            //catch(Exception ex)
+            //{
+            //    Console.WriteLine(ex);
+            //}
             return terug;
         }
 

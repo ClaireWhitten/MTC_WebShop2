@@ -81,6 +81,8 @@ namespace MTC_WebServerCore
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

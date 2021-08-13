@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MTC_WebServerCore.ViewModels.Account;
@@ -17,7 +18,7 @@ namespace MTC_WebServerCore.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger _logger;
 
-        //==================================================================ctor
+        //======================================================================================================ctor
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -28,23 +29,14 @@ namespace MTC_WebServerCore.Controllers
             _logger = logger;
         }
 
-        //=============================================================================
+
+
+
+        #region ====================================================================================================== Register
+
         [HttpGet]
         public IActionResult Register()
         {
-            //om de exceptionpage en logger te testen
-            //throw new Exception("ik ben toch een fout dat gegenereerd wordt in de Registermethode");
-
-
-
-            //_logger.LogTrace("Trace Log");
-            //_logger.LogDebug("Debug Log");
-            //_logger.LogInformation("Information Log");
-            //_logger.LogWarning("Warning Log");
-            //_logger.LogError("Error Log");
-            //_logger.LogCritical("Critical Log");
-
-
 
             return View();
         }
@@ -75,32 +67,32 @@ namespace MTC_WebServerCore.Controllers
                 {
                     //=========================================================================================
                     //een token genereren voor emailbevestiging
-                    //var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    ////de url aanmaken
-                    //var confirmationLink = Url.Action("ConfirmEmail", "Account",
-                    //    new { userId = user.Id, token = token }, Request.Scheme);
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //de url aanmaken
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                        new { userId = user.Id, token = token }, Request.Scheme);
 
 
-                    ////ViewData["Link"] = confirmationLink;
-                    //ViewData["EmailAdress"] = model.Email;
+                    //ViewData["Link"] = confirmationLink;
+                    ViewData["EmailAdress"] = model.Email;
 
                     //--------------------------------------------------------------------------email verzenden
-                    //StringBuilder sbBody = new StringBuilder();
+                    StringBuilder sbBody = new StringBuilder();
 
-                    //sbBody.Append("<hr>");
-                    //sbBody.Append("<h3>Bedankt voor het vertrouwen in ons product</h3>");
-                    //sbBody.Append("<p>U bent nog 1 stap verwijderd om je succesvol te registreren, klik op onderstaande link</p>");
-                    //sbBody.Append($"<a href='{confirmationLink}'><button>Registreer uw email</button></a>");
-                    //sbBody.Append("<hr>");
+                    sbBody.Append("<hr>");
+                    sbBody.Append("<h3>Bedankt voor het vertrouwen in ons product</h3>");
+                    sbBody.Append("<p>U bent nog 1 stap verwijderd om je succesvol te registreren, klik op onderstaande link</p>");
+                    sbBody.Append($"<a href='{confirmationLink}'><button>Registreer uw email</button></a>");
+                    sbBody.Append("<hr>");
 
-                    //// nieuwe async versie geschreven, deze ff in commentaar
-                    //// nieuwe versie controlleerd nog niet op geldig email
-                    ////-------------------------------------------------------
-                    //// new TDSmail(
-                    ////    model.Email,
-                    ////    "registreer je emailadres",
-                    ////    sbBody.ToString())
-                    ////.SendHTML();
+                    // nieuwe async versie geschreven, deze ff in commentaar
+                    // nieuwe versie controlleerd nog niet op geldig email
+                    //-------------------------------------------------------
+                    // new TDSmail(
+                    //    model.Email,
+                    //    "registreer je emailadres",
+                    //    sbBody.ToString())
+                    //.SendHTML();
 
                     //TDSmail mail = new TDSmail(model.Email, "registreer je emailadres", sbBody.ToString());
                     //var emailResult = await mail.SendHtmlAsync();
@@ -111,9 +103,9 @@ namespace MTC_WebServerCore.Controllers
                     //{
                     //}
 
-                    ////-----------------------------------------------------------------------------------------
+                    //-----------------------------------------------------------------------------------------
 
-                    //return View("SendEmailConfirmationLink");
+                    return View("SendEmailConfirmationLink");
 
 
                     //voorlopig naar de console schrijven, dit moet nog gemaild worden
@@ -125,10 +117,10 @@ namespace MTC_WebServerCore.Controllers
                     //Als de gebruiker is aangemeld en de role Admin heeft, is het:
                     //de Admin-gebruiker die een nieuwe gebruiker aan het maken is.
                     //Stuur de  Admin - gebruiker door naar de actie ListUsers
-                    //if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                    //{
-                    //    return RedirectToAction("ListUsers", "Administration");
-                    //}
+                    if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("ListUsers", "Administration");
+                    }
 
                     //=============================================================== automatisch inloggen ====
 
@@ -138,8 +130,8 @@ namespace MTC_WebServerCore.Controllers
                     // een sessiecookie verdwijnt wanneer je de browser sluit
                     // een permanent cookie verdwijnd na de expires time (14dagen standaard hier in dit geval)
                     //-------------------------------------------------------------------------
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("index", "home");
+                    //await _signInManager.SignInAsync(user, isPersistent: false);
+                    //return RedirectToAction("index", "budget");
 
 
 
@@ -163,9 +155,13 @@ namespace MTC_WebServerCore.Controllers
             return View(model);
         }
 
+        #endregion
 
 
-        //====================================================================================================
+
+
+        #region======================================================================================================== Login
+
 
         [HttpGet]
         public IActionResult Login()
@@ -226,7 +222,7 @@ namespace MTC_WebServerCore.Controllers
                         return LocalRedirect(returnUrl);
                     }
 
-                    return RedirectToAction(nameof(HomeController.IndexAsync), "Home");
+                    return RedirectToAction("index", "Home");
                 }
 
                 //als niet succesvol is ingelogd
@@ -235,5 +231,160 @@ namespace MTC_WebServerCore.Controllers
 
             return View(model);
         }
+        #endregion
+
+
+        #region===================================================================================================== Logout
+        // Gebruik een POST-verzoek om de gebruiker uit te loggen.Het gebruik van een GET-verzoek om de 
+        // gebruiker uit te loggen wordt niet aanbevolen omdat de aanpak mogelijk wordt misbruikt.
+        // Een kwaadwillende gebruiker kan u misleiden om op een afbeeldingselement te klikken waarbij 
+        //  het src-kenmerk is ingesteld op de uitlog-URL van de toepassing. 
+        // Hierdoor wordt u onbewust uitgelogd.
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("index", "home");
+        }
+        #endregion
+
+        #region ================================================================================================= IsEmailInUse
+
+        [AcceptVerbs("Get", "Post")] //post niet echt nodig hier denk
+        [AllowAnonymous]
+        public async Task<IActionResult> IsEmailInUse(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"Email {email} is already in use.");
+            }
+
+        }
+        #endregion
+
+
+
+
+        #region================================================================================================== AccessDenied
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+        #endregion
+
+
+
+
+        #region================================================================================================= ConfirmEmail
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("index", "home");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"The User ID {userId} is invalid";
+                return View("NotFound");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return View();
+            }
+
+
+            ViewData["ErrorTitle"] = "Email kan niet bevestigd worden";
+
+            return View("MyError");
+
+        }
+        #endregion
+
+
+
+
+        #region================================================================================================ ForgotPassword
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        //-----------------------------------------------------------------------------------------------------------------
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // de user zoeken ahv emailadress
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+
+                // If the user is found AND Email is confirmed
+                // als de gebruiker gevonden is "EN" het email is bevestigd (via mail)
+                if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    // token voor resetpaswoord aanmaken
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    // de link aanmaken om te verzenden
+                    var passwordResetLink = Url.Action("ResetPassword", "Account",
+                            new { email = model.Email, token = token }, Request.Scheme);
+
+                    // email verzenden
+                    //logger.Log(LogLevel.Warning, passwordResetLink);
+
+                    // view ForgotPasswordConfirmation laten zien
+                    return View("ForgotPasswordConfirmation");
+                }
+
+                //Om accountopsomming en brute force - aanvallen te voorkomen, 
+                //moet u de (misschien  met slechtbedoelende) gebruiker
+                //niet laten weten dat de gebruiker niet bestaat of het
+                //email nog niet bevestigd is 
+                return View("ForgotPasswordConfirmation");
+            }
+
+            return View(model);
+        }
+
+
+        #endregion
+
+
+
+        #region ========================================================================================================== TEST
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult _test_Authorize()
+        {
+            return View();
+        }
+
+
+
+        #endregion
+
+
     }
+
 }

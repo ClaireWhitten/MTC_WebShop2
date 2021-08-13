@@ -7,7 +7,8 @@ namespace MTCmodel
 {
     public class  UserFactoryHelper 
     {
-       public ClaimsPrincipal User { get; set; }
+
+        //public ApplicationUser User { get; set; } = null;
 
         
     }

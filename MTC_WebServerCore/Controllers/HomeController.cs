@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MTC_WebServerCore.Models;
 using MTCmodel;
@@ -15,11 +16,13 @@ namespace MTC_WebServerCore.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IApplicationRepository _repos;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, IApplicationRepository appRepos)
+        public HomeController(ILogger<HomeController> logger, IApplicationRepository appRepos, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _repos = appRepos;
+            _userManager = userManager;
         }
 
         //public IActionResult Index()
@@ -31,7 +34,10 @@ namespace MTC_WebServerCore.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-          
+
+            
+
+
 
             //ProductCategorie testCategorie = new ProductCategorie
             //{
@@ -39,13 +45,39 @@ namespace MTC_WebServerCore.Controllers
             //};
             //var testCategegoryAdded = await _repos.ProductCategories.AddAsync(testCategorie);
 
+
+            //ProductCategorie testCategorie2 = new ProductCategorie
+            //{
+            //    Name = "TV", ParentCategorieID = 1,
+            //};
+            //var testCategegoryAdded2 = await _repos.ProductCategories.AddAsync(testCategorie2);
+
+
+
+            //if (testCategegoryAdded2.ErrorCode != TDSreposErrCode.OK)
+            //{
+            //    _logger.LogError(testCategegoryAdded2.ErrorCode.ToString());
+            //}
+
+            //if (testCategegoryAdded.ErrorCode != TDSreposErrCode.OK)
+            //{
+            //    _logger.LogError(testCategegoryAdded.ErrorCode.ToString());
+            //}
+
+            //if(testCategegoryAdded.ErrorCode == TDSreposErrCode.OK)
+
+
+            //TestModel testModel = new TestModel { Name = "dit is een test" };
+            //await _repos.TestModel.AddAsync(testModel);
+
+
             //Product testProduct = new Product
             //{
             //    EAN = "8888888888888",
             //    AverageRating = 3,
             //    BTWPercentage = 21,
             //    //CategorieId = 1,
-            //    Categorie = new ProductCategorie { Name = "testcat"},
+            //    Categorie = new ProductCategorie { Name = "testcat" },
             //    CountInStock = 0,
             //    ExtraInfo = "dit is een geweldig produkt",
             //    Name = "testProduct",
@@ -65,10 +97,10 @@ namespace MTC_WebServerCore.Controllers
 
             //};
 
-           // var resultProductView = await _repos.ProductReviews.AddAsync(testProductReview);
+            //var resultProductView = await _repos.ProductReviews.AddAsync(testProductReview);
 
             //var resultAdd = await _repos.Products.AddAsync(testProduct);
-            
+
 
             //if(resultAdd.ErrorCode != TDSreposErrCode.OK)
             //{
@@ -78,34 +110,35 @@ namespace MTC_WebServerCore.Controllers
             //var resultUpdate = await _repos.Products.UpdateAsync(testProduct);
 
 
-            var result = await  _repos.Products.GetAllAsync();
+            //var result = await _repos.Products.GetAllAsync();
 
-            var model = result.Data;
+            //var model = result.Data;
+            IEnumerable<Product> model = null;
 
             return View(model);
         }
 
 
-        public async Task<IActionResult> ProductsAsync([FromRoute] int categoryId)
+        //public async Task<IActionResult> ProductsAsync([FromRoute] int categoryId)
 
-        {
-            //Get chosen category
-            //var
-            TSDreposResultOneObject<ProductCategorie> result = await _repos.ProductCategories.GetByIdAsync(categoryId);
+        //{
+        //    //Get chosen category
+        //    //var
+        //    TSDreposResultOneObject<ProductCategorie> result = await _repos.ProductCategories.GetByIdAsync(categoryId);
 
-            ProductCategorie chosenCategory = result.Data;
+        //    ProductCategorie chosenCategory = result.Data;
 
-            //var
-            TSDreposResultIenumerable<Product> resultProducts = await _repos.Products.GetByConditionAsync(p => p.CategorieId == categoryId);
+        //    //var
+        //    TSDreposResultIenumerable<Product> resultProducts = await _repos.Products.GetByConditionAsync(p => p.CategorieId == categoryId);
 
-            //Make into viewModel instead
-            IEnumerable<Product> allCategoryProducts = resultProducts.Data;
+        //    //Make into viewModel instead
+        //    IEnumerable<Product> allCategoryProducts = resultProducts.Data;
 
-            //Make viewmodel with needed properties 
-            //Make view with page layout and bootstrap
+        //    //Make viewmodel with needed properties 
+        //    //Make view with page layout and bootstrap
 
 
-        }
+        //}
 
 
 
