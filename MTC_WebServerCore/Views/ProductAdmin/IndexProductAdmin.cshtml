@@ -23,26 +23,33 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>@item.ProductImage</td>
-                    <td>@item.Name</td>
+            <tr>
+                <td><input type="file" id="files" asp-for="@item.ProductImage" /></td>
+                <td>@item.Name </td>
+                <td>@item.EAN </td>
+                <td>
+                    @item.RecommendedUnitPrice @{ if (item.SolderPrice != 0)
+                    { <h1 class="text-danger">@item.SolderPrice</h1>}
+                    }
+                </td>
+                <td>@item.Categorie.Name </td>
 
-                    <td>
-                        <a asp-controller="ProductAdminController" asp-action="DetailProductAdmin" asp-route-id="@item.EAN">
-                            <input type="button" class="btn btn-primary" value="Detail" />
-                        </a>
-                    </td>
-                    <td>
-                        <a asp-controller="ProductAdminController" asp-action="UpdateProductAdmin" asp-route-id="@item.EAN">
-                            <input type="button" class="btn btn-primary" value="Update" />
-                        </a>
-                    </td>
-                    <td>
-                        <a asp-controller="ProductAdminController" asp-action="DeleteProductAdmin" asp-route-id="@item.EAN">
-                            <input type="button" class="btn btn-danger" value="Delete" />
-                        </a>
-                    </td>
-                </tr>
+                <td>
+                    <a asp-controller="ProductAdminController" asp-action="DetailProductAdmin" asp-route-id="@item.EAN">
+                        <input type="button" class="btn btn-primary" value="Detail" />
+                    </a>
+                </td>
+                <td>
+                    <a asp-controller="ProductAdminController" asp-action="UpdateProductAdmin" asp-route-id="@item.EAN">
+                        <input type="button" class="btn btn-primary" value="Update" />
+                    </a>
+                </td>
+                <td>
+                    <a asp-controller="ProductAdminController" asp-action="DeleteProductAdmin" asp-route-id="@item.EAN">
+                        <input type="button" class="btn btn-danger" value="Delete" />
+                    </a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
