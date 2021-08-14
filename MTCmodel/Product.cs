@@ -20,7 +20,8 @@ namespace MTCmodel
         [EAN (ErrorMessage = "EAN must be 13 digit characters")]
         public string EAN { get; set; }
 
-        
+        public bool IsActive { get; set; } = true;
+
         //-------------------------------------------------------------------
         [Required]
         [MaxLength(50, ErrorMessage = "maximum {1} characters allowed for Productame")]

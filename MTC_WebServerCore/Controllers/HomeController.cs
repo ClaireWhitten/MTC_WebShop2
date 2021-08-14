@@ -35,7 +35,7 @@ namespace MTC_WebServerCore.Controllers
         public async Task<IActionResult> IndexAsync()
         {
 
-            
+
 
 
 
@@ -48,7 +48,8 @@ namespace MTC_WebServerCore.Controllers
 
             //ProductCategorie testCategorie2 = new ProductCategorie
             //{
-            //    Name = "TV", ParentCategorieID = 1,
+            //    Name = "TV",
+            //    ParentCategorieID = 1,
             //};
             //var testCategegoryAdded2 = await _repos.ProductCategories.AddAsync(testCategorie2);
 
@@ -76,14 +77,15 @@ namespace MTC_WebServerCore.Controllers
             //    EAN = "8888888888888",
             //    AverageRating = 3,
             //    BTWPercentage = 21,
-            //    //CategorieId = 1,
-            //    Categorie = new ProductCategorie { Name = "testcat" },
+            //    CategorieId = 1,
+            //    //Categorie = new ProductCategorie { Name = "testcat" },
             //    CountInStock = 0,
             //    ExtraInfo = "dit is een geweldig produkt",
             //    Name = "testProduct",
             //    MinStock = 5,
             //    MaxStock = 100,
             //    RecommendedUnitPrice = 22.5,
+
 
             //};
 
