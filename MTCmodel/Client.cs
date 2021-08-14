@@ -12,20 +12,37 @@ namespace MTCmodel
         [Key]
         [MaxLength(450)]
         public string Id { get; set; }
-       
-        public ApplicationUser ApplicationUser { get; set; }
+
+
+        //-------------------------------------------------------------------
+        [Required]
+        [MaxLength(30, ErrorMessage = "lengte maximum 30")]
+        public string FirstName { get; set; }
+
+        //-------------------------------------------------------------------
+        [MaxLength(8, ErrorMessage = "lengte maximum 8")]
+        public string NameAdditional { get; set; }
+
+
+        //-------------------------------------------------------------------
+        [Required]
+        [MaxLength(30, ErrorMessage = "lengte maximum 30")]
+        public string LastName { get; set; }
 
         //-------------------------------------------------------------------
 
         public bool IsActive { get; set; } = true;
 
 
+
+        //-------------------------------------------------------------------
         public double DiscountPercentage { get; set; } = 0;
 
 
         //=============================== foreign key's =========================================
 
 
+        public ApplicationUser ApplicationUser { get; set; }
 
 
 

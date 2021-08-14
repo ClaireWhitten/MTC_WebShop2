@@ -56,24 +56,39 @@ namespace MTCrepository.Repository
             // standaard roles seeden
             //---------------------------------------------------------------------------------------------------------------
 
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "2c5e174e-3b0e-446f-86af-483d56fd7210", Name = "SuperAdmin", NormalizedName = "SUPERADMIN" });
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", Name = "Admin", NormalizedName = "ADMIN" });
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", Name = "Moderator", NormalizedName = "MODERATOR" });
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
+            //all roles
+            modelBuilder.Entity<ApplicationRole>().HasData(
+                new ApplicationRole { IsRemovable = false, Id = "2c5e174e-3b0e-446f-86af-483d56fd7210", Name = "SuperAdmin", NormalizedName = "SUPERADMIN" });
+
+            //can crud Users and maybe later  the roles for users
+            modelBuilder.Entity<ApplicationRole>().HasData(
+                new ApplicationRole { IsRemovable = false, Id = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", Name = "UserAdmin", NormalizedName = "USERADMIN" });
+
+            //can the website edit.. all data but not the users, example: the productcategories and his product etc...
+            modelBuilder.Entity<ApplicationRole>().HasData(
+                new ApplicationRole { IsRemovable = false, Id = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", Name = "Moderator", NormalizedName = "MODERATOR" });
 
 
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
-            //modelBuilder.Entity<ApplicationRole>().HasData(
-            //    new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Basic", NormalizedName = "BASIC" });
+            //is a client
+            modelBuilder.Entity<ApplicationRole>().HasData(
+                new ApplicationRole { IsRemovable = false, Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd", Name = "Client", NormalizedName = "CLIENT" });
+
+            //is a Transporter
+            modelBuilder.Entity<ApplicationRole>().HasData(
+                 new ApplicationRole { IsRemovable = false, Id = "1dde702e-2587-41bd-bec5-0f4cc5d05498", Name = "Transporter", NormalizedName = "TRANSPORTER" });
+
+            //is a Supplier
+            modelBuilder.Entity<ApplicationRole>().HasData(
+                 new ApplicationRole { IsRemovable = false, Id = "277f86fd-db6a-449a-a7de-25917a177a61", Name = "Supplier", NormalizedName = "SUPPLIER" });
+
+
+            //this are unique keys for roles if we add some roles, if there is add a role, don't forgot the SuperUser give this role,
+            //also you need a migration and a update-database
+            //"0194324d-3d5a-44a0-b566-ff7c06ce883e"
+            //"0cdcf3c3-4cc0-4a61-a6dc-e2293ef607c2"
+            //"9c533953-31be-4ee9-9d6d-58c21484b3c0"
+            //"ef337c6c-a310-4fc7-8ec3-0252a9f2ba65"
+
 
 
 
@@ -95,7 +110,7 @@ namespace MTCrepository.Repository
                     NormalizedEmail = "SUPER@USER.COM",
                     IsRemovable = false,
                     EmailConfirmed = true,
-                    PasswordHash = hasher.HashPassword(null, "Test_123")
+                    PasswordHash = hasher.HashPassword(null, "Admin_12345") //deze anders dan Test_123
                 }
             );
 
@@ -104,34 +119,233 @@ namespace MTCrepository.Repository
             // bridge tabel nog koppelen (alle Roles voor Superadmin)
             //---------------------------------------------------------------------------------------------------------------
 
-            //modelBuilder.Entity<IdentityUserRole<string>>().HasData(
-            //    new IdentityUserRole<string>
-            //    {
-            //        RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-            //        UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
-            //    }
-            //);
-            //modelBuilder.Entity<IdentityUserRole<string>>().HasData(
-            //    new IdentityUserRole<string>
-            //    {
-            //        RoleId = "c6aaef1a-8312-4185-8b51-1e3a09421ff7",
-            //        UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
-            //    }
-            //);
-            //modelBuilder.Entity<IdentityUserRole<string>>().HasData(
-            //    new IdentityUserRole<string>
-            //    {
-            //        RoleId = "6ee9e763-1f51-4d0d-a463-b7a8a791234b",
-            //        UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
-            //    }
-            //);
-            //modelBuilder.Entity<IdentityUserRole<string>>().HasData(
-            //    new IdentityUserRole<string>
-            //    {
-            //        RoleId = "7e19e371-55db-4c16-b9c0-4103de5b39fd",
-            //        UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
-            //    }
-            //);
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210", //SuperAdmin
+                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+                }
+            );
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", //UserAdmin
+                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+                }
+            );
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", //moderator
+                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+                }
+            );
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "7e19e371-55db-4c16-b9c0-4103de5b39fd", //client
+                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+                }
+            );
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "1dde702e-2587-41bd-bec5-0f4cc5d05498", //transporter
+                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+                }
+            );
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "277f86fd-db6a-449a-a7de-25917a177a61", //supplier
+                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+                }
+            );
+
+            modelBuilder.Entity<Client>().HasData(
+                new Client
+                {
+                    Id = "8e445865-a24d-4543-a6c6-9443d048cdb9", // primary key
+                    FirstName = "Super",
+                    LastName = "User"
+                }
+            );
+
+            modelBuilder.Entity<Transporter>().HasData(
+                new Transporter
+                {
+                    Id = "8e445865-a24d-4543-a6c6-9443d048cdb9", // primary key
+                    Name = "MTCSuperUserTransporter",
+                }
+            );
+            modelBuilder.Entity<Supplier>().HasData(
+                new Supplier
+                {
+                    Id = "8e445865-a24d-4543-a6c6-9443d048cdb9", // primary key
+                    Name = "MTCSuperUserSupplier",
+                    BTW = "BE0123456789",
+                    CompanyNummer = "0123456789",
+                    WebSite = "www.MTCtestsupplier.be",
+                }
+            );
+
+
+            //===============================================================================================================
+            // TestUsers toevoegen: a client, a Supplier and a Transporter
+            //---------------------------------------------------------------------------------------------------------------
+
+
+            //client
+            //===============
+            //a hasher to hash the password before seeding the user to the db
+            hasher = new PasswordHasher<ApplicationUser>();
+            modelBuilder.Entity<ApplicationUser>().HasData(
+                new ApplicationUser
+                {
+                    Id = "e08d7ef7-2615-4385-844f-81834bb6e776", // primary key
+                    UserName = "client@mtc.com",
+                    NormalizedUserName = "CLIENT@MTC.COM",
+                    Email = "client@mtc.com",
+                    NormalizedEmail = "CLIENT@MTC.COM",
+                    IsRemovable = false,
+                    EmailConfirmed = true,
+                    PasswordHash = hasher.HashPassword(null, "Test_123")
+                }
+            );
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "7e19e371-55db-4c16-b9c0-4103de5b39fd", //client
+                    UserId = "e08d7ef7-2615-4385-844f-81834bb6e776"
+                }
+            );
+            modelBuilder.Entity<Client>().HasData(
+                new Client
+                {
+                    Id = "e08d7ef7-2615-4385-844f-81834bb6e776", // primary key
+                    FirstName = "testClientvoornaam",
+                    NameAdditional = "tst",
+                    LastName = "testclientAchternaam"
+                }
+            );
+
+            //transporter
+            //=================
+            modelBuilder.Entity<ApplicationUser>().HasData(
+                new ApplicationUser
+                {
+                    Id = "a0392e57-a71c-4314-b87c-ba8dc7628fcc", // primary key
+                    UserName = "transporter@mtc.com",
+                    NormalizedUserName = "TRANSPORTER@MTC.COM",
+                    Email = "transporter@mtc.com",
+                    NormalizedEmail = "TRANSPORTER@MTC.COM",
+                    IsRemovable = false,
+                    EmailConfirmed = true,
+                    PasswordHash = hasher.HashPassword(null, "Test_123") 
+                }
+            );
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "1dde702e-2587-41bd-bec5-0f4cc5d05498", //transporter
+                    UserId = "a0392e57-a71c-4314-b87c-ba8dc7628fcc"
+                }
+            );
+            modelBuilder.Entity<Transporter>().HasData(
+                new Transporter
+                {
+                    Id = "a0392e57-a71c-4314-b87c-ba8dc7628fcc", // primary key
+                    Name = "TestTransporter",
+                }
+            );
+
+            //supplier
+            //=================
+            modelBuilder.Entity<ApplicationUser>().HasData(
+                new ApplicationUser
+                {
+                    Id = "f0cd17fb-639c-4bd4-aa51-cb64259d9743", // primary key
+                    UserName = "supplier@mtc.com",
+                    NormalizedUserName = "SUPPLIER@MTC.COM",
+                    Email = "supplier@mtc.com",
+                    NormalizedEmail = "SUPPLIER@MTC.COM",
+                    IsRemovable = false,
+                    EmailConfirmed = true,
+                    PasswordHash = hasher.HashPassword(null, "Test_123")
+                }
+            );
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "277f86fd-db6a-449a-a7de-25917a177a61", //supplier
+                    UserId = "f0cd17fb-639c-4bd4-aa51-cb64259d9743"
+                }
+            );
+            modelBuilder.Entity<Supplier>().HasData(
+                new Supplier
+                {
+                    Id = "f0cd17fb-639c-4bd4-aa51-cb64259d9743", // primary key
+                    Name = "TestSupplier",
+                    BTW = "22222222222222",
+                    CompanyNummer = "22222222222",
+                    WebSite = "www.MTCtestsupplier.be",
+                }
+            );
+
+
+
+            //moderator
+            //=================
+            modelBuilder.Entity<ApplicationUser>().HasData(
+                new ApplicationUser
+                {
+                    Id = "3ba08e02-85b4-4488-8108-e526aa987eed", // primary key
+                    UserName = "moderator@mtc.com",
+                    NormalizedUserName = "MODERATOR@MTC.COM",
+                    Email = "moderator@mtc.com",
+                    NormalizedEmail = "MODERATOR@MTC.COM",
+                    IsRemovable = false,
+                    EmailConfirmed = true,
+                    PasswordHash = hasher.HashPassword(null, "Test_123")
+                }
+            );
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", //moderator
+                    UserId = "3ba08e02-85b4-4488-8108-e526aa987eed"
+                }
+            );
+
+
+            //useradmin
+            //=================
+            modelBuilder.Entity<ApplicationUser>().HasData(
+                new ApplicationUser
+                {
+                    Id = "c6bbcf91-ab26-4bf1-a8ac-6251444d1464", // primary key
+                    UserName = "UserAdmin@mtc.com",
+                    NormalizedUserName = "USERADMIN@MTC.COM",
+                    Email = "UserAdmin@mtc.com",
+                    NormalizedEmail = "USERADMIN@MTC.COM",
+                    IsRemovable = false,
+                    EmailConfirmed = true,
+                    PasswordHash = hasher.HashPassword(null, "Test_123")
+                }
+            );
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", //UserAdmin
+                                UserId = "c6bbcf91-ab26-4bf1-a8ac-6251444d1464"
+                }
+            );
+
+            //this are unique keys for users if we add some users, if there is add a role, don't forgot  a migration and a update-database
+            //"1634e0e9-e648-4a79-8644-6751da067cdf"
+
+
+
 
 
 
@@ -141,7 +355,7 @@ namespace MTCrepository.Repository
 
 
             //modelBuilder.Entity<ProductSupplier>().HasKey(x => new {x.ProductEAN,x.SupplierID });
-       
+
 
             //===============================================================================================================
             // relaties aanpassen

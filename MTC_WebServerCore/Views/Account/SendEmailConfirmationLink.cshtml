@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Email verzonden";
+
+    //var _confirmationLink = ViewData["Link"];
+    var _emailAdress = ViewData["EmailAdress"];
+}
+
+@*//ViewData["Title"] = "Bedankt om je te registreren";
+                        //ViewData["Message"] = $"We hebben daarnet een email gestuur naar {model.Email}." +
+                        //    $" Om je registratie af te ronden klik op de knop in de email die we daarnet verzonden. ";
+
+
+    <h1 class="text-danger">@ViewData["ErrorTitle"]</h1>
+    <h6 class="text-danger">@ViewData["ErrorMessage"]</h6>*@
+
+
+<div class="row justify-content-center m-3">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h1>Email verzonden</h1>
+            </div>
+
+            <div class="card-body text-center">
+
+
+                <h4>Bedankt om je te registreren</h4>
+                <h4>We hebben daarnet een email verstuurd naar <strong>@_emailAdress</strong>.</h4>
+                <h4>Om je registratie af te ronden klik op de knop in de email.</h4>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
