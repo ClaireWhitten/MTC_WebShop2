@@ -70,7 +70,7 @@ namespace MTC_WebServerCore.Controllers
                     //een token genereren voor emailbevestiging
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     //de url aanmaken
-                    var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                    var confirmationLink = Url.Action("ConfirmEmailConfirmation", "Account",
                         new { userId = user.Id, token = token }, Request.Scheme);
 
 
@@ -86,14 +86,6 @@ namespace MTC_WebServerCore.Controllers
                     sbBody.Append($"<a href='{confirmationLink}'><button>Registreer uw email</button></a>");
                     sbBody.Append("<hr>");
 
-                    // nieuwe async versie geschreven, deze ff in commentaar
-                    // nieuwe versie controlleerd nog niet op geldig email
-                    //-------------------------------------------------------
-                   // new MTCmail(
-                   //    model.Email,
-                   //    "registreer je emailadres",
-                   //    sbBody.ToString())
-                   //.SendHTML();
 
                     MTCmail mail = new MTCmail(model.Email, "registreer je emailadres", sbBody.ToString());
                     var emailResult = await mail.SendHtmlAsync();
@@ -152,10 +144,44 @@ namespace MTC_WebServerCore.Controllers
                 }
             }
 
-
+            //als geen modelstate niet valid is
             return View(model);
         }
 
+        #endregion
+
+
+
+
+        #region================================================================================================= ConfirmEmail
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmailConfirmation(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("index", "home");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"The User ID {userId} is invalid";
+                return View("NotFound");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return View();
+            }
+
+
+            ViewData["ErrorTitle"] = "Email kan niet bevestigd worden";
+
+            return View("MyError");
+
+        }
         #endregion
 
 
@@ -235,6 +261,9 @@ namespace MTC_WebServerCore.Controllers
         #endregion
 
 
+
+
+
         #region===================================================================================================== Logout
         // Gebruik een POST-verzoek om de gebruiker uit te loggen.Het gebruik van een GET-verzoek om de 
         // gebruiker uit te loggen wordt niet aanbevolen omdat de aanpak mogelijk wordt misbruikt.
@@ -250,6 +279,9 @@ namespace MTC_WebServerCore.Controllers
             return RedirectToAction("index", "home");
         }
         #endregion
+
+
+
 
         #region ================================================================================================= IsEmailInUse
 
@@ -274,50 +306,6 @@ namespace MTC_WebServerCore.Controllers
 
 
 
-        #region================================================================================================== AccessDenied
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
-        #endregion
-
-
-
-
-        #region================================================================================================= ConfirmEmail
-
-        [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string token)
-        {
-            if (userId == null || token == null)
-            {
-                return RedirectToAction("index", "home");
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                ViewBag.ErrorMessage = $"The User ID {userId} is invalid";
-                return View("NotFound");
-            }
-
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-            if (result.Succeeded)
-            {
-                return View();
-            }
-
-
-            ViewData["ErrorTitle"] = "Email kan niet bevestigd worden";
-
-            return View("MyError");
-
-        }
-        #endregion
-
-
 
 
         #region================================================================================================ ForgotPassword
@@ -339,8 +327,9 @@ namespace MTC_WebServerCore.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email);
 
 
-                // If the user is found AND Email is confirmed
-                // als de gebruiker gevonden is "EN" het email is bevestigd (via mail)
+                // als de gebruiker gevonden is "EN" het email is bevestigd (via mail) dan sturen we een 
+                // email, anders niet en we laten het niet bestaan van het emailadress niet weten aan de gebru!iker 
+                // wegens veiligheidsredenen
                 if (user != null && await _userManager.IsEmailConfirmedAsync(user))
                 {
                     // token voor resetpaswoord aanmaken
@@ -349,19 +338,34 @@ namespace MTC_WebServerCore.Controllers
                     // de link aanmaken om te verzenden
                     var passwordResetLink = Url.Action("ResetPassword", "Account",
                             new { email = model.Email, token = token }, Request.Scheme);
+                 
+                    //--------------------------------------------------------------------------email verzenden
+                    StringBuilder sbBody = new StringBuilder();
 
-                    // email verzenden
-                    //logger.Log(LogLevel.Warning, passwordResetLink);
+                    sbBody.Append("<hr>");
+                    sbBody.Append("<h3>Bedankt voor het vertrouwen in ons product</h3>");
+                    sbBody.Append("<p>Klik op de onderstaande link om jouw passwoord te resetten</p>");
+                    sbBody.Append($"<a href='{passwordResetLink}'><button>Registreer uw email</button></a>");
+                    sbBody.Append("<hr>");
 
-                    // view ForgotPasswordConfirmation laten zien
-                    return View("ForgotPasswordConfirmation");
+
+                    MTCmail mail = new MTCmail(model.Email, "Paswoord reset", sbBody.ToString());
+                    var emailResult = await mail.SendHtmlAsync();
+                    //if (emailResult.Succeeded)
+                    //{
+                    //}
+                    //else
+                    //{
+                    //}
+
                 }
-
                 //Om accountopsomming en brute force - aanvallen te voorkomen, 
                 //moet u de (misschien  met slechtbedoelende) gebruiker
                 //niet laten weten dat de gebruiker niet bestaat of het
                 //email nog niet bevestigd is 
-                return View("ForgotPasswordConfirmation");
+
+                ViewData["EmailAdress"] = model.Email;
+                return View("SendForgotPasswordLink");
             }
 
             return View(model);
@@ -369,6 +373,75 @@ namespace MTC_WebServerCore.Controllers
 
 
         #endregion
+
+
+
+
+        #region==============================================================================================ResetPassword
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            // If password reset token or email is null, most likely the
+            // user tried to tamper the password reset link
+            if (token == null || email == null)
+            {
+                ModelState.AddModelError("", "Invalid password reset token");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Find the user by email
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    // reset the user password
+                    var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+                    if (result.Succeeded)
+                    {
+                        return View("ConfirmResetPassword");
+                    }
+                    // Display validation errors. For example, password reset token already
+                    // used to change the password or password complexity rules not met
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return View(model);
+                }
+
+                //Om accountopsomming en brute force-aanvallen te voorkomen, 
+                //moet u niet laten weten dat de gebruiker niet bestaat
+                return View("ConfirmResetPassword");
+            }
+            // toon de errors als model niet valid is
+            return View(model);
+        }
+
+        #endregion
+
+
+
+
+        #region================================================================================================== AccessDenied
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+        #endregion
+
+
+
 
 
 

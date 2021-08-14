@@ -3,6 +3,7 @@ using MTCrepository.TDSrepository;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MTCrepository.Repository
 {
@@ -14,5 +15,12 @@ namespace MTCrepository.Repository
         {
            
         }
+
+        //public override Task<TSDreposResultOneObject<Product>> RemoveAsync(Product aEntity, bool autoSaveChange = true)
+        //{
+        //    //hier isActive = false
+
+        //    //return base.RemoveAsync(aEntity, autoSaveChange);
+        //}
     }
 }

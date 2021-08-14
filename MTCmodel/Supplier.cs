@@ -23,6 +23,8 @@ namespace MTCmodel
         [MaxLength(20)]
         public string BTW { get; set; }
         //-------------------------------------------------------------------
+
+        [MaxLength(400)]
         public string WebSite { get; set; }
         //-------------------------------------------------------------------
         public bool IsActive { get; set; } = true;
