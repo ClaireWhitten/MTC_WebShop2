@@ -1,0 +1,34 @@
+﻿@model IEnumerable<ProductCategorie>;
+
+<h1>Overview Categories</h1>
+<a class="btn btn-info" asp-controller="Category" asp-action="AddCategory">Add new category</a>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Parent Category</th>
+                <th scope="col">Number of products</th>
+                <th scope="col">Subcategories</th>
+                <th scope="col">Modify</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@item.Name</th>
+                    <td>@item.ParentCategorie.Name</td>
+                    <td>@item.Products.Count()</td>
+                    <td>@item.SubCategories</td>
+                    <td>
+                        <a asp-controller="Category" asp-action="Detail" asp-route-id="@item.ID">View</a>
+                        <a asp-controller="Category" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+                        <a asp-controller="Category" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
