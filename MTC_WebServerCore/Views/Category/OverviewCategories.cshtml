@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ProductCategorie>;
+
+<h1>Overview Categories</h1>
+<a class="btn btn-info" asp-controller="Category" asp-action="AddCategory">Add new category</a>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Parent Category</th>
+                <th scope="col">Number of products</th>
+                <th scope="col">Subcategories</th>
+                <th scope="col">Modify</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var productCategory in Model)
+            {
+            <tr>
+                <th scope="row">@productCategory.Name</th>
+                @if (productCategory.ParentCategorie != null)
+                {
+                    <td>@productCategory.ParentCategorie.Name</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                <td>@productCategory.Products.Count()</td>
+
+                @if (productCategory.SubCategories.Count()>0)
+                {
+                    <td>
+                      @foreach (var subcat in productCategory.SubCategories)
+                      {
+                        <p>@subcat.Name</p>
+                      }
+                    </td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
+                <td>
+                    <a asp-controller="Category" asp-action="Detail" asp-route-id="@productCategory.ID">View</a>
+                    <a asp-controller="Category" asp-action="Edit" asp-route-id="@productCategory.ID">Edit</a>
+                    <a asp-controller="Category" asp-action="Delete" asp-route-id="@productCategory.ID">Delete</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
