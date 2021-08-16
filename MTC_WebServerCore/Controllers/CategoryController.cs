@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace MTC_WebServerCore.Controllers
 {
     public class CategoryController : Controller
@@ -45,7 +46,7 @@ namespace MTC_WebServerCore.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromForm] AddCategoryViewModel model)
         {
-            //check if parent category already exists
+            //if it's a parent category, checks if it already exists is db 
             bool duplicateExists = false;
             if (model.ParentCategorieId == null)
             {
@@ -56,7 +57,7 @@ namespace MTC_WebServerCore.Controllers
                     duplicateExists = true;
                 }
             }
-
+            //if model state is valid and no duplicate exists adds the new category and redirects to overview
             if (ModelState.IsValid && !duplicateExists)
             {
   
@@ -67,7 +68,7 @@ namespace MTC_WebServerCore.Controllers
                 };
 
                 var result = await _repos.ProductCategories.AddAsync(newCategory);
-                return RedirectToAction(nameof(Overview));
+                return RedirectToAction(nameof(OverviewCategories));
                 
             }
 
@@ -85,9 +86,12 @@ namespace MTC_WebServerCore.Controllers
 
 
         //Gets an overview of all categories
-        public async Task<IActionResult> Overview()
+        [HttpGet]
+        public async Task<IActionResult> OverviewCategories()
         {
-
+            var productsResult = await _repos.ProductCategories.GetCategoriesWithSubandParent();
+            var productCategories = productsResult.Data;
+            return View(productCategories);
         }
 
 
@@ -101,10 +105,24 @@ namespace MTC_WebServerCore.Controllers
 
 
         //Gets the 'delete category' view
+        [HttpGet]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var categoryResult = await _repos.ProductCategories.GetByIdAsync(id);
+            var selectedCategory = categoryResult.Data;
+            return View(selectedCategory); 
+ 
+        }
 
 
-
-
+       [HttpPost]
+       public async Task<IActionResult> DeleteConfirm([FromRoute] int id)
+       {
+            var categoryResult = await _repos.ProductCategories.GetByIdAsync(id);
+            var selectedCategory = categoryResult.Data;
+            var deleteResult = await _repos.ProductCategories.RemoveAsync(selectedCategory);
+            return RedirectToAction(nameof(OverviewCategories));
+       }
 
         // Deletes the category in the db 
 
