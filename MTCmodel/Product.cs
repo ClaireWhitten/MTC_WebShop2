@@ -89,7 +89,7 @@ namespace MTCmodel
         public ICollection<ReturnedProduct> ReturnedProducts { get; set; }
 
 
-        public ICollection<ProductImage> Images { get; set; }
+        public ICollection<ProductImage> Images { get; set; } 
 
         //-------------------------------------------------------------------many to many
 

@@ -16,7 +16,7 @@ namespace MTCrepository.Repository
            
         }
 
-        //public override Task<TSDreposResultOneObject<Product>> RemoveAsync(Product aEntity, bool autoSaveChange = true)
+        //public override Task<TSDreposResultOneObject<Product>> AddAsync(Product aEntity, bool autoSaveChange = true)
         //{
         //    //hier isActive = false
 
