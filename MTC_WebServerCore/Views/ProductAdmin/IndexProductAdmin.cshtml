@@ -1,56 +1,61 @@
 ﻿@model IEnumerable<MTC_WebServerCore.ViewModels.Product.ProductIndexViewModel>
 
 <h1>Products overview</h1>
-<a asp-area="" asp-controller="ProductAdminController" asp-action="CreateProductAdmin">Add </a>
+<a asp-area="" asp-controller="ProductAdmin" asp-action="CreateProductAdmin">Add </a>
 
-@if (Model.Count() == null || Model.Count() == 0)
-{
-    <p>There is no available products</p>
-}
-else
-{
-    <table>
-        <thead>
-            <tr>
-                <th style="width:300px">Image</th>
-                <th style="width:300px">Name</th>
-                <th style="width:300px">EAN</th>
-                <th style="width:300px">Unit Price</th>
-                <th style="width:300px">Solde</th>
-                <th style="width:300px">Categorie</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-            <tr>
-                <td><input type="file" id="files" asp-for="@item.ProductImage" /></td>
-                <td>@item.Name </td>
-                <td>@item.EAN </td>
-                <td>
-                    @item.RecommendedUnitPrice @{ if (item.SolderPrice != 0)
-                    { <h1 class="text-danger">@item.SolderPrice</h1>}
-                    }
-                </td>
-                <td>@item.Categorie.Name </td>
+@{ if (Model == null || Model.Count() == 0)
+    {
+        <p>There is no available products</p>
+    }
 
-                <td>
-                    <a asp-controller="ProductAdminController" asp-action="DetailProductAdmin" asp-route-id="@item.EAN">
-                        <input type="button" class="btn btn-primary" value="Detail" />
-                    </a>
-                </td>
-                <td>
-                    <a asp-controller="ProductAdminController" asp-action="UpdateProductAdmin" asp-route-id="@item.EAN">
-                        <input type="button" class="btn btn-primary" value="Update" />
-                    </a>
-                </td>
-                <td>
-                    <a asp-controller="ProductAdminController" asp-action="DeleteProductAdmin" asp-route-id="@item.EAN">
-                        <input type="button" class="btn btn-danger" value="Delete" />
-                    </a>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:300px">Image</th>
+                    <th style="width:300px">Name</th>
+                    <th style="width:300px">EAN</th>
+                    <th style="width:300px">Unit Price</th>
+                    <th style="width:300px">Stock</th>
+                    <th style="width:300px">Categorie</th>
+                    <th style="width:300px">Supplier</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><img class="img-responsive full-width" src="data:image/jpeg;base64,@Convert.ToBase64String(item.ProductImage)" /></td>
+                        <td>@item.Name </td>
+                        <td>@item.EAN </td>
+                        <td>
+                            @item.RecommendedUnitPrice @{ if (item.SolderPrice != 0)
+                                { <h1 class="text-danger">@item.SolderPrice</h1>}
+                            }
+                        </td>
+                        <td>@item.CountInStock</td>
+                        <td>@item.CategorieName </td>
+                        <td>@item.Supplier.Name </td>
+
+                        <td>
+                            <a asp-controller="ProductAdminController" asp-action="DetailProductAdmin" asp-route-id="@item.EAN">
+                                <input type="button" class="btn btn-primary" value="Detail" />
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-controller="ProductAdminController" asp-action="UpdateProductAdmin" asp-route-id="@item.EAN">
+                                <input type="button" class="btn btn-primary" value="Update" />
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-controller="ProductAdminController" asp-action="DeleteProductAdmin" asp-route-id="@item.EAN">
+                                <input type="button" class="btn btn-danger" value="Delete" />
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 }

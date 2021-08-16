@@ -1,4 +1,5 @@
-﻿using MTCmodel;
+﻿using Microsoft.AspNetCore.Http;
+using MTCmodel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,6 +25,9 @@ namespace MTC_WebServerCore.ViewModels.Product
         public double RecommendedUnitPrice { get; set; }
 
 
+        public int CountInStock { get; set; }
+
+
         public double? SolderPrice { get; set; }
 
 
@@ -32,9 +36,18 @@ namespace MTC_WebServerCore.ViewModels.Product
         //public double BTWPercentage { get; set; }
 
 
+
+
+
+
+
+        //====>===>===> most be a list of supliers<====<====<=====
+        public  Supplier Supplier { get; set; }
+
+
+
         [Required(ErrorMessage = "Category cannot be empty")]
-        public int CategorieId { get; set; }
-        public ProductCategorie Categorie { get; set; }
+        public string CategorieName { get; set; }
 
 
         //[Required(ErrorMessage = "Product must have at less 1 Supplier")]
@@ -43,7 +56,7 @@ namespace MTC_WebServerCore.ViewModels.Product
 
         //public ICollection<ProductImage> ProductImages { get; set; }
 
-        public ProductImage ProductImage { get; set; }
+        public byte[] ProductImage { get; set; }
 
         //[MaxLength(255, ErrorMessage = "maximum {1} characters allowed for Extra info")]
         //public string ExtraInfo { get; set; }
