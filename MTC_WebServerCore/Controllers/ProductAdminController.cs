@@ -61,7 +61,7 @@ namespace MTC_WebServerCore.Controllers
             TSDreposResultIenumerable<ProductCategorie> resultProductCategoriess = await _repos.ProductCategories.GetByConditionAsync(p => p.SubCategories.Count == 0);
             IEnumerable<ProductCategorie> ProductCategories = resultProductCategoriess.Data;
 
-            TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s=>s.IsActive==true);
+            TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s=>s.ApplicationUser.IsActive==true);
             IEnumerable<Supplier> suppliers = resultSuppliers.Data;
 
 
@@ -97,7 +97,7 @@ namespace MTC_WebServerCore.Controllers
                    
                     SolderPrice = product.SolderPercentage
                 };
-
+                //newproduct.Suppliers=new IEnumerable<Supplier>
                 TSDreposResultOneObject<Supplier> resultProductCategorie = await _repos.Suppliers.GetByIdAsync(product.SupplierId);
                 newproduct.Suppliers.Add(resultProductCategorie.Data);
                 newproduct.Images = new List<ProductImage>();
