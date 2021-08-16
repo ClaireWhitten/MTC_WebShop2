@@ -61,12 +61,14 @@ namespace MTCrepository.Repository
                 new ApplicationRole { IsRemovable = false, Id = "2c5e174e-3b0e-446f-86af-483d56fd7210", Name = "SuperAdmin", NormalizedName = "SUPERADMIN" });
 
             //can crud Users and maybe later  the roles for users
-            modelBuilder.Entity<ApplicationRole>().HasData(
-                new ApplicationRole { IsRemovable = false, Id = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", Name = "UserAdmin", NormalizedName = "USERADMIN" });
 
-            //can the website edit.. all data but not the users, example: the productcategories and his product etc...
+            //update!!!! we give it Claims instead, this works flexibel if we need to add some permissions
             modelBuilder.Entity<ApplicationRole>().HasData(
-                new ApplicationRole { IsRemovable = false, Id = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", Name = "Moderator", NormalizedName = "MODERATOR" });
+                new ApplicationRole { IsRemovable = false, Id = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", Name = "Administrator", NormalizedName = "ADMINISTRATOR" });
+
+            ////can the website edit.. all data but not the users, example: the productcategories and his product etc...
+            //modelBuilder.Entity<ApplicationRole>().HasData(
+            //    new ApplicationRole { IsRemovable = false, Id = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", Name = "Moderator", NormalizedName = "MODERATOR" });
 
 
             //is a client
@@ -129,17 +131,17 @@ namespace MTCrepository.Repository
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
-                    RoleId = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", //UserAdmin
+                    RoleId = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", //Administrator
                     UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
                 }
             );
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
-                new IdentityUserRole<string>
-                {
-                    RoleId = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", //moderator
-                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
-                }
-            );
+            //modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+            //    new IdentityUserRole<string>
+            //    {
+            //        RoleId = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", //moderator
+            //        UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+            //    }
+            //);
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
@@ -294,31 +296,31 @@ namespace MTCrepository.Repository
 
 
 
-            //moderator
-            //=================
-            modelBuilder.Entity<ApplicationUser>().HasData(
-                new ApplicationUser
-                {
-                    Id = "3ba08e02-85b4-4488-8108-e526aa987eed", // primary key
-                    UserName = "moderator@mtc.com",
-                    NormalizedUserName = "MODERATOR@MTC.COM",
-                    Email = "moderator@mtc.com",
-                    NormalizedEmail = "MODERATOR@MTC.COM",
-                    IsRemovable = false,
-                    EmailConfirmed = true,
-                    PasswordHash = hasher.HashPassword(null, "Test_123")
-                }
-            );
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
-                new IdentityUserRole<string>
-                {
-                    RoleId = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", //moderator
-                    UserId = "3ba08e02-85b4-4488-8108-e526aa987eed"
-                }
-            );
+            ////moderator
+            ////=================
+            //modelBuilder.Entity<ApplicationUser>().HasData(
+            //    new ApplicationUser
+            //    {
+            //        Id = "3ba08e02-85b4-4488-8108-e526aa987eed", // primary key
+            //        UserName = "moderator@mtc.com",
+            //        NormalizedUserName = "MODERATOR@MTC.COM",
+            //        Email = "moderator@mtc.com",
+            //        NormalizedEmail = "MODERATOR@MTC.COM",
+            //        IsRemovable = false,
+            //        EmailConfirmed = true,
+            //        PasswordHash = hasher.HashPassword(null, "Test_123")
+            //    }
+            //);
+            //modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+            //    new IdentityUserRole<string>
+            //    {
+            //        RoleId = "6ee9e763-1f51-4d0d-a463-b7a8a791234b", //moderator
+            //        UserId = "3ba08e02-85b4-4488-8108-e526aa987eed"
+            //    }
+            //);
 
 
-            //useradmin
+            //Administrator
             //=================
             modelBuilder.Entity<ApplicationUser>().HasData(
                 new ApplicationUser
@@ -336,7 +338,7 @@ namespace MTCrepository.Repository
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
-                    RoleId = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", //UserAdmin
+                    RoleId = "c6aaef1a-8312-4185-8b51-1e3a09421ff7", //Administrator
                                 UserId = "c6bbcf91-ab26-4bf1-a8ac-6251444d1464"
                 }
             );
@@ -542,6 +544,24 @@ namespace MTCrepository.Repository
                 .WithMany(P => P.Images)
                 .HasForeignKey(PI => PI.ProductEAN)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            //=======================================================one to one needed for user => client, supplier and Transporter
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne<Transporter>(s => s.Transporter)
+                .WithOne(ad => ad.ApplicationUser)
+                .HasForeignKey<Transporter>(ad => ad.Id);
+
+            modelBuilder.Entity<ApplicationUser>()
+    .HasOne<Supplier>(s => s.Supplier)
+    .WithOne(ad => ad.ApplicationUser)
+    .HasForeignKey<Supplier>(ad => ad.Id);
+
+            modelBuilder.Entity<ApplicationUser>()
+    .HasOne<Client>(s => s.Client)
+    .WithOne(ad => ad.ApplicationUser)
+    .HasForeignKey<Client>(ad => ad.Id);
+
+
 
 
 

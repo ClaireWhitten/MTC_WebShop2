@@ -1,0 +1,87 @@
+﻿@model RegisterSupplierViewModel
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnv
+
+@{
+    ViewData["Title"] = "New Supplier";
+    bool isDevelopment = hostingEnv.EnvironmentName == "Development" ? true : false;
+}
+
+<hr />
+<h1>Add new supplier</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+
+            @*================================= INLOGGegevens =======================================================*@
+
+
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+
+            @*================================= SUPPLIER =======================================================*@
+            @if (@isDevelopment)
+            {
+                <div class="form-group">
+                    <label asp-for="Supplier.Name"></label>
+                    <input asp-for="Supplier.Name" class="form-control" value="testSupplier" />
+                    <span asp-validation-for="Supplier.Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Supplier.WebSite"></label>
+                    <input asp-for="Supplier.WebSite" class="form-control" value="www.testSite.be" />
+                    <span asp-validation-for="Supplier.WebSite" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Supplier.BTW"></label>
+                    <input asp-for="Supplier.BTW" class="form-control" value="1234567890" />
+                    <span asp-validation-for="Supplier.BTW" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Supplier.CompanyNummer"></label>
+                    <input asp-for="Supplier.CompanyNummer" class="form-control" value="1234567890" />
+                    <span asp-validation-for="Supplier.CompanyNummer" class="text-danger"></span>
+                </div>
+
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="Supplier.Name"></label>
+                    <input asp-for="Supplier.Name" class="form-control"  />
+                    <span asp-validation-for="Supplier.Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Supplier.WebSite"></label>
+                    <input asp-for="Supplier.WebSite" class="form-control" />
+                    <span asp-validation-for="Supplier.WebSite" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Supplier.BTW"></label>
+                    <input asp-for="Supplier.BTW" class="form-control" />
+                    <span asp-validation-for="Supplier.BTW" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Supplier.CompanyNummer"></label>
+                    <input asp-for="Supplier.CompanyNummer" class="form-control"  />
+                    <span asp-validation-for="Supplier.CompanyNummer" class="text-danger"></span>
+                </div>
+            }
+
+
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <button type="submit" class="btn btn-primary">Registreer</button>
+        </form>
+    </div>
+</div>

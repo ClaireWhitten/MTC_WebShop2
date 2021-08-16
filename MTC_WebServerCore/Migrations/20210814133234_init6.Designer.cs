@@ -4,14 +4,16 @@ using MTCrepository.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MTC_WebServerCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210814133234_init6")]
+    partial class init6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,9 +106,7 @@ namespace MTC_WebServerCore.Migrations
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-
-                            ConcurrencyStamp = "5a127efe-f361-4a3a-909b-3d89feb276be",
-
+                            ConcurrencyStamp = "ebb395e1-ec38-4b78-bb91-8c7d80742157",
                             IsRemovable = false,
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
@@ -114,19 +114,23 @@ namespace MTC_WebServerCore.Migrations
                         new
                         {
                             Id = "c6aaef1a-8312-4185-8b51-1e3a09421ff7",
-
-                            ConcurrencyStamp = "335b740f-bd04-4a0f-8e51-97784018ff0d",
+                            ConcurrencyStamp = "51028b7a-f4d6-4f07-a7ef-11b041e9efc6",
                             IsRemovable = false,
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-
+                            Name = "UserAdmin",
+                            NormalizedName = "USERADMIN"
+                        },
+                        new
+                        {
+                            Id = "6ee9e763-1f51-4d0d-a463-b7a8a791234b",
+                            ConcurrencyStamp = "38742ca1-3f0b-45e8-86ce-6db68c7549ea",
+                            IsRemovable = false,
+                            Name = "Moderator",
+                            NormalizedName = "MODERATOR"
                         },
                         new
                         {
                             Id = "7e19e371-55db-4c16-b9c0-4103de5b39fd",
-
-                            ConcurrencyStamp = "a26e6c8e-bb19-44a1-83f2-0291e28e788d",
-
+                            ConcurrencyStamp = "06478b81-b42a-4932-985b-ac1ee331b13a",
                             IsRemovable = false,
                             Name = "Client",
                             NormalizedName = "CLIENT"
@@ -134,9 +138,7 @@ namespace MTC_WebServerCore.Migrations
                         new
                         {
                             Id = "1dde702e-2587-41bd-bec5-0f4cc5d05498",
-
-                            ConcurrencyStamp = "12439f06-84d7-4dad-9ab1-ebbceff7bd20",
-
+                            ConcurrencyStamp = "1f0ecbb3-6371-48d8-97fe-2aa52d512cc2",
                             IsRemovable = false,
                             Name = "Transporter",
                             NormalizedName = "TRANSPORTER"
@@ -144,9 +146,7 @@ namespace MTC_WebServerCore.Migrations
                         new
                         {
                             Id = "277f86fd-db6a-449a-a7de-25917a177a61",
-
-                            ConcurrencyStamp = "bb5b7d36-1da3-44f1-99f6-a0f06d344d43",
-
+                            ConcurrencyStamp = "68cd41be-5292-43d5-b976-e6aee214c94c",
                             IsRemovable = false,
                             Name = "Supplier",
                             NormalizedName = "SUPPLIER"
@@ -160,6 +160,10 @@ namespace MTC_WebServerCore.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("ClientId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -204,6 +208,14 @@ namespace MTC_WebServerCore.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SupplierId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TransporterId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -213,6 +225,10 @@ namespace MTC_WebServerCore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId")
+                        .IsUnique()
+                        .HasFilter("[ClientId] IS NOT NULL");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -221,6 +237,14 @@ namespace MTC_WebServerCore.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("SupplierId")
+                        .IsUnique()
+                        .HasFilter("[SupplierId] IS NOT NULL");
+
+                    b.HasIndex("TransporterId")
+                        .IsUnique()
+                        .HasFilter("[TransporterId] IS NOT NULL");
+
                     b.ToTable("AspNetUsers");
 
                     b.HasData(
@@ -228,9 +252,7 @@ namespace MTC_WebServerCore.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-
-                            ConcurrencyStamp = "70b60a32-b0bc-4ca6-ac30-f678dc5126e5",
-
+                            ConcurrencyStamp = "9f76dfa9-f229-475f-83db-c85c7fccef23",
                             Email = "super@user.com",
                             EmailConfirmed = true,
                             IsActive = true,
@@ -238,11 +260,9 @@ namespace MTC_WebServerCore.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPER@USER.COM",
                             NormalizedUserName = "SUPER@USER.COM",
-
-                            PasswordHash = "AQAAAAEAACcQAAAAEJ6eH/5Ab4FmVczn83Ejj1X2fU/lBzfNPlrXYccumk/QzPD8C1Gyr9bHHqTq0/3vHg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENsAnpOCMlMKpCX/f/KZxzCMxc7tzqVPVzoc4Sl0eNIVE3ngJ6/f16kIedLgOK8omw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "204485ab-63a9-4f09-b39d-bb2691cfc4d5",
-
+                            SecurityStamp = "1b5b6f50-ea82-4231-8707-05b5fa0ebebc",
                             TwoFactorEnabled = false,
                             UserName = "super@user.com"
                         },
@@ -250,9 +270,7 @@ namespace MTC_WebServerCore.Migrations
                         {
                             Id = "e08d7ef7-2615-4385-844f-81834bb6e776",
                             AccessFailedCount = 0,
-
-                            ConcurrencyStamp = "8dcd252d-4bcd-4ad4-bc1b-b6620a9fb10c",
-
+                            ConcurrencyStamp = "3249898e-cf08-473e-a2fd-6cd6fcf0dafe",
                             Email = "client@mtc.com",
                             EmailConfirmed = true,
                             IsActive = true,
@@ -260,11 +278,9 @@ namespace MTC_WebServerCore.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "CLIENT@MTC.COM",
                             NormalizedUserName = "CLIENT@MTC.COM",
-
-                            PasswordHash = "AQAAAAEAACcQAAAAEBBi96od04XGKACIytVgeSO7jsvXNTWuj3qyTdnl/LQeMlliNw4ey4LkfAaT7vTFSA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOFMYMdw0yjqhmFYyqgXGbgZ+yBXPHk283nPO6ZOG4XOM7gxEAZvB1OHy6Hc+Xxvxg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "85adb137-961e-4963-8875-b097a7ea3fb7",
-
+                            SecurityStamp = "b9e747b1-2127-4001-af9d-0e640f374f78",
                             TwoFactorEnabled = false,
                             UserName = "client@mtc.com"
                         },
@@ -272,9 +288,7 @@ namespace MTC_WebServerCore.Migrations
                         {
                             Id = "a0392e57-a71c-4314-b87c-ba8dc7628fcc",
                             AccessFailedCount = 0,
-
-                            ConcurrencyStamp = "457fbb1c-d52d-4992-b1cb-e168ed17f9f3",
-
+                            ConcurrencyStamp = "d332e37c-8cb8-4e04-94f9-c9935be15b3a",
                             Email = "transporter@mtc.com",
                             EmailConfirmed = true,
                             IsActive = true,
@@ -282,11 +296,9 @@ namespace MTC_WebServerCore.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TRANSPORTER@MTC.COM",
                             NormalizedUserName = "TRANSPORTER@MTC.COM",
-
-                            PasswordHash = "AQAAAAEAACcQAAAAEFmSFTON8YTq76IsWx+sc/o2lV0JPNrdswy0rSf0GpoywUv3/dlqCcv2ijDq1XEDUw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAJBwlmybe72jqZSzzNhYamIIQ6QdtE5LO/Vai4kVuThtf+KOXRdh2SMsjaJthlS4Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b240da1d-b9c6-41df-8f65-b5815c80b739",
-
+                            SecurityStamp = "0e7b8d86-4b42-4629-94c5-5d8fb0d0a6bd",
                             TwoFactorEnabled = false,
                             UserName = "transporter@mtc.com"
                         },
@@ -294,9 +306,7 @@ namespace MTC_WebServerCore.Migrations
                         {
                             Id = "f0cd17fb-639c-4bd4-aa51-cb64259d9743",
                             AccessFailedCount = 0,
-
-                            ConcurrencyStamp = "aeb589ec-1e50-4fcb-8887-44b797c50ac9",
-
+                            ConcurrencyStamp = "272f6415-b209-4774-b447-13fbbbc13884",
                             Email = "supplier@mtc.com",
                             EmailConfirmed = true,
                             IsActive = true,
@@ -304,21 +314,35 @@ namespace MTC_WebServerCore.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPPLIER@MTC.COM",
                             NormalizedUserName = "SUPPLIER@MTC.COM",
-
-                            PasswordHash = "AQAAAAEAACcQAAAAEILsGOIpx9i1wkk40OLO2bBkm89tPIj5mNE2p86VXBax/2+iDO7dSe4DspmLR+rOlg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJi8aR8KrHHd6vIR8cJt9WoEWniWS3viwsGlLm+xa9mpL0lClAVmovKEKCEHEjdzEg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d046038a-0533-4cf3-bf17-4ac5c8612513",
-
+                            SecurityStamp = "a2175e9d-b6fe-476c-a512-93fe6bcefaa2",
                             TwoFactorEnabled = false,
                             UserName = "supplier@mtc.com"
                         },
                         new
                         {
-
+                            Id = "3ba08e02-85b4-4488-8108-e526aa987eed",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ff1bf7ca-5130-475d-82b8-6864a28c5fde",
+                            Email = "moderator@mtc.com",
+                            EmailConfirmed = true,
+                            IsActive = true,
+                            IsRemovable = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MODERATOR@MTC.COM",
+                            NormalizedUserName = "MODERATOR@MTC.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHOSah1etE/d7+y/qFEKhdzxGLRDev8Gfak5DwFeerlaop/HzobBJ7lkOefiGjSQsw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "6b0c9bc5-eda5-442a-983b-671ec88a3c20",
+                            TwoFactorEnabled = false,
+                            UserName = "moderator@mtc.com"
+                        },
+                        new
+                        {
                             Id = "c6bbcf91-ab26-4bf1-a8ac-6251444d1464",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dfe428a7-65e1-4a55-8c34-013b03daecba",
-
+                            ConcurrencyStamp = "aa0a1148-aa70-4e8e-a1d7-ca4c8ca9bdec",
                             Email = "UserAdmin@mtc.com",
                             EmailConfirmed = true,
                             IsActive = true,
@@ -326,11 +350,9 @@ namespace MTC_WebServerCore.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USERADMIN@MTC.COM",
                             NormalizedUserName = "USERADMIN@MTC.COM",
-
-                            PasswordHash = "AQAAAAEAACcQAAAAEMLU104ocoxmxKPdq+hXUzy1hyoAuzCeG8Cd/0iWpo9dApPL5MFYcn8nYV537JAEOQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIOSe199penX9iEzffrbK4/a8rAWOyb3LnMkQ9/5qEQZgWrJGz86IIfU5sNmy/2CVQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "00aaaec4-b5d2-4834-b907-b8adf3a572ad",
-
+                            SecurityStamp = "5d0f5477-24e8-446b-ae3c-f8943755c9f2",
                             TwoFactorEnabled = false,
                             UserName = "UserAdmin@mtc.com"
                         });
@@ -639,10 +661,8 @@ namespace MTC_WebServerCore.Migrations
 
             modelBuilder.Entity("MTCmodel.ProductImage", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
@@ -951,6 +971,11 @@ namespace MTC_WebServerCore.Migrations
                         new
                         {
                             UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9",
+                            RoleId = "6ee9e763-1f51-4d0d-a463-b7a8a791234b"
+                        },
+                        new
+                        {
+                            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             RoleId = "7e19e371-55db-4c16-b9c0-4103de5b39fd"
                         },
                         new
@@ -977,6 +1002,11 @@ namespace MTC_WebServerCore.Migrations
                         {
                             UserId = "f0cd17fb-639c-4bd4-aa51-cb64259d9743",
                             RoleId = "277f86fd-db6a-449a-a7de-25917a177a61"
+                        },
+                        new
+                        {
+                            UserId = "3ba08e02-85b4-4488-8108-e526aa987eed",
+                            RoleId = "6ee9e763-1f51-4d0d-a463-b7a8a791234b"
                         },
                         new
                         {
@@ -1030,6 +1060,27 @@ namespace MTC_WebServerCore.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
+            modelBuilder.Entity("MTCmodel.ApplicationUser", b =>
+                {
+                    b.HasOne("MTCmodel.Client", "Client")
+                        .WithOne("ApplicationUser")
+                        .HasForeignKey("MTCmodel.ApplicationUser", "ClientId");
+
+                    b.HasOne("MTCmodel.Supplier", "Supplier")
+                        .WithOne("ApplicationUser")
+                        .HasForeignKey("MTCmodel.ApplicationUser", "SupplierId");
+
+                    b.HasOne("MTCmodel.Transporter", "Transporter")
+                        .WithOne("ApplicationUser")
+                        .HasForeignKey("MTCmodel.ApplicationUser", "TransporterId");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Supplier");
+
+                    b.Navigation("Transporter");
+                });
+
             modelBuilder.Entity("MTCmodel.Bonus", b =>
                 {
                     b.HasOne("MTCmodel.Client", "Client")
@@ -1047,17 +1098,6 @@ namespace MTC_WebServerCore.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("OrderOUT");
-                });
-
-            modelBuilder.Entity("MTCmodel.Client", b =>
-                {
-                    b.HasOne("MTCmodel.ApplicationUser", "ApplicationUser")
-                        .WithOne("Client")
-                        .HasForeignKey("MTCmodel.Client", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("MTCmodel.OrderIN", b =>
@@ -1197,28 +1237,6 @@ namespace MTC_WebServerCore.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("MTCmodel.Supplier", b =>
-                {
-                    b.HasOne("MTCmodel.ApplicationUser", "ApplicationUser")
-                        .WithOne("Supplier")
-                        .HasForeignKey("MTCmodel.Supplier", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-                });
-
-            modelBuilder.Entity("MTCmodel.Transporter", b =>
-                {
-                    b.HasOne("MTCmodel.ApplicationUser", "ApplicationUser")
-                        .WithOne("Transporter")
-                        .HasForeignKey("MTCmodel.Transporter", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-                });
-
             modelBuilder.Entity("MTCmodel.Zone", b =>
                 {
                     b.HasOne("MTCmodel.Transporter", "Transporter")
@@ -1299,16 +1317,12 @@ namespace MTC_WebServerCore.Migrations
             modelBuilder.Entity("MTCmodel.ApplicationUser", b =>
                 {
                     b.Navigation("Addresses");
-
-                    b.Navigation("Client");
-
-                    b.Navigation("Supplier");
-
-                    b.Navigation("Transporter");
                 });
 
             modelBuilder.Entity("MTCmodel.Client", b =>
                 {
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("Bonuses");
 
                     b.Navigation("OrderOUTs");
@@ -1350,11 +1364,15 @@ namespace MTC_WebServerCore.Migrations
 
             modelBuilder.Entity("MTCmodel.Supplier", b =>
                 {
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("OrdersINs");
                 });
 
             modelBuilder.Entity("MTCmodel.Transporter", b =>
                 {
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("orderLineOUTs");
 
                     b.Navigation("Zones");

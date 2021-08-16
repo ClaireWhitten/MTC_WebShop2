@@ -1,0 +1,51 @@
+﻿@model RegisterAdministratorViewModel
+@*@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnv
+
+@{
+    ViewData["Title"] = "Register";
+    bool isDevelopment = hostingEnv.EnvironmentName == "Development" ? true : false;
+}*@
+
+<hr />
+<h1>Add a new Administrator</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+
+            @*================================= INLOGGegevens =======================================================*@
+
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+
+            @*================================= CLAIMS =======================================================*@
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Claims</h2>
+                </div>
+                <div class="card-body">
+                    @for (int i = 0; i < Model.Claims.Count; i++)
+                    {
+                        <div class="form-check m-1">
+                            <input type="hidden" asp-for="@Model.Claims[i].ClaimType" />
+                            <input asp-for="@Model.Claims[i].IsSelected" class="form-check-input" />
+                            <label class="form-check-label" asp-for="@Model.Claims[i].IsSelected">
+                                @Model.Claims[i].ClaimType
+                            </label>
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Registreer</button>
+        </form>
+    </div>
+</div>

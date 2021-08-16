@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MTCmodel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,8 +8,13 @@ using System.Threading.Tasks;
 
 namespace MTC_WebServerCore.ViewModels.Account
 {
-    public class RegisterViewModel
+    public abstract class _RegisterViewModel
     {
+        //[Required]
+        //[MaxLength(256, ErrorMessage = "maximum 256 karakters")]
+        //[MinLength(5, ErrorMessage = "minimum 5 karakters")]
+        //public string UserName { get; set; }
+
         [Required]
         [EmailAddress]
         [Remote(action: "IsEmailInUse", controller: "Account")]
@@ -27,5 +33,10 @@ namespace MTC_WebServerCore.ViewModels.Account
         [Compare("Password",
             ErrorMessage = "Paswoord en bevestigd paswoord komen niet overeen")]
         public string ConfirmPassword { get; set; }
+
+
+
+
+
     }
 }

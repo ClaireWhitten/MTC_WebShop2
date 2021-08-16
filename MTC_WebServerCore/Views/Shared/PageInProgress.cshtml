@@ -1,0 +1,21 @@
+﻿@model  PageInProgressViewModel
+
+@{
+    ViewData["Title"] = "In progress";
+}
+
+
+<h1>@Model.Message</h1>
+
+
+@*<h1>@ViewData["Path"]</h1>
+    <h1>@ViewData["QS"]</h1>*@
+
+
+
+<a asp-action=@Model.ActionMethodeBack asp-controller=@Model.ControllerBack>
+    Klik hier terug te gaan
+</a>
+
+<hr />
+<img class="centered" src="~/images/pageInProgress.jpg" />

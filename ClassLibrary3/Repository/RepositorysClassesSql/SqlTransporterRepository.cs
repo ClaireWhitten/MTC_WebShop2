@@ -27,26 +27,26 @@ namespace MTCrepository.Repository
             throw new NotImplementedException("Sorry, at this moment you can not use this method, Tom work on it");
             return base.AddRangeAsync(aEntities, autoSaveChange);
         }
-        public override Task<TSDreposResultIenumerable<Transporter>> GetAllAsync()
-        {
-            throw new NotImplementedException("Sorry, at this moment you can not use this method, Tom work on it");
-            return base.GetAllAsync();
-        }
-        public override Task<TSDreposResultIenumerable<Transporter>> GetByConditionAsync(Expression<Func<Transporter, bool>> predicate)
-        {
-            throw new NotImplementedException("Sorry, at this moment you can not use this method, Tom work on it");
-            return base.GetByConditionAsync(predicate);
-        }
-        public override Task<TSDreposResultOneObject<Transporter>> GetByIdAsync(params object[] aPrimaryKey)
-        {
-            throw new NotImplementedException("Sorry, at this moment you can not use this method, Tom work on it");
-            return base.GetByIdAsync(aPrimaryKey);
-        }
-        public override Task<TSDreposResultOneObject<Transporter>> GetSingleOrDefaultAsync(Expression<Func<Transporter, bool>> aPredicate)
-        {
-            throw new NotImplementedException("Sorry, at this moment you can not use this method, Tom work on it");
-            return base.GetSingleOrDefaultAsync(aPredicate);
-        }
+        //public override Task<TSDreposResultIenumerable<Transporter>> GetAllAsync()
+        //{
+        //    throw new NotImplementedException("Sorry, at this moment you can not use this method, Tom work on it");
+        //    return base.GetAllAsync();
+        //}
+        //public override Task<TSDreposResultIenumerable<Transporter>> GetByConditionAsync(Expression<Func<Transporter, bool>> predicate)
+        //{
+        //    throw new NotImplementedException("Sorry, at this moment you can not use this method, Tom work on it");
+        //    return base.GetByConditionAsync(predicate);
+        //}
+        //public override Task<TSDreposResultOneObject<Transporter>> GetByIdAsync(params object[] aPrimaryKey)
+        //{
+        //    throw new NotImplementedException("Sorry, at this moment you can not use this method, Tom work on it");
+        //    return base.GetByIdAsync(aPrimaryKey);
+        //}
+        //public override Task<TSDreposResultOneObject<Transporter>> GetSingleOrDefaultAsync(Expression<Func<Transporter, bool>> aPredicate)
+        //{
+        //    throw new NotImplementedException("Sorry, at this moment you can not use this method, Tom work on it");
+        //    return base.GetSingleOrDefaultAsync(aPredicate);
+        //}
         public override Task<TSDreposResultOneObject<Transporter>> RemoveAsync(Transporter aEntity, bool autoSaveChange = true)
         {
             throw new NotImplementedException("Sorry, at this moment you can not use this method, Tom work on it");

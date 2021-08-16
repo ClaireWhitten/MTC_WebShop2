@@ -1,0 +1,21 @@
+﻿
+
+@{
+    ViewData["Title"] = "NotFound";
+}
+
+
+<h1>@ViewData["ErrorMessage"]</h1>
+
+
+@*<h1>@ViewData["Path"]</h1>
+<h1>@ViewData["QS"]</h1>*@
+
+
+
+<a asp-action="index" asp-controller="Budget">
+    Klik hier om terug naar de lijst te gaan
+</a>
+
+<hr />
+<img class="centered" src="~/images/notfound.jpg" />

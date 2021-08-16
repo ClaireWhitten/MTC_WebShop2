@@ -17,7 +17,9 @@ namespace MTCmodel
         //-------------------------------------------------------------------
         [Required]
         [MaxLength(30, ErrorMessage = "lengte maximum 30")]
+        [MinLength(2, ErrorMessage = "lengte minimum 2")]
         public string FirstName { get; set; }
+
 
         //-------------------------------------------------------------------
         [MaxLength(8, ErrorMessage = "lengte maximum 8")]
@@ -27,15 +29,17 @@ namespace MTCmodel
         //-------------------------------------------------------------------
         [Required]
         [MaxLength(30, ErrorMessage = "lengte maximum 30")]
+        [MinLength(2, ErrorMessage = "lengte minimum 2")]
         public string LastName { get; set; }
 
         //-------------------------------------------------------------------
 
-        public bool IsActive { get; set; } = true;
+        //public bool IsActive { get; set; } = true; //staat nu in  ApplicationUser
 
 
 
         //-------------------------------------------------------------------
+        [Range(0,25, ErrorMessage = "moet tussen 0 en 25 zijn")]
         public double DiscountPercentage { get; set; } = 0;
 
 
@@ -43,7 +47,7 @@ namespace MTCmodel
 
 
         public ApplicationUser ApplicationUser { get; set; }
-
+        //public string UserId { get; set; } //changed to string (from int)
 
 
         //=============================== navigation property's =================================

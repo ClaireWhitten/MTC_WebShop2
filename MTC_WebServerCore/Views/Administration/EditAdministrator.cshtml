@@ -1,0 +1,53 @@
+﻿@model EditAdministratorViewModel
+
+
+    @{
+        ViewData["Title"] = "Edit Administrator";
+    }
+
+<hr />
+<h1>Edit Administrator</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+
+            @*================================= INLOGGegevens =======================================================*@
+            <input type="hidden" asp-for="@Model.Id" />
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                @*<input asp-for="Email"  class="form-control " />*@
+                @*<span asp-validation-for="Email" class="text-danger"></span>*@
+                <div>
+                    <input asp-for="Email" disabled class="form-control">
+                </div>
+            </div>
+
+
+            @*================================= CLAIMS =======================================================*@
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Claims</h2>
+                </div>
+                <div class="card-body">
+                    @for (int i = 0; i < Model.Claims.Count; i++)
+                    {
+                        <div class="form-check m-1">
+                            <input type="hidden" asp-for="@Model.Claims[i].ClaimType" />
+                            <input asp-for="@Model.Claims[i].IsSelected" class="form-check-input" />
+                            <label class="form-check-label" asp-for="@Model.Claims[i].IsSelected">
+                                @Model.Claims[i].ClaimType
+                            </label>
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Edit administrator</button>
+        </form>
+    </div>
+</div>
