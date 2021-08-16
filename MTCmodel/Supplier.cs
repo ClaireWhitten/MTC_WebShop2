@@ -13,7 +13,7 @@ namespace MTCmodel
         [MaxLength(450)]
         public string Id { get; set; }
 
-        public ApplicationUser ApplicationUser { get; set; }
+
         //-------------------------------------------------------------------
         [Required(ErrorMessage = "Name can't be empty!")]
         [MaxLength(50)]
@@ -27,7 +27,7 @@ namespace MTCmodel
         [MaxLength(400)]
         public string WebSite { get; set; }
         //-------------------------------------------------------------------
-        public bool IsActive { get; set; } = true;
+        //public bool IsActive { get; set; } = true; ://staat nu in ApplicationUser
         //-------------------------------------------------------------------
         [Required(ErrorMessage = "Company number can't be empty!")]
         [MaxLength(20)]
@@ -36,7 +36,8 @@ namespace MTCmodel
 
 
         //=============================== foreign key's =========================================
-
+        public ApplicationUser ApplicationUser { get; set; }
+        //public string UserId { get; set; } //changed to string (from int)
 
         //=============================== navigation property's =================================
 

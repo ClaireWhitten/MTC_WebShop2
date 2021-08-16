@@ -21,7 +21,10 @@
 
   <ItemGroup>
     <Folder Include="Bussiness\" />
-    <Folder Include="ViewModels\Administration\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\verboden.jpg" />
   </ItemGroup>
 
   <ItemGroup>

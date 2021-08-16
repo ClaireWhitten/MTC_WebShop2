@@ -1,0 +1,74 @@
+﻿@model IEnumerable<ApplicationUser>
+
+@{
+    ViewData["Title"] = "Suppliers overview";
+}
+
+
+
+<h1>Suppliers overview</h1>
+<hr />
+
+
+<a asp-action="RegisterSupplier" asp-controller="Administration"
+   class="btn btn-primary mb-3" style="width:auto">
+    Add new Supplier
+</a>
+
+
+@*if there are items*@
+@if (Model.Any())
+{
+    <table class="table">
+        @*the headers of the table, tip: show only important property's  *@
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*here you set the items in the column that matched with the headers above*@
+                <td>@item.Id</td>
+                <td>@item.Email</td>
+
+                <td>
+
+                    @*the buttons, you must only change the controller and action*@
+                    <form method="post" asp-controller="Administration" asp-action="DeleteSupplier" asp-route-id="@item.Id">
+                        @*the buttons, you must only change the controller and action*@
+                        <a asp-controller="Administration" asp-action="DetailSupplier" asp-route-id="@item.Id">
+                            <input type="button" class="btn btn-primary m-1" value="Detail" />
+                        </a>
+                        @*the buttons, you must only change the controller and action*@
+                        <a asp-controller="Administration" asp-action="EditSupplier" asp-route-id="@item.Id">
+                            <input type="button" class="btn btn-primary m-1" value="Edit" />
+                        </a>
+
+                        <span id="confirmDeleteSpan_@item.Id" style="display:none">
+                            <span>Are you sure you want to delete?</span>
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                            <a href="#" class="btn btn-primary"
+                               onclick="confirmDelete('@item.Id', false)">No</a>
+                        </span>
+                        <span id="deleteSpan_@item.Id">
+                            <a href="#" class="btn btn-danger"
+                               onclick="confirmDelete('@item.Id', true)">Delete</a>
+                        </span>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            No Suppliers found
+        </div>
+    </div>
+}

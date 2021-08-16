@@ -1,0 +1,43 @@
+﻿@model RegisterTransporterViewModel
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnv
+
+@{
+    ViewData["Title"] = "New Transporter";
+    bool isDevelopment = hostingEnv.EnvironmentName == "Development" ? true : false;
+}
+
+<hr />
+<h1>Add new supplier</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+
+            @*================================= INLOGGegevens =======================================================*@
+
+
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+
+            @*================================= Transporter =======================================================*@
+
+            <div class="form-group">
+                <label asp-for="Transporter.Name"></label>
+                <input asp-for="Transporter.Name" class="form-control"  />
+                <span asp-validation-for="Transporter.Name" class="text-danger"></span>
+            </div>
+
+
+     
+
+            @*<div asp-validation-summary="All" class="text-danger"></div>*@
+
+            <button type="submit" class="btn btn-primary">Registreer</button>
+        </form>
+    </div>
+</div>

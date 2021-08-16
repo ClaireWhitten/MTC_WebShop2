@@ -13,7 +13,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MTC_WebServerCore</a>
+                @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MTC_WebServerCore</a>*@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -71,7 +71,85 @@
                                    asp-action="">Tom_testPage_3</a>
                             </div>
                         </li>
+
+
+                        @*=========================================================================
+                        visible somtings dependent on the Roles of the inlogged user
+                        =========================================================================*@
+
+
+                        @if (_signInManager.IsSignedIn(User) && User.IsInRole("Transporter"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Transporter management
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-controller="Administration"
+                                       asp-action="ListUsers">sometest</a>
+                                    <a class="dropdown-item" asp-controller="Administration"
+                                       asp-action="ListRoles">sometest</a>
+                                </div>
+                            </li>
+                        }
+
+                        @if (_signInManager.IsSignedIn(User) && User.IsInRole("Supplier"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Supplier management
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-controller="Administration"
+                                       asp-action="ListUsers">sometest</a>
+                                    <a class="dropdown-item" asp-controller="Administration"
+                                       asp-action="ListRoles">sometest</a>
+                                </div>
+                            </li>
+                        }
+
+                        @if (_signInManager.IsSignedIn(User) && User.IsInRole("Client"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Client management
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-controller="Administration"
+                                       asp-action="ListUsers">sometest</a>
+                                    <a class="dropdown-item" asp-controller="Administration"
+                                       asp-action="ListRoles">sometest</a>
+                                </div>
+                            </li>
+                        }
+
+
+                        @if (_signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Administrator management
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-controller="Administration"
+                                       asp-action="OverviewAdministrators">Administrators overview</a>
+                                    <a class="dropdown-item" asp-controller="Administration"
+                                       asp-action="OverviewSuppliers">Suppliers overview</a>
+                                    <a class="dropdown-item" asp-controller="Administration"
+                                       asp-action="OverviewTransporters">Transporters overview</a>
+                                </div>
+                            </li>
+                        }
+
+
+
+
                     </ul>
+
 
 
 
@@ -95,7 +173,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="account" asp-action="register">
+                                <a class="nav-link" asp-controller="account" asp-action="RegisterClient">
                                     Register
                                 </a>
                             </li>
