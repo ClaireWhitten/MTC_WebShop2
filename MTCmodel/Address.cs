@@ -20,7 +20,7 @@ namespace MTCmodel
         //------------------------------------------------------------------- 
 
         [Required(ErrorMessage = "House number can't be empty")]
-        //[MaxLength(4)]
+        [Range(1,2000,ErrorMessage ="moet waarde van 1 tem 2000 zijn")]
         public int HouseNumber { get; set; }
 
         //------------------------------------------------------------------- 
@@ -58,7 +58,7 @@ namespace MTCmodel
 
         //=============================== foreign key's =========================================
 
-        [Required]
+        [Required (ErrorMessage ="userId vereist")]
         //identity use nvarchar(450) for the key but save all userskeys in format string(36) 
         //if this give a problem, change it to MaxLength 450 
         [MaxLength(450)] 

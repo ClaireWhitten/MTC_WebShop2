@@ -10,13 +10,13 @@ namespace MTCmodel
     {
         public static List<Claim> AllClaims = new List<Claim>()
         {
-            new Claim("Create Role", "Create Role"),
-            new Claim("Edit Role","Edit Role"),
-            new Claim("Delete Role","Delete Role"),
+            new Claim("Products", "Products"),
+            new Claim("ProductCategories","ProductCategories"),
+            new Claim("Users","Users"),
 
-            new Claim("Create Book", "Create Book"),
-            new Claim("Edit Book","Edit Book"),
-            new Claim("Delete Book","Delete Book"),
+            //new Claim("Create Book", "Create Book"),
+            //new Claim("Edit Book","Edit Book"),
+            //new Claim("Delete Book","Delete Book")
         };
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using MTC_WebServerCore.ViewModels.Account;
 using MTCmailServer;
 using MTCmodel;
+using MTCrepository.TDSrepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,39 +14,46 @@ using System.Threading.Tasks;
 
 namespace MTC_WebServerCore.Controllers
 {
+    
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly ILogger _logger;
+        private readonly IApplicationRepository _repos;
 
         //======================================================================================================ctor
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            RoleManager<ApplicationRole> roleManager,
+            IApplicationRepository appRepos,
             ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _repos = appRepos;
+            _roleManager = roleManager;
         }
 
 
 
 
-        #region ====================================================================================================== Register
+        #region ====================================================================================================== RegisterClient
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult RegisterClient()
         {
-
             return View();
         }
 
         [ValidateAntiForgeryToken] 
         [HttpPost]
-        public async Task<IActionResult> Register([FromForm] RegisterViewModel model)
+        public async Task<IActionResult> RegisterClient([FromForm] RegisterClientViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 // copier data van model naar IdentityUser
@@ -53,20 +61,33 @@ namespace MTC_WebServerCore.Controllers
                 {
                     UserName = model.Email,
                     Email = model.Email,
-                    //City = model.City,
-                    //Zipcode = model.Zipcode
+                    Client = model.Client
                 };
+                user.Addresses = new List<Address>();
+                user.Addresses.Add(model.Address);
 
 
                 // sla de user op in de tabel AspNetUsers in de DB
                 var result = await _userManager.CreateAsync(user, model.Password);
+
 
                 // Als de gebruiker succesvol is aangemaakt, 
                 // meld je de gebruiker aan met  SignInManager en dan 
                 // redirecten naar een actiemethode 
                 if (result.Succeeded)
                 {
-                    //=========================================================================================
+                    //======================================================================================== TOEVOEGEN ROLE
+                    var resultRoleAdded = await _userManager.AddToRoleAsync(user, "Client");
+
+                    //======================================================================================== TOEVOEGEN CLIENT
+                    //eerst id setten van de client
+                    //model.Client.Id = user.Id;
+                    //var resultAddClient = await _repos.Clients.AddAsync(model.Client);
+
+
+
+
+                    //========================================================================================= EMAIL VERZENDEN
                     //een token genereren voor emailbevestiging
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     //de url aanmaken
@@ -100,20 +121,16 @@ namespace MTC_WebServerCore.Controllers
 
                     return View("SendEmailConfirmationLink");
 
-
-                    //voorlopig naar de console schrijven, dit moet nog gemaild worden
-                    //Console.WriteLine(confirmationLink);
-                    //logger.Log(LogLevel.Warning, confirmationLink);
                     //=========================================================================================
 
 
                     //Als de gebruiker is aangemeld en de role Admin heeft, is het:
                     //de Admin-gebruiker die een nieuwe gebruiker aan het maken is.
                     //Stuur de  Admin - gebruiker door naar de actie ListUsers
-                    if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                    {
-                        return RedirectToAction("ListUsers", "Administration");
-                    }
+                    //if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    //{
+                    //    return RedirectToAction("ListUsers", "Administration");
+                    //}
 
                     //=============================================================== automatisch inloggen ====
 
@@ -149,6 +166,7 @@ namespace MTC_WebServerCore.Controllers
         }
 
         #endregion
+
 
 
 
@@ -345,7 +363,7 @@ namespace MTC_WebServerCore.Controllers
                     sbBody.Append("<hr>");
                     sbBody.Append("<h3>Bedankt voor het vertrouwen in ons product</h3>");
                     sbBody.Append("<p>Klik op de onderstaande link om jouw passwoord te resetten</p>");
-                    sbBody.Append($"<a href='{passwordResetLink}'><button>Registreer uw email</button></a>");
+                    sbBody.Append($"<a href='{passwordResetLink}'><button>Reset paswoord</button></a>");
                     sbBody.Append("<hr>");
 
 
