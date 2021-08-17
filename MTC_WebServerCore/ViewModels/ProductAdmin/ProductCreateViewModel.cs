@@ -45,7 +45,7 @@ namespace MTC_WebServerCore.ViewModels.ProductAdmin
         
         public double? SolderPercentage { get; set; }
 
-        public IFormFileCollection  IImages { get; set; }
+        public byte[]  ProductImages { get; set; }
 
 
         [Required(ErrorMessage = "Category cannot be empty")]

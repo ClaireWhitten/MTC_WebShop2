@@ -29,36 +29,40 @@ namespace MTC_WebServerCore.Controllers
         
         public async Task<IActionResult> IndexProductAdminAsync()
         {
-            TSDreposResultIenumerable<Product> resultProducts = await _repos.Products.GetByConditionAsync(p => p.IsActive == true);
-            IEnumerable<Product> Products = resultProducts.Data;
-            TSDreposResultIenumerable<ProductCategorie> resultProductCategoriess = await _repos.ProductCategories.GetByConditionAsync(p => p.SubCategories.Count == 0);
-            IEnumerable<ProductCategorie> ProductCategories = resultProductCategoriess.Data;
-            if(Products.Count()>0)
-            { 
-            var vm = Products.Select(x => new ProductIndexViewModel
+            TSDreposResultIenumerable<Product> resultProducts = await _repos.Products.GetProductsWithSuppliers();
+            IEnumerable<Product> Products = resultProducts.Data.Where(x=>x.IsActive==true);
+
+            TSDreposResultIenumerable<ProductImage> resultProductImages = await _repos.ProductImages.GetAllAsync();
+            IEnumerable<ProductImage> ProductImages = resultProductImages.Data;
+
+
+            if (Products.Count()>0)
             {
-                EAN = x.EAN,
-                Name = x.Name,
-                RecommendedUnitPrice = x.RecommendedUnitPrice,
-                CountInStock = x.CountInStock,
-                SolderPrice = x.SolderPrice,
-                CategorieName = ProductCategories.FirstOrDefault(c=>c.ID==x.CategorieId).Name,
-                ProductImage = x.Images.First().Image,
-                Supplier=x.Suppliers.First()
+                var vm = Products.Select(x => new ProductIndexViewModel
+                {
+                    EAN = x.EAN,
+                    Name = x.Name,
+                    RecommendedUnitPrice = x.RecommendedUnitPrice,
+                    CountInStock = x.CountInStock,
+                    SolderPrice = x.SolderPrice,
+                    CategorieName = x.Categorie.Name, 
+                    ProductImagesrc = string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(x.Images.FirstOrDefault().Image)),
+                    Suppliers = x.Suppliers.Select(x=>x.Name).ToArray(),
+                });
+                List<KeyValuePair<string, string>> Photos = new List<KeyValuePair<string, string>>();
                 
-                //ProductImage =new FormFile(new MemoryStream(x.Images.First().Image), 0, x.Images.First().Image.Length, "name", "fileName") ,
-            });
-            
                 return View(vm);
+
             }
             return View();
         }
+        
 
         
         public async Task<IActionResult> CreateProductAdmin()
         {
-            TSDreposResultIenumerable<ProductCategorie> resultProductCategoriess = await _repos.ProductCategories.GetByConditionAsync(p => p.SubCategories.Count == 0);
-            IEnumerable<ProductCategorie> ProductCategories = resultProductCategoriess.Data;
+            TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
+            IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
 
             TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s=>s.ApplicationUser.IsActive==true);
             IEnumerable<Supplier> suppliers = resultSuppliers.Data;
@@ -69,6 +73,40 @@ namespace MTC_WebServerCore.Controllers
                 Categories = ProductCategories.Select(c => new SelectListItem { Text = c.Name, Value = c.ID.ToString() }),
                 Suppliers=suppliers.Select(s=>new SelectListItem { Text=s.Name,Value=s.Id.ToString()})
             };
+
+
+            
+                List<object> treedata = new List<object>();
+            foreach (var item in ProductCategories)
+            {
+                int Id;
+                int Pid=0;
+                bool Haschild = false;
+                string Name;
+
+                Name = item.Name;
+                Id = item.ID;
+                if (item.SubCategories !=null &&  item.SubCategories.Count!=0)
+                {
+                    Haschild = true;
+                }
+                if(item.ParentCategorieID!=0 )
+                {
+                    Pid =Convert.ToInt32( item.ParentCategorieID);
+                }
+                treedata.Add(new { 
+                    id=Id,
+                    name=Name,
+                    haschild=Haschild,
+                    pid=Pid
+                });
+            }
+
+                ViewBag.dataSource = treedata;
+                
+           
+
+
             return View(vm);
         }
 
@@ -77,7 +115,7 @@ namespace MTC_WebServerCore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateProductAdminAsync([FromForm] ProductCreateViewModel product)
+        public async Task<IActionResult> CreateProductAdminAsync([FromForm] ProductCreateViewModel product,List<IFormFile> ProductImages)
         {
             if (TryValidateModel(product))
             {
@@ -96,24 +134,25 @@ namespace MTC_WebServerCore.Controllers
                    
                     SolderPrice = product.SolderPercentage
                 };
-                //newproduct.Suppliers=new IEnumerable<Supplier>
+                newproduct.Suppliers = new List<Supplier>();
                 TSDreposResultOneObject<Supplier> resultProductCategorie = await _repos.Suppliers.GetByIdAsync(product.SupplierId);
                 newproduct.Suppliers.Add(resultProductCategorie.Data);
                 newproduct.Images = new List<ProductImage>();
-                string id ="0" ;
-                int cnt = 0;
-                foreach (var item in product.IImages)
+
+                
+                foreach (var item in Request.Form.Files)
                 {
-                    if (item.Length > 0)
-                    {
-                        using (var reader = new StreamReader(item.OpenReadStream()))
-                        {
-                            string contentAsString = reader.ReadToEnd();
-                            ProductImage photo = new ProductImage { Image = new byte[contentAsString.Length * sizeof(char)], ProductEAN = newproduct.EAN,ID=(Convert.ToInt32( id )+cnt++).ToString()} ;
-                            await _repos.ProductImages.AddAsync(photo);
-                            //newproduct.Images.Add(photo);
-                        }
-                    }
+                    ProductImage img = new ProductImage();
+                    img.ID = Guid.NewGuid().ToString();
+                    
+                    MemoryStream ms = new MemoryStream();
+                    item.CopyTo(ms);
+                    img.Image = ms.ToArray();
+                    ms.Close();
+                    ms.Dispose();
+
+                    newproduct.Images.Add(img);
+
                 }
                 await _repos.Products.AddAsync(newproduct);
                 return RedirectToAction("IndexProductAdmin");

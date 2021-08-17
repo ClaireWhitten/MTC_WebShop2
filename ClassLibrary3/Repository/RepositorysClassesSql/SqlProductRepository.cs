@@ -1,9 +1,12 @@
-﻿using MTCmodel;
+﻿using Microsoft.EntityFrameworkCore;
+using MTCmodel;
 using MTCrepository.TDSrepository;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+
+
 
 namespace MTCrepository.Repository
 {
@@ -15,12 +18,19 @@ namespace MTCrepository.Repository
         {
            
         }
+        public async Task<TSDreposResultIenumerable<Product>> GetProductsWithSuppliers()
+        {
+            var terug = new TSDreposResultIenumerable<Product>();
 
-        //public override Task<TSDreposResultOneObject<Product>> AddAsync(Product aEntity, bool autoSaveChange = true)
-        //{
-        //    //hier isActive = false
+            terug.Data = await _context.Set<Product>().Include(x => x.Suppliers).Include(x=>x.Images).Include(x=>x.Categorie).ToListAsync();
 
-        //    //return base.RemoveAsync(aEntity, autoSaveChange);
-        //}
+            return terug;
+        }
+        ////public override Task<TSDreposResultOneObject<Product>> AddAsync(Product aEntity, bool autoSaveChange = true)
+        ////{
+        ////    //hier isActive = false
+
+        ////    //return base.RemoveAsync(aEntity, autoSaveChange);
+        ////}
     }
 }
