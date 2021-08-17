@@ -9,6 +9,9 @@ namespace MTCrepository.Repository
 {
     public interface IProductCategorieRepository : ITDSrepositoryAsync<ProductCategorie>
     {
+     
         Task<TSDreposResultIenumerable<ProductCategorie>> GetCategoriesWithSubandParent();
+
+        Task<IEnumerable<ProductCategorie>> GetAllParents(int categoryId, List<ProductCategorie> productCategories = null);
     }
 }

@@ -1,4 +1,8 @@
-﻿@model IEnumerable<ProductCategorie>;
+﻿@using MTC_WebServerCore.ViewModels.Category
+@model IEnumerable<OverviewCategoriesViewModel>
+@{
+    ViewData["Title"] = "Overview Categories";
+}
 
 <h1>Overview Categories</h1>
 <a class="btn btn-info" asp-controller="Category" asp-action="AddCategory">Add new category</a>
@@ -7,34 +11,37 @@
         <thead>
             <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Parent Category</th>
+                <th scope="col">Parent Categories</th>
+                <th scope="col">Direct parent</th>
                 <th scope="col">Number of products</th>
                 <th scope="col">Subcategories</th>
                 <th scope="col">Modify</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var productCategory in Model)
+            @foreach (var cat in Model)
             {
             <tr>
-                <th scope="row">@productCategory.Name</th>
-                @if (productCategory.ParentCategorie != null)
+                <th scope="row">@cat.Name</th>
+                <th scope="row">@cat.ParentPath</th>
+
+                @if (cat.ParentCategorie != null)
                 {
-                    <td>@productCategory.ParentCategorie.Name</td>
+                    <td>@cat.ParentCategorie.Name</td>
                 }
                 else
                 {
                     <td>None</td>
                 }
-                <td>@productCategory.Products.Count()</td>
+                <td>@cat.Products.Count()</td>
 
-                @if (productCategory.SubCategories.Count()>0)
+                @if (cat.Subcategories.Count() > 0)
                 {
                     <td>
-                      @foreach (var subcat in productCategory.SubCategories)
-                      {
-                        <p>@subcat.Name</p>
-                      }
+                        @foreach (var subcat in cat.Subcategories)
+                        {
+                            <p>@subcat.Name</p>
+                        }
                     </td>
                 }
                 else
@@ -42,9 +49,9 @@
                     <td>None</td>
                 }
                 <td>
-                    <a asp-controller="Category" asp-action="Detail" asp-route-id="@productCategory.ID">View</a>
-                    <a asp-controller="Category" asp-action="Edit" asp-route-id="@productCategory.ID">Edit</a>
-                    <a asp-controller="Category" asp-action="Delete" asp-route-id="@productCategory.ID">Delete</a>
+                    <a asp-controller="Category" asp-action="Detail" asp-route-id="@cat.Id">View</a>
+                    <a asp-controller="Category" asp-action="EditCategory" asp-route-id="@cat.Id">Edit</a>
+                    <a asp-controller="Category" asp-action="DeleteCategory" asp-route-id="@cat.Id">Delete</a>
                 </td>
             </tr>
             }
