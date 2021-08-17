@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MTC_WebServerCore.ViewModels.Product
+namespace MTC_WebServerCore.ViewModels.ProductAdmin
 {
     public class ProductIndexViewModel
     {
@@ -42,7 +42,7 @@ namespace MTC_WebServerCore.ViewModels.Product
 
 
         //====>===>===> most be a list of supliers<====<====<=====
-        public  Supplier Supplier { get; set; }
+        public  string[] Suppliers { get; set; }
 
 
 
@@ -56,7 +56,7 @@ namespace MTC_WebServerCore.ViewModels.Product
 
         //public ICollection<ProductImage> ProductImages { get; set; }
 
-        public byte[] ProductImage { get; set; }
+        public string ProductImagesrc { get; set; }
 
         //[MaxLength(255, ErrorMessage = "maximum {1} characters allowed for Extra info")]
         //public string ExtraInfo { get; set; }
