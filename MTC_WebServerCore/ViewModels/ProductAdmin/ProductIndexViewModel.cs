@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MTC_WebServerCore.ViewModels.Product
+namespace MTC_WebServerCore.ViewModels.ProductAdmin
 {
     public class ProductIndexViewModel
     {
