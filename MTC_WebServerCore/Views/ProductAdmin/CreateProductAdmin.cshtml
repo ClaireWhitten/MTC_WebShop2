@@ -1,5 +1,4 @@
 ﻿@model MTC_WebServerCore.ViewModels.ProductAdmin.ProductCreateViewModel
-
 <form asp-controller="ProductAdmin" asp-action="CreateProductAdmin" method="post" enctype="multipart/form-data">
     <!--belanrijk enctype voor een foto-->
     <div class="form-group">
@@ -33,11 +32,6 @@
         <span class="text-danger" asp-validation-for="BTWPercentage"></span>
     </div>
     <div class="form-group">
-        <label asp-for="CountInStock"></label>
-        <input class="form-control" asp-for="CountInStock" />
-        <span class="text-danger" asp-validation-for="CountInStock"></span>
-    </div>
-    <div class="form-group">
         <label asp-for="MinStock"></label>
         <input class="form-control" asp-for="MinStock" />
         <span class="text-danger" asp-validation-for="MinStock"></span>
@@ -48,52 +42,18 @@
         <span class="text-danger" asp-validation-for="MaxStock"></span>
     </div>
     <div class="form-group">
-            <select asp-items="@Model.Categories" asp-for="CategorieId"></select>
-        </div>
-    @*<div class="demo-section k-content">
-            @(Html.Kendo().TreeView()
-            .Name("treeview")
-            .DataTextField("Name")
-            .DataSource(dataSource => dataSource
-                .Read(read => read
-                    .Action("Employees", "treeview")
-                )
-            )
-        )*@
-
-    @*@(
-    Html.DevExtreme().TreeView()
-    .ID("treeview")
-    .DataSource(d => d.Mvc().LoadAction("GetHierarchicalDataForSearch"))
-    .DisplayExpr("Text")
-    .ItemsExpr("Items")
-    .ExpandedExpr("Expanded")
-    .Width(500)
-    .SearchEnabled(true)
-)
-
-    <div class="options">
-        <div class="caption">Options</div>
-        <div class="option">
-            <span>Search mode</span>
-            @(Html.DevExtreme().SelectBox()
-            .ID("searchMode")
-            .DataSource(new[] { "contains", "startsWith" })
-            .Value("contains")
-            .OnValueChanged("selectBox_valueChanged")
-        )
-        </div>
-    </div>*@
-
-    <script>
-    function selectBox_valueChanged(e) {
-        $("#treeview").dxTreeView("option", "searchMode", e.value);
-    }
-    </script>
-
+        <label asp-for="CategorieId"></label>
+        <select class="form-control" asp-items="@Model.Categories" asp-for="CategorieId"></select>
+        <a asp-controller="Category" asp-action="AddCategory">New Category</a>
+    </div>
+   
 
     <div class="form-group">
-        <select asp-items="@Model.Suppliers" asp-for="SupplierId"></select>
+
+        <label asp-for="SupplierIds"></label>
+        <select multiple class="form-control" asp-items="@Model.Suppliers" asp-for="SupplierIds"></select>
+
+        <a asp-controller="Administration" asp-action="RegisterSupplier">New Supplier</a>
     </div>
     <div class="form-group">
         <label asp-for="ProductImages"></label>
@@ -104,4 +64,4 @@
     <button class="btn-primary" type="submit">Create</button>
 
 </form>
-<a asp-controller="ProductAdminController" asp-action="Index">Trug naar overzicht </a>
+<a asp-controller="ProductAdmin" asp-action="IndexProductAdmin">Back </a>
