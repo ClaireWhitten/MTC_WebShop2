@@ -28,9 +28,12 @@ namespace MTC_WebServerCore.Controllers
         [HttpGet]
         public async Task<IActionResult> AddCategory()
         {
+            _logger.LogInformation("first");
             //Get all product categories
             var result = await _repos.ProductCategories.GetAllAsync();
             var productCategories = result.Data;
+
+            _logger.LogInformation("next");
             AddCategoryViewModel vm = new AddCategoryViewModel();
           
            //for each product cateogry find its parents and create a path
@@ -47,6 +50,7 @@ namespace MTC_WebServerCore.Controllers
                 
             }
 
+            _logger.LogInformation("last");
             return View(vm);
         }
 

@@ -52,7 +52,6 @@ namespace MTCmodel
         [Range(0, 5)]
         public double? AverageRating { get; set; } = null;
 
-        public int? RatingCount { get; set; } = null;
 
         //-------------------------------------------------------------------
         [Required]

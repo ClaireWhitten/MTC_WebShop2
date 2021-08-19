@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using MTC_WebServerCore.ViewModels.Product;
 using MTC_WebServerCore.ViewModels.ProductAdmin;
 using MTCmodel;
 using MTCrepository.TDSrepository;
@@ -28,7 +27,7 @@ namespace MTC_WebServerCore.Controllers
             _userManager = userManager;
         }
 
-        [Route("")]
+        //[Route("")]
         public async Task<IActionResult> IndexProductAdminAsync()
         {
             TSDreposResultIenumerable<Product> resultProducts = await _repos.Products.GetProductsWithSuppliers();

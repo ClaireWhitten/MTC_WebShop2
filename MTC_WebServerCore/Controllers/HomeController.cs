@@ -101,6 +101,7 @@ namespace MTC_WebServerCore.Controllers
             //model.ProductsToShow = testlistProducts;
 
             var productsResult = await _repos.Products.GetAllAsync();
+            var productsResult2 = await _repos.Products.GetAllAsync();
 
             model.ProductsToShow = productsResult.Data.ToList();
 
