@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MTC_WebServerCore.Models;
+using MTC_WebServerCore.ViewModels.Home;
 using MTCmodel;
 using MTCrepository.TDSrepository;
 using System;
@@ -32,90 +33,78 @@ namespace MTC_WebServerCore.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> Index(int? id)
         {
 
+            var model = new IndexPageViewModel();
 
 
+            //hier kies je welke producten je wil laten zien
+            #region testlist aanmaken
+
+            var testlistProducts = new List<Product>() {
+
+                new Product
+                {
+                    EAN = "8888888888888",
+                    AverageRating = 3,
+                    RatingCount = 4,
+                    BTWPercentage = 21,
+                    CategorieId = 1,
+                    //Categorie = new ProductCategorie { Name = "testcat" },
+                    CountInStock = 0,
+                    ExtraInfo = "dit is een gesmurft produkt",
+                    Name = "Smurven",
+                    MinStock = 5,
+                    MaxStock = 100,
+                    RecommendedUnitPrice = 22.5,
+                    SolderPrice = 15,
+                    
+                }  ,              
+                new Product
+                {
+                    EAN = "333333333333333",
+                    AverageRating = 2.55,
+                    RatingCount = 8,
+                    BTWPercentage = 21,
+                    CategorieId = 1,
+                    //Categorie = new ProductCategorie { Name = "testcat" },
+                    CountInStock = 0,
+                    ExtraInfo = "dit is een geweldig produkt",
+                    Name = "testProduct",
+                    MinStock = 5,
+                    MaxStock = 100,
+                    RecommendedUnitPrice = 22.5,
+                    SolderPrice = 15,
+                },
+                new Product
+                {
+                    EAN = "44444444444",
+                    AverageRating = 3.8,
+                    RatingCount = 14,
+                    BTWPercentage = 21,
+                    CategorieId = 1,
+                    //Categorie = new ProductCategorie { Name = "testcat" },
+                    CountInStock = 0,
+                    ExtraInfo = "dit is een geweldig produkt",
+                    Name = "blikje cola",
+                    MinStock = 5,
+                    MaxStock = 100,
+                    RecommendedUnitPrice = 12,
+                    SolderPrice = 4.2,
+                }
+            };
+
+            #endregion
 
 
-            //ProductCategorie testCategorie = new ProductCategorie
-            //{
-            //    Name = "Elektronica"
-            //};
-            //var testCategegoryAdded = await _repos.ProductCategories.AddAsync(testCategorie);
+            //model.ProductsToShow = testlistProducts;
+
+            var productsResult = await _repos.Products.GetAllAsync();
+
+            model.ProductsToShow = productsResult.Data.ToList();
 
 
-            //ProductCategorie testCategorie2 = new ProductCategorie
-            //{
-            //    Name = "TV",
-            //    ParentCategorieID = 1,
-            //};
-            //var testCategegoryAdded2 = await _repos.ProductCategories.AddAsync(testCategorie2);
-
-
-
-            //if (testCategegoryAdded2.ErrorCode != TDSreposErrCode.OK)
-            //{
-            //    _logger.LogError(testCategegoryAdded2.ErrorCode.ToString());
-            //}
-
-            //if (testCategegoryAdded.ErrorCode != TDSreposErrCode.OK)
-            //{
-            //    _logger.LogError(testCategegoryAdded.ErrorCode.ToString());
-            //}
-
-            //if(testCategegoryAdded.ErrorCode == TDSreposErrCode.OK)
-
-
-            //TestModel testModel = new TestModel { Name = "dit is een test" };
-            //await _repos.TestModel.AddAsync(testModel);
-
-
-            //Product testProduct = new Product
-            //{
-            //    EAN = "8888888888888",
-            //    AverageRating = 3,
-            //    BTWPercentage = 21,
-            //    CategorieId = 1,
-            //    //Categorie = new ProductCategorie { Name = "testcat" },
-            //    CountInStock = 0,
-            //    ExtraInfo = "dit is een geweldig produkt",
-            //    Name = "testProduct",
-            //    MinStock = 5,
-            //    MaxStock = 100,
-            //    RecommendedUnitPrice = 22.5,
-
-
-            //};
-
-            //var testProductReview = new ProductReview()
-            //{
-            //    Comment = "hahahahaha",
-            //    DateTime = DateTime.Now,
-            //    ProductEAN = "4444444444444",
-            //    Rating = 1,
-            //    UserId = "1sfsdfsfd",
-
-            //};
-
-            //var resultProductView = await _repos.ProductReviews.AddAsync(testProductReview);
-
-            //var resultAdd = await _repos.Products.AddAsync(testProduct);
-
-
-            //if(resultAdd.ErrorCode != TDSreposErrCode.OK)
-            //{
-            //    _logger.LogError(resultAdd.ErrorCode.ToString());
-            //}
-
-            //var resultUpdate = await _repos.Products.UpdateAsync(testProduct);
-
-
-            //var result = await _repos.Products.GetAllAsync();
-
-            //var model = result.Data;
-            IEnumerable<Product> model = null;
 
             return View(model);
         }

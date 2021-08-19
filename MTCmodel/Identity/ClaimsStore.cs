@@ -12,11 +12,15 @@ namespace MTCmodel
         {
             new Claim("Products", "Products"),
             new Claim("ProductCategories","ProductCategories"),
-            new Claim("Users","Users"),
 
-            //new Claim("Create Book", "Create Book"),
-            //new Claim("Edit Book","Edit Book"),
-            //new Claim("Delete Book","Delete Book")
+            //new added on 19aug2021
+            new Claim("PreparingOrderOUT","PreparingOrderOUT"),
+            new Claim("SentOrderOUT","SentOrderOUT"),
+
+            new Claim("ReservedOrderIn","ReservedOrderIn"),
+            new Claim("DeliveredOrderIn","DeliveredOrderIn"),
+
+
         };
     }
 }

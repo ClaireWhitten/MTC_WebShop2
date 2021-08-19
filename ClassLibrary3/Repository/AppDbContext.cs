@@ -436,12 +436,14 @@ namespace MTCrepository.Repository
                 .HasForeignKey(ol => ol.ProductEAN)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            //====================================================
             //OrderlineOUT-Transporter
             modelBuilder.Entity<OrderLineOUT>()
                 .HasOne<Transporter>(ol => ol.Transporter)
                 .WithMany(t => t.orderLineOUTs)
                 .HasForeignKey(ol => ol.TransporterId)
                 .OnDelete(DeleteBehavior.NoAction);
+            //====================================================
 
             //OrderOUT-Client
             modelBuilder.Entity<OrderOUT>()

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
+using Microsoft.AspNetCore.Http;
 using MTCmodel;
 using System;
 using System.Collections.Generic;
@@ -6,12 +7,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MTC_WebServerCore.ViewModels.Product
+namespace MTC_WebServerCore.ViewModels.ProductAdmin
 {
     public class ProductIndexViewModel
     {
         [Key]
-        [MaxLength(13,ErrorMessage = "EAN must be 13 digit characters")]
+        [MaxLength(13, ErrorMessage = "EAN must be 13 digit characters")]
         public string EAN { get; set; }
 
 
@@ -42,7 +43,7 @@ namespace MTC_WebServerCore.ViewModels.Product
 
 
         //====>===>===> most be a list of supliers<====<====<=====
-        public  Supplier Supplier { get; set; }
+        public Supplier Supplier { get; set; }
 
 
 

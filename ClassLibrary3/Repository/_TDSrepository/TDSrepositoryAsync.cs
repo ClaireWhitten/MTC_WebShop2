@@ -333,7 +333,7 @@ namespace MTCrepository.TDSrepository
         public virtual async Task<TSDreposResultIenumerable<TDSentity>> RemoveRangeAsync(IEnumerable<TDSentity> aEntities, bool autoSaveChange=true)
         {
             //=====================================================================================================
-            throw new NotImplementedException($"deze nog uit commentaar halen, deze methode moet nog getest worden");
+            //throw new NotImplementedException($"deze nog uit commentaar halen, deze methode moet nog getest worden");
             //=====================================================================================================
             var terug = new TSDreposResultIenumerable<TDSentity>();
             try {
