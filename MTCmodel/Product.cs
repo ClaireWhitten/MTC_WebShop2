@@ -52,6 +52,7 @@ namespace MTCmodel
         [Range(0, 5)]
         public double? AverageRating { get; set; } = null;
 
+
         //-------------------------------------------------------------------
         [Required]
         [Range(0, double.MaxValue)]

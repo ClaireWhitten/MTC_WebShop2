@@ -27,7 +27,7 @@ namespace MTC_WebServerCore.Controllers
             _userManager = userManager;
         }
 
-        [Route("")]
+        //[Route("")]
         public async Task<IActionResult> IndexProductAdminAsync()
         {
             TSDreposResultIenumerable<Product> resultProducts = await _repos.Products.GetProductsWithSuppliers();

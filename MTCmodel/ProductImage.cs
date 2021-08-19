@@ -9,6 +9,7 @@ namespace MTCmodel
     {
         //-------------------------------------------------------------------
         [Key]
+        //[maxLength(450)]
         public string ID { get; set; }
 
         public byte[] Image { get; set; }

@@ -32,7 +32,7 @@ namespace MTCmodel
 
         //=============================== foreign key's =========================================
         [MaxLength(450)]
-        [Required(ErrorMessage = "Transporter cannot be empty")]
+        //[Required(ErrorMessage = "Transporter cannot be empty")]//not required
         public string TransporterId { get; set; }
         public Transporter Transporter { get; set; }
 
@@ -42,7 +42,7 @@ namespace MTCmodel
         public Product Product { get; set; }
 
         //-------------------------------------------------------------------
-        [Required(ErrorMessage = "Product cannot be empty")]
+        [Required(ErrorMessage = "OrderOut cannot be empty")]
         public int OrderOUTId { get; set; }
         public OrderOUT OrderOUT { get; set; }
 
