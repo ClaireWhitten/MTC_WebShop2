@@ -11,7 +11,7 @@ namespace MTC_WebServerCore.ViewModels.ProductAdmin
     public class ProductIndexViewModel
     {
         [Key]
-        [MaxLength(13,ErrorMessage = "EAN must be 13 digit characters")]
+        [MaxLength(13, ErrorMessage = "EAN must be 13 digit characters")]
         public string EAN { get; set; }
 
 
@@ -42,7 +42,7 @@ namespace MTC_WebServerCore.ViewModels.ProductAdmin
 
 
         //====>===>===> most be a list of supliers<====<====<=====
-        public  Supplier Supplier { get; set; }
+        public Supplier Supplier { get; set; }
 
 
 
@@ -71,3 +71,4 @@ namespace MTC_WebServerCore.ViewModels.ProductAdmin
 
     }
 }
+

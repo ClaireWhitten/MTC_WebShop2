@@ -13,5 +13,13 @@ namespace MTCrepository.Repository
         Task<TSDreposResultIenumerable<ProductCategorie>> GetCategoriesWithSubandParent();
 
         Task<IEnumerable<ProductCategorie>> GetAllParents(int categoryId, List<ProductCategorie> productCategories = null);
+
+        List<ProductCategorie> Subcategories { get; set; }
+
+        List<ProductCategorie> GetAllSubCats(int categoryId);
+
+        Task<TSDreposResultOneObject<ProductCategorie>> GetCategoryWithProducts(int categoryId);
+
+        Task<TSDreposResultOneObject<ProductCategorie>> GetCategoryWithAll(int id);
     }
 }
