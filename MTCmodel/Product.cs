@@ -47,7 +47,7 @@ namespace MTCmodel
         public int MinStock { get; set; }
         //-------------------------------------------------------------------
 
-
+        public int? RatingCount { get; set; } = null;
 
         [Range(0, 5)]
         public double? AverageRating { get; set; } = null;

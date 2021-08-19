@@ -2,6 +2,7 @@
 @model AddCategoryViewModel
 @{
     ViewData["Title"] = "Add Category";
+    //var errorCode = ViewData["ErrorCode"];
 }
 
 <h2>Add Category</h2>
@@ -20,4 +21,10 @@
         <span asp-validation-for="ParentCategorieId" class="text-danger"></span>
     </div>
     <button class="btn btn-primary" type="submit">Save Category</button>
+
+    @*@if (errorCode == "DUPLICATE")
+    {
+        <span></span>
+    }*@
+
 </form>

@@ -26,6 +26,7 @@ namespace MTC_WebServerCore.Controllers
             _repos = appRepos;
             _userManager = userManager;
         }
+
         [Route("")]
         public async Task<IActionResult> IndexProductAdminAsync()
         {
@@ -37,6 +38,7 @@ namespace MTC_WebServerCore.Controllers
 
 
             if (Products.Count()>0)
+
             {
                 var vm = Products.Select(x => new ProductIndexViewModel
                 {
@@ -45,6 +47,7 @@ namespace MTC_WebServerCore.Controllers
                     RecommendedUnitPrice = x.RecommendedUnitPrice,
                     CountInStock = x.CountInStock,
                     SolderPrice = x.SolderPrice,
+
                     CategorieName = getcategoryPath( x.Categorie.ID),
                     ProductImagesrc  = x.Images.Count>0 ? string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(x.Images.FirstOrDefault().Image)) : null ,
                     Suppliers = x.Suppliers.Select(x=>x.Name).ToArray(),
@@ -66,11 +69,13 @@ namespace MTC_WebServerCore.Controllers
 
                 }
                 ViewBag.Categories = Categories;
+
                 return View(vm);
 
             }
             return View();
         }
+
         
         public  string getcategoryPath(int id)
         {
@@ -83,19 +88,22 @@ namespace MTC_WebServerCore.Controllers
             return parentPath;
         }
         
+
         public async Task<IActionResult> CreateProductAdmin()
         {
             TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
             IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
 
-            TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s=>s.ApplicationUser.IsActive==true);
+            TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s => s.ApplicationUser.IsActive == true);
             IEnumerable<Supplier> suppliers = resultSuppliers.Data;
 
 
             var vm = new ProductCreateViewModel
             {
+
                 //Categories = ProductCategories.Select(c => new SelectListItem { Text = c.Name, Value = c.ID.ToString() }),
                 Suppliers=suppliers.Select(s=>new SelectListItem { Text=s.Name,Value=s.Id.ToString()}).ToList()
+
             };
 
             vm.Categories = new List<SelectListItem>();
@@ -127,13 +135,16 @@ namespace MTC_WebServerCore.Controllers
                     MinStock = product.MinStock,
                     RecommendedUnitPrice = product.RecommendedUnitPrice,
                     CategorieId = product.CategorieId,
+
                     
+
                     SolderPrice = product.SolderPercentage
                 };
                 //newproduct.Suppliers = new List<Supplier>();
                 //TSDreposResultOneObject<Supplier> resultProductCategorie = await _repos.Suppliers.GetByIdAsync(product.SupplierId);
                 //newproduct.Suppliers.Add(resultProductCategorie.Data);
                 newproduct.Images = new List<ProductImage>();
+
                 newproduct.Suppliers = new List<Supplier>();
                 foreach (var item in product.SupplierIds)
                 {
@@ -154,12 +165,13 @@ namespace MTC_WebServerCore.Controllers
 
                     newproduct.Images.Add(img);
 
+
                 }
                 await _repos.Products.AddAsync(newproduct);
                 return RedirectToAction("IndexProductAdmin");
             }
 
-                return View();
+            return View();
         }
 
 
