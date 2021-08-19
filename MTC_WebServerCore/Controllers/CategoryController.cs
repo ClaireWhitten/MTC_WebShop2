@@ -28,22 +28,16 @@ namespace MTC_WebServerCore.Controllers
         [HttpGet]
         public async Task<IActionResult> AddCategory()
         {
-            //Get all product categories
-            var result = await _repos.ProductCategories.GetAllAsync();
-            var productCategories = result.Data;
+
             AddCategoryViewModel vm = new AddCategoryViewModel();
-          
+            var catDictionary = await _repos.ProductCategories.GetAllPosiblePaths();
+
            //for each product cateogry find its parents and create a path
-            foreach (var productCategory in productCategories)
+            foreach (var category in catDictionary)
             {
-                var parentCategories = await _repos.ProductCategories.GetAllParents(productCategory.ID);
-                string parentPath = "";
-                foreach (var parentCategory in parentCategories)
-                {
-                    parentPath += ">" + parentCategory.Name;
-                }
+                
                 //set the path as the text in the select list
-                vm.productCategories.Add(new SelectListItem { Text = parentPath, Value = productCategory.ID.ToString() });
+                vm.productCategories.Add(new SelectListItem { Text = category.Value, Value = category.Key.ToString() });
                 
             }
 
@@ -103,34 +97,30 @@ namespace MTC_WebServerCore.Controllers
         {
             //get all existing categories
             var allCategories = await _repos.ProductCategories.GetCategoriesWithSubandParent();
-            var vm = allCategories.Data.Select(x => new OverviewCategoriesViewModel()
+            var categoryModels = allCategories.Data.Select(x => new OverviewCategoriesViewModel()
             {
                 Id = x.ID,
-                Products = x.Products,
-                Subcategories = x.SubCategories,
                 Name = x.Name,
-                ParentCategorie = x.ParentCategorie
-
+                Subcategories = x.SubCategories,
+                
             }).ToList(); // to list needed to set the parentPath property in foreach
 
+            var catDictionary = await _repos.ProductCategories.GetAllPosiblePaths();
 
-            foreach (var cat in vm)
+
+            foreach (var cat in categoryModels)
             {
-                var parents = (await _repos.ProductCategories.GetAllParents(cat.Id)).ToList();
-
-                string parentPath = "";
-                for (var i = 0; i < parents.Count(); i++)
-                {
-                 
-                    parentPath += ">" + parents[i].Name;
-
-                }
-                cat.ParentPath = parentPath;  
+                cat.FullPath = catDictionary.FirstOrDefault(d=>d.Key == cat.Id).Value;  
             }
-            return View(vm);
+            return View(categoryModels);
         }
 
         
+
+
+
+
+
         //Gets details of category 
         [HttpGet]
         public async Task<IActionResult> DetailCategory([FromRoute] int id)
@@ -156,63 +146,63 @@ namespace MTC_WebServerCore.Controllers
 
 
 
+        //TODO: Fix this action 
 
+        ////Gets the 'Edit cateogry' view and sets current details of the category
+        //[HttpGet]
+        //public async Task<IActionResult> EditCategory([FromRoute] int id)
+        //{
+        //    //Get selected category
+        //    var selectedCat = (await _repos.ProductCategories.GetByIdAsync(id)).Data;
 
-        //Gets the 'Edit cateogry' view and sets current details of the category
-        [HttpGet]
-        public async Task<IActionResult> EditCategory([FromRoute] int id)
-        {
-            //Get selected category
-            var selectedCat = (await _repos.ProductCategories.GetByIdAsync(id)).Data;
-
-            //Get the location of the selected category
-            var currentParents = (await _repos.ProductCategories.GetAllParents(selectedCat.ID)).ToList();
-            currentParents.RemoveAt(currentParents.Count()-1);
-            string currentParentPath = string.Join(">", currentParents.Select(p => p.Name));
+        //    //Get the location of the selected category
+        //    var currentParents = (await _repos.ProductCategories.GetAllParents(selectedCat.ID)).ToList();
+        //    currentParents.RemoveAt(currentParents.Count()-1);
+        //    string currentParentPath = string.Join(">", currentParents.Select(p => p.Name));
             
 
-            //Create the vm
-            EditCategoryViewModel vm = new EditCategoryViewModel()
-            {
-                Name = selectedCat.Name,
-                CurrentLocation = currentParentPath
-            };
+        //    //Create the vm
+        //    EditCategoryViewModel vm = new EditCategoryViewModel()
+        //    {
+        //        Name = selectedCat.Name,
+        //        CurrentLocation = currentParentPath
+        //    };
 
-            //Set data for change parent selectlist 
-            var allCategories = (await _repos.ProductCategories.GetCategoriesWithSubandParent()).Data.ToList();
-            allCategories.Remove(selectedCat);
-            //allCategories.Remove(selectedCat.ParentCategorie);
-            var subcats = _repos.ProductCategories.GetAllSubCats(id);
-            foreach (var sub in subcats)
-            {
-                allCategories.Remove(sub);
-            }
+        //    //Set data for change parent selectlist 
+        //    var allCategories = (await _repos.ProductCategories.GetCategoriesWithSubandParent()).Data.ToList();
+        //    allCategories.Remove(selectedCat);
+        //    //allCategories.Remove(selectedCat.ParentCategorie);
+        //    var subcats = _repos.ProductCategories.GetAllSubCats(id);
+        //    foreach (var sub in subcats)
+        //    {
+        //        allCategories.Remove(sub);
+        //    }
             
             
-            //create path string for each new parent option
-            foreach (var productCategory in allCategories)
-            {
-                var parentCategories = await _repos.ProductCategories.GetAllParents(productCategory.ID);
-                string parentPath = string.Join(">", parentCategories.Select(p => p.Name));
+        //    //create path string for each new parent option
+        //    foreach (var productCategory in allCategories)
+        //    {
+        //        var parentCategories = await _repos.ProductCategories.GetAllParents(productCategory.ID);
+        //        string parentPath = string.Join(">", parentCategories.Select(p => p.Name));
                
-                //set the path as the text in the select list
-                vm.productCategories.Add(new SelectListItem { Text = parentPath, Value = productCategory.ID.ToString() });
+        //        //set the path as the text in the select list
+        //        vm.productCategories.Add(new SelectListItem { Text = parentPath, Value = productCategory.ID.ToString() });
 
-            }
-            //set current parent in drop down list
-            if (selectedCat.ParentCategorieID == null)
-            {
-                ViewData["NoParent"] = true;
-            }
-            else
-            {
-                ViewData["NoParent"] = false;
-                var selected = vm.productCategories.FirstOrDefault(c => c.Value == selectedCat.ParentCategorieID.ToString());
-                selected.Selected = true;
-            }
+        //    }
+        //    //set current parent in drop down list
+        //    if (selectedCat.ParentCategorieID == null)
+        //    {
+        //        ViewData["NoParent"] = true;
+        //    }
+        //    else
+        //    {
+        //        ViewData["NoParent"] = false;
+        //        var selected = vm.productCategories.FirstOrDefault(c => c.Value == selectedCat.ParentCategorieID.ToString());
+        //        selected.Selected = true;
+        //    }
             
-            return View(vm);
-        }
+        //    return View(vm);
+        //}
 
 
 

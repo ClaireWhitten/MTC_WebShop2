@@ -12,7 +12,7 @@ namespace MTCrepository.Repository
      
         Task<TSDreposResultIenumerable<ProductCategorie>> GetCategoriesWithSubandParent();
 
-        Task<IEnumerable<ProductCategorie>> GetAllParents(int categoryId, List<ProductCategorie> productCategories = null);
+        //Task<IEnumerable<ProductCategorie>> GetAllParents(int categoryId, List<ProductCategorie> productCategories = null);
 
         List<ProductCategorie> Subcategories { get; set; }
 
@@ -21,5 +21,7 @@ namespace MTCrepository.Repository
         Task<TSDreposResultOneObject<ProductCategorie>> GetCategoryWithProducts(int categoryId);
 
         Task<TSDreposResultOneObject<ProductCategorie>> GetCategoryWithAll(int id);
+
+        Task<Dictionary<int, string>> GetAllPosiblePaths();
     }
 }
