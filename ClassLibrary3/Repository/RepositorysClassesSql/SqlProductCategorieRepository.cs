@@ -135,6 +135,7 @@ namespace MTCrepository.Repository
 
 
 
+
         //Method returns list of all related subcateogries 
         public List<ProductCategorie> Subcategories { get; set; } 
 
@@ -170,6 +171,34 @@ namespace MTCrepository.Repository
 
 
 
+
+
+        //public async Task<IEnumerable<ProductCategorie>> GetAllchilds(int categoryId, List<ProductCategorie> productCategories = null)
+        //{
+        //    //if no list has been passed as parameter, create a new list
+        //    productCategories = productCategories ?? new List<ProductCategorie>();
+
+        //    //Get chosen category with it's childs category
+        //    var chosenCategory = await _context.Set<ProductCategorie>().Include(c => c.SubCategories).FirstOrDefaultAsync(c => c.ID == categoryId);
+
+        //    if (chosenCategory.SubCategories == null)
+        //    {
+        //        productCategories.Add(chosenCategory);
+
+        //        return productCategories;
+        //    }
+        //    else
+        //    {
+        //        foreach (var item in chosenCategory.SubCategories)
+        //        {
+        //            productCategories.Add(item);
+        //            return await GetAllchilds(item.ID, productCategories);
+
+        //        }
+        //        return productCategories;
+        //    }
+
+        //}
 
     }
 }
