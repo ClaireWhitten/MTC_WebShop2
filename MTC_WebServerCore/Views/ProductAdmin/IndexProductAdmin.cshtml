@@ -10,6 +10,12 @@
 
     else
     {
+<form method="post">
+    <div class="form-group">
+        <select class="form-control" asp-items="@ViewBag.Categories" onselect="submitdata"></select>
+    </div>
+</form>
+
         <table>
             <thead>
                 <tr>
@@ -25,45 +31,47 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    @*<td><img class="img-responsive full-width" src="data:image/jpeg;base64,@Convert.ToBase64String(item.ProductImage)" /></td>*@
-                    
-                    <td><img class="img-responsive" width="200" height="200" src="@item.ProductImagesrc" /></td>
-                    @*<td></td>*@
-                    <td>@item.Name </td>
-                    <td>@item.EAN </td>
-                    <td>
-                        @item.RecommendedUnitPrice @{ if (item.SolderPrice != 0 && item.SolderPrice != null)
-                            { <h6 class="text-danger">@item.SolderPrice %</h6>}
+                    <tr>
+                        @*<td><img class="img-responsive full-width" src="data:image/jpeg;base64,@Convert.ToBase64String(item.ProductImage)" /></td>*@
+
+                        <td><img class="img-responsive" width="200" height="200" src="@item.ProductImagesrc" /></td>
+                        @*<td></td>*@
+                        <td>@item.Name </td>
+                        <td>@item.EAN </td>
+                        <td>
+                            @item.RecommendedUnitPrice @{ if (item.SolderPrice != 0 && item.SolderPrice != null)
+                                { <h6 class="text-danger">@item.SolderPrice %</h6>}
+                            }
+                        </td>
+                        <td>@item.CountInStock</td>
+                        <td>@item.CategorieName </td>
+                        <td>
+                            @{
+                                foreach (var sup in item.Suppliers)
+                                {
+                                    <p>● @sup</p>
+
+                                }
                         }
                     </td>
-                    <td>@item.CountInStock</td>
-                    <td>@item.CategorieName </td>
-                    <td>@{
-                        foreach (var sup in item.Suppliers)
-                        {
-                                            <p>● @sup</p> 
-
-                        }
-                            } </td>
 
                     <td>
-                        <a asp-controller="ProductAdminController" asp-action="DetailProductAdmin" asp-route-id="@item.EAN">
+                        <a asp-controller="ProductAdmin" asp-action="DetailProductAdmin" asp-route-id="@item.EAN">
                             <input type="button" class="btn btn-primary" value="Detail" />
                         </a>
                     </td>
                     <td>
-                        <a asp-controller="ProductAdminController" asp-action="UpdateProductAdmin" asp-route-id="@item.EAN">
+                        <a asp-controller="ProductAdmin" asp-action="EditProductAdmin" asp-route-id="@item.EAN">
                             <input type="button" class="btn btn-primary" value="Update" />
                         </a>
                     </td>
                     <td>
-                        <a asp-controller="ProductAdminController" asp-action="DeleteProductAdmin" asp-route-id="@item.EAN">
+                        <a asp-controller="ProductAdmin" asp-action="DeleteProductAdmin" asp-route-id="@item.EAN">
                             <input type="button" class="btn btn-danger" value="Delete" />
                         </a>
                     </td>
                 </tr>
-                }
+            }
             </tbody>
         </table>
     }

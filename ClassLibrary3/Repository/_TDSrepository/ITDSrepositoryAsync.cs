@@ -34,6 +34,10 @@ namespace MTCrepository.TDSrepository
         //updaten
         //----------------------------------------------------------
         Task<TSDreposResultOneObject<TDSentity>> UpdateAsync(TDSentity aEntity, bool autoSaveChange = true);
+
+
+
+
     }
 }
 
