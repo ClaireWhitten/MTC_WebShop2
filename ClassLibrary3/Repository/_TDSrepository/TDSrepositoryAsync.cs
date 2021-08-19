@@ -180,6 +180,7 @@ namespace MTCrepository.TDSrepository
                 founded.State = EntityState.Modified;
                 terug.Data = aEntity;
                 terug.SaveChangeCount = await _context.SaveChangesAsync();
+
             }
             catch(DbUpdateException ex)
             {
@@ -368,7 +369,7 @@ namespace MTCrepository.TDSrepository
         public virtual async Task<TSDreposResultIenumerable<TDSentity>> RemoveByCondition(Expression<Func<TDSentity, bool>> aPredicate, bool autoSaveChange = true)
         {
             //=====================================================================================================
-            throw new NotImplementedException($"deze nog uit commentaar halen, deze methode moet nog getest worden");
+            //throw new NotImplementedException($"deze nog uit commentaar halen, deze methode moet nog getest worden");
             //=====================================================================================================
 
             var terug = new TSDreposResultIenumerable<TDSentity>();
@@ -390,6 +391,10 @@ namespace MTCrepository.TDSrepository
             return terug;
         }
         #endregion
+
+
+
+        
     }
 }
 
