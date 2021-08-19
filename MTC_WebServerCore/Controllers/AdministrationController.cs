@@ -21,8 +21,8 @@ namespace MTC_WebServerCore.Controllers
 
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IApplicationRepository _repos;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         //===================================================================================
         //constructor injectie

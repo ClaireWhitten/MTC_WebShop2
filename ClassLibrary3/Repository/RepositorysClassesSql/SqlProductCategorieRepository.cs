@@ -63,11 +63,42 @@ namespace MTCrepository.Repository
             return terug;
         }
 
-        
 
 
 
 
+        ////Method returns list of all parents of a given category
+        ////optional parameter
+        //public async Task<IEnumerable<ProductCategorie>> GetAllParents(int categoryId, List<ProductCategorie> productCategories = null)
+        //{
+        //    //r AllCategorys = await _context.Set<ProductCategorie>().Include(c => c.ParentCategorie).ToListAsync();
+
+        //    return await GetAllParentsPrivate(categoryId, AllCategorys);
+        //}
+
+        //private async Task<IEnumerable<ProductCategorie>> GetAllParentsPrivate(int categoryId,List<ProductCategorie>allCategorie, List<ProductCategorie> productCategories = null)
+        //{
+        //    //if no list has been passed as parameter, create a new list
+        //    productCategories = productCategories ?? new List<ProductCategorie>();
+
+        //    //Get chosen category with its parent category
+        //    //var chosenCategory = await _context.Set<ProductCategorie>().Include(c => c.ParentCategorie).FirstOrDefaultAsync(c => c.ID == categoryId);
+
+        //    var chosenCategory = allCategorie.FirstOrDefault(c => c.ID == categoryId);
+
+
+        //    if (chosenCategory.ParentCategorie == null)
+        //    {
+        //        productCategories.Add(chosenCategory);
+        //        productCategories.Reverse();
+        //        return productCategories;
+        //    }
+        //    else
+        //    {
+        //        productCategories.Add(chosenCategory);
+        //        return await GetAllParentsPrivate(chosenCategory.ParentCategorie.ID, productCategories);
+        //    }
+        //}
 
 
 
@@ -75,7 +106,7 @@ namespace MTCrepository.Repository
 
 
         //Method returns list of all parents of a given category
-                                                                                                       //optional parameter
+        //optional parameter
         public async Task<IEnumerable<ProductCategorie>> GetAllParents(int categoryId, List<ProductCategorie> productCategories = null)
         {
             //if no list has been passed as parameter, create a new list
@@ -84,7 +115,8 @@ namespace MTCrepository.Repository
             //Get chosen category with its parent category
             var chosenCategory = await _context.Set<ProductCategorie>().Include(c => c.ParentCategorie).FirstOrDefaultAsync(c => c.ID == categoryId);
 
-            if(chosenCategory.ParentCategorie == null)
+
+            if (chosenCategory.ParentCategorie == null)
             {
                 productCategories.Add(chosenCategory);
                 productCategories.Reverse();
@@ -93,10 +125,11 @@ namespace MTCrepository.Repository
             else
             {
                 productCategories.Add(chosenCategory);
-                return await GetAllParents(chosenCategory.ParentCategorie.ID,  productCategories);
+                return await GetAllParents(chosenCategory.ParentCategorie.ID, productCategories);
             }
-
         }
+
+
 
 
 

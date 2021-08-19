@@ -1,0 +1,62 @@
+﻿@model BasketViewModel
+
+@{
+    ViewData["Title"] = "You're basket";
+}
+
+
+<h1>You're basket</h1>
+<hr />
+
+@*prijzen TT, btw en ttInclusive btw*@
+<hr />
+<h3>prijs zonder btw: @Model.TTpriceExclBtw</h3>
+<h3>btw: @Model.TTbtw</h3>
+<h3>prijs MET btw: @Model.TTpriceIncludeBtw</h3>
+<hr />
+
+<a asp-controller="home" class="btn btn-primary btn-lg "> go to shop </a>
+
+@*the button 'goto bill page' not show if the basket is empty*@
+@if (Model.BasketProductsItem.Any())
+{
+    <a asp-controller="Basket" asp-action="Bill" class="btn btn-primary btn-lg "> go to bill page</a>
+}
+<hr />
+
+@if (Model.BasketProductsItem.Any())
+{
+    foreach (var item in Model.BasketProductsItem)
+    {
+
+        //zeker het id laten staan
+        <div id="_orderOutLine_@item.Product.EAN">
+
+            <p>prijs excl btw per stuk: @item.Product.RecommendedUnitPrice</p>
+            <p>Count: @item.CountOfProducts </p>
+            <p>BTWpercentage: @item.Product.BTWPercentage</p>
+
+            <p>TTprijs excl btw: @item.TTexclBtwThisProduct</p>
+            <p>TT btw: @item.TTbtwThisProduct</p>
+            <p>TTprijs incl btw: @item.TTinclBtwThisProduct</p>
+
+
+            <img src="~/images/noProductImage.png" height="200" />
+            <input type="number" class="form-control" id="AmountOf_EAN_@item.Product.EAN" min="1" max="5000" />
+            <button id="ButtonAddToBasket_EAN_@item.Product.EAN" class="btn btn-info" onclick="setToBasketCookie('@item.Product.EAN',true)"><i class="fas fa-baby-carriage"></i></button>
+            <button type="button" class="btn btn-danger" onclick="deletFromBasketCookie('@item.Product.EAN',true)">Delete</button>
+            <hr /><hr /><hr />
+        </div>
+    }
+}
+else
+{
+    <h3>you're basket is empty</h3>
+}
+
+
+
+@section Scripts {
+    <script src="~/js/cookies.js"></script>
+    <script src="~/js/basket.js"></script>
+}
