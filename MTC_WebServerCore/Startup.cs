@@ -55,6 +55,10 @@ namespace MTC_WebServerCore
 
             services.AddScoped<IApplicationRepository, ApplicationRepository>();
 
+            //services.AddDbContext<AppDbContext>(o=>
+            //{ 
+            //    o.us
+            //});
         }
 
 

@@ -15,7 +15,7 @@ namespace MTCmodel
         //------------------------------------------------------------------- required not needed here, custom EAN attribute writed :-)
         [Key]
         //[Required] //key is allways required, don't needed here
-        //[MaxLength(13)]
+        //[MaxLength(13, ErrorMessage = "EAN must be 13 digit characters")]
         //[MinLength(13)]
         [EAN (ErrorMessage = "EAN must be 13 digit characters")]
         public string EAN { get; set; }
@@ -47,7 +47,7 @@ namespace MTCmodel
         public int MinStock { get; set; }
         //-------------------------------------------------------------------
 
-
+        public int? RatingCount { get; set; } = null;
 
         [Range(0, 5)]
         public double? AverageRating { get; set; } = null;

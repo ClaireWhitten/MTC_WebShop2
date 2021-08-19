@@ -1,54 +1,101 @@
-﻿@model IEnumerable<ProductCategorie>;
+﻿@using MTC_WebServerCore.ViewModels.Category
+@model IEnumerable<OverviewCategoriesViewModel>
+@{
+    ViewData["Title"] = "Overview Categories";
+}
 
 <h1>Overview Categories</h1>
 <a class="btn btn-info" asp-controller="Category" asp-action="AddCategory">Add new category</a>
-<div class="table-responsive">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Parent Category</th>
-                <th scope="col">Number of products</th>
-                <th scope="col">Subcategories</th>
-                <th scope="col">Modify</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var productCategory in Model)
-            {
-            <tr>
-                <th scope="row">@productCategory.Name</th>
-                @if (productCategory.ParentCategorie != null)
-                {
-                    <td>@productCategory.ParentCategorie.Name</td>
-                }
-                else
-                {
-                    <td>None</td>
-                }
-                <td>@productCategory.Products.Count()</td>
+@if (Model.Any())
+{
 
-                @if (productCategory.SubCategories.Count()>0)
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Parent Categories</th>
+                    <th scope="col">Number of products</th>
+                    <th scope="col">Subcategories</th>
+                    <th scope="col">Modify</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cat in Model)
                 {
+                    <tr>
+                        <td scope="row">@cat.Name</td>
+                        <td scope="row">@cat.ParentPath</td>
+                        <td>@cat.Products.Count()</td>
+
+                        @if (cat.Subcategories.Count() > 0)
+                        {
+                            <td>
+                                @foreach (var subcat in cat.Subcategories)
+                                {
+                                    <p>@subcat.Name</p>
+                                }
+                            </td>
+                        }
+                        else
+                        {
+                            <td>None</td>
+                        }
                     <td>
-                      @foreach (var subcat in productCategory.SubCategories)
-                      {
-                        <p>@subcat.Name</p>
-                      }
+                        <a asp-controller="Category" asp-action="EditCategory" asp-route-id="@cat.Id">
+                            <input type="button" class="btn btn-primary m-1" value="Edit" />
+                        </a>
+                        <a asp-controller="Category" asp-action="DetailCategory" asp-route-id="@cat.Id">
+                            <input type="button" class="btn btn-primary m-1" value="Detail" />
+                        </a>
+                        <form method="post" asp-controller="Category" asp-action="DeleteCategory" asp-route-id="@cat.Id" style="display:inline-block">
+                            <span id="confirmDeleteSpan_@cat.Id" style="display:none">
+                                <span>Are you sure you want to delete this category and its children?</span>
+                                <button type="submit" class="btn btn-danger">Yes</button>
+                                <a href="#" class="btn btn-primary"
+                                   onclick="confirmDelete('@cat.Id', false)">No</a>
+                            </span>
+                            <span id="deleteSpan_@cat.Id">
+                                <a href="#" class="btn btn-danger"
+                                   onclick="confirmDelete('@cat.Id', true)">Delete</a>
+                            </span>
+                        </form>
                     </td>
+                    </tr>
                 }
-                else
-                {
-                    <td>None</td>
-                }
-                <td>
-                    <a asp-controller="Category" asp-action="Detail" asp-route-id="@productCategory.ID">View</a>
-                    <a asp-controller="Category" asp-action="Edit" asp-route-id="@productCategory.ID">Edit</a>
-                    <a asp-controller="Category" asp-action="Delete" asp-route-id="@productCategory.ID">Delete</a>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            No Categories found
+        </div>
+    </div>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

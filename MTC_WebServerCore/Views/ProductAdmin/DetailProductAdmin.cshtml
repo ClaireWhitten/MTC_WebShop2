@@ -1,5 +1,50 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model MTC_WebServerCore.ViewModels.ProductAdmin.ProductDetailViewModel
+<strong>Name</strong>
+<p>@Model.Product.Name</p>
+<strong>EAN</strong>
+<p>@Model.Product.EAN</p>
+<strong>Description</strong>
+<p>@Model.Product.ExtraInfo</p>
+<strong>BTW</strong>
+<p>@Model.Product.BTWPercentage</p>
+<strong>Stock</strong>
+<p>@Model.Product.CountInStock</p>
+<strong>Maximum stock</strong>
+<p>@Model.Product.MaxStock</p>
+<strong>Minimum stock</strong>
+<p>@Model.Product.MinStock</p>
+<strong>Rating</strong>
+<p>@Model.Product.AverageRating /5</p>
+<strong>Recommended Price</strong>
+<p>@Model.Product.RecommendedUnitPrice</p>
+<strong>Solde</strong>
+<p>@Model.Product.SolderPrice %</p>
+<strong>Category</strong>
+<p>@Model.CategoryName</p>
+<strong>Suppliers</strong>
+@{ foreach (var item in Model.Product.Suppliers)
+    {
+        <p>●@item.Name</p>
+    }
 }
+
+<strong>Images</strong>
+@{
+    if(Model.ProductImages!=null)
+    foreach (var item in Model.ProductImages)
+    {
+        <img class="img-responsive" width="200" height="200" src="@item" />
+    }
+}
+<br />
+<strong>Returned</strong>
+<p>@Model.Product.ReturnedProducts.Count(r => r.Outlet == true)</p>
+
+<strong>Reviews</strong>
+@foreach (var item in Model.Product.ProductReviews)
+{
+    <p>@item.Rating /5</p>
+    <p>@item.Comment</p>
+}
+<br />
+<a asp-controller="ProductAdmin" asp-action="IndexProductAdmin">Back </a>

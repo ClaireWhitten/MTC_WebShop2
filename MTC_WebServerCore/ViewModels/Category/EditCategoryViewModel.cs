@@ -17,11 +17,18 @@ namespace MTC_WebServerCore.ViewModels.Category
         [Display(Name = "Category name:")]
         public string Name { get; set; }
 
+        public string CurrentLocation { get; set; }
+
+        public List<SelectListItem> productCategories { get; set; } = new List<SelectListItem>();
+
+
+
 
         [Display(Name = "Parent Category:")]
         public int? ParentCategorieId { get; set; }
 
-        public List<SelectListItem> productCategories { get; set; } = new List<SelectListItem>();
+
+        
 
 
         //public IEnumerable<ProductCategorie> ProductCategories { get; set; }
