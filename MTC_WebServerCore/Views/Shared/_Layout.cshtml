@@ -33,51 +33,44 @@
 
 
                         @*=========================================================================
-                        tempory Testbuttons for the mega super developpers :-)
-                        =========================================================================*@
+        tempory Testbuttons for the mega super developpers :-)
+        removed because we don't use this
+        =========================================================================*@
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                TestPages
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <!--<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        TestPages
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">-->
+                        @*================ testpages for Claire ===============*@
 
+                        <!--<a class="dropdown-item" asp-controller=""
+       asp-action="">Claire_testPage_1</a>
+    <a class="dropdown-item" asp-controller=""
+       asp-action="">Claire_testPage_2</a>
+    <a class="dropdown-item" asp-controller=""
+       asp-action="">Claire_testPage_3</a>-->
+                        @*================ testpages for Mohammed ===============*@
 
-                                @*================ testpages for Claire ===============*@
-
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Claire_testPage_1</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Claire_testPage_2</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Claire_testPage_3</a>
-
-
-                                @*================ testpages for Mohammed ===============*@
-
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Mohammed_testPage_1</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Mohammed_testPage_2</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Mohammed_testPage_3</a>
-
-
-                                @*================ testpages for Tom ===============*@
-                                <a class="dropdown-item" asp-controller="Account"
-                                   asp-action="_test_Authorize">Tom_authorizePage</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Tom_testPage_2</a>
-                                <a class="dropdown-item" asp-controller=""
-                                   asp-action="">Tom_testPage_3</a>
-                            </div>
-                        </li>
-
-
+                        <!--<a class="dropdown-item" asp-controller=""
+       asp-action="">Mohammed_testPage_1</a>
+    <a class="dropdown-item" asp-controller=""
+       asp-action="">Mohammed_testPage_2</a>
+    <a class="dropdown-item" asp-controller=""
+       asp-action="">Mohammed_testPage_3</a>-->
+                        @*================ testpages for Tom ===============*@
+                        <!--<a class="dropdown-item" asp-controller="Account"
+               asp-action="_test_Authorize">Tom_authorizePage</a>
+            <a class="dropdown-item" asp-controller=""
+               asp-action="">Tom_testPage_2</a>
+            <a class="dropdown-item" asp-controller=""
+               asp-action="">Tom_testPage_3</a>
+        </div>
+    </li>-->
                         @*=========================================================================
-                        visible somtings dependent on the Roles of the inlogged user
-                        =========================================================================*@
+        visible somtings dependent on the Roles of the inlogged user
+        =========================================================================*@
 
 
                         @if (_signInManager.IsSignedIn(User) && User.IsInRole("Transporter"))
@@ -88,10 +81,10 @@
                                     Transporter management
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" asp-controller="Administration"
-                                       asp-action="ListUsers">sometest</a>
-                                    <a class="dropdown-item" asp-controller="Administration"
-                                       asp-action="ListRoles">sometest</a>
+                                    <a class="dropdown-item" asp-controller="orderout"
+                                       asp-action="OverviewSentToDelivered">Set sent orders to delivered</a>
+                                    @*<a class="dropdown-item" asp-controller="Administration"
+                    asp-action="ListRoles">sometest</a>*@
                                 </div>
                             </li>
                         }
@@ -112,21 +105,23 @@
                             </li>
                         }
 
-                        @if (_signInManager.IsSignedIn(User) && User.IsInRole("Client"))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Client management
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" asp-controller="Administration"
-                                       asp-action="ListUsers">sometest</a>
-                                    <a class="dropdown-item" asp-controller="Administration"
-                                       asp-action="ListRoles">sometest</a>
-                                </div>
-                            </li>
-                        }
+                        @*een klant gebruikt dit niet, dus commenten*@
+
+                        @*@if (_signInManager.IsSignedIn(User) && User.IsInRole("Client"))
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Client management
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" asp-controller="Administration"
+                       asp-action="ListUsers">sometest</a>
+                    <a class="dropdown-item" asp-controller="Administration"
+                       asp-action="ListRoles">sometest</a>
+                </div>
+            </li>
+        }*@
 
 
                         @if (_signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
@@ -143,7 +138,17 @@
                                        asp-action="OverviewSuppliers">Suppliers overview</a>
                                     <a class="dropdown-item" asp-controller="Administration"
                                        asp-action="OverviewTransporters">Transporters overview</a>
-                                </div>
+
+                                    <div class="dropdown-divider"></div>
+
+                                    <a class="dropdown-item" asp-controller="orderout"
+                                       asp-action="OverviewReservedToPrepared">Set reserved orderOuts to prepared</a>
+                                    <a class="dropdown-item" asp-controller="orderout"
+                                       asp-action="OverviewPreparedToSent">Set prepared orderOuts to sent</a>
+
+                                    <div class="dropdown-divider"></div>
+
+                         
                             </li>
                         }
 

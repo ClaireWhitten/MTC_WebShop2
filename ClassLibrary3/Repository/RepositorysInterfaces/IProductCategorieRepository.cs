@@ -21,5 +21,11 @@ namespace MTCrepository.Repository
         Task<TSDreposResultOneObject<ProductCategorie>> GetCategoryWithProducts(int categoryId);
 
         Task<TSDreposResultOneObject<ProductCategorie>> GetCategoryWithAll(int id);
+
+
+
+        //====================================================================create by tom
+        Task<Dictionary<int, string>> GetAllPosiblePaths();
+        //=================================================================================
     }
 }

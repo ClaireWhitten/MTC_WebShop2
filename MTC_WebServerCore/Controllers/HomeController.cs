@@ -32,78 +32,56 @@ namespace MTC_WebServerCore.Controllers
         //}
 
 
+
+
+        //https://localhost:5001?catId=1&sub=true 
+        //https://localhost:5001?catId=1&sub=false
+        //https://localhost:5001?catId=1
+        //public async Task<IActionResult> Index(int? id, [FromQuery(Name = "sub")] bool? isBar)
+
         [HttpGet]
-        public async Task<IActionResult> Index(int? id)
+        [Route("")]
+        public async Task<IActionResult> Index(int? catId, [FromQuery(Name = "sub")] bool? isShowSubs=false)
         {
+            if (!isShowSubs.HasValue) isShowSubs = false;
+
+            ////=======================================================test
+            var testResult = await _repos.ProductCategories.GetAllPosiblePaths();
+
+            foreach (var item in testResult)
+            {
+                Console.WriteLine(item.Key + " === " + item.Value);
+            }
+            //===========================================================
+
+            ////========================================================test
+            //var testResult2 = await _repos.Products.GetProductsByCategoryId(1, true);
+
+
+            ////============================================================
+
+
 
             var model = new IndexPageViewModel();
 
+            var xx = await _repos.OrderOUTs.getOrderOutDTO(StatusOfOrder.Reserved);
 
-            //hier kies je welke producten je wil laten zien
-            #region testlist aanmaken
+            //var rrr = await _repos.OrderOUTs.GetSingleOrDefaultAsync(x=>x.Id == 3);
 
-            var testlistProducts = new List<Product>() {
-
-                new Product
-                {
-                    EAN = "8888888888888",
-                    AverageRating = 3,
-                    RatingCount = 4,
-                    BTWPercentage = 21,
-                    CategorieId = 1,
-                    //Categorie = new ProductCategorie { Name = "testcat" },
-                    CountInStock = 0,
-                    ExtraInfo = "dit is een gesmurft produkt",
-                    Name = "Smurven",
-                    MinStock = 5,
-                    MaxStock = 100,
-                    RecommendedUnitPrice = 22.5,
-                    SolderPrice = 15,
-                    
-                }  ,              
-                new Product
-                {
-                    EAN = "333333333333333",
-                    AverageRating = 2.55,
-                    RatingCount = 8,
-                    BTWPercentage = 21,
-                    CategorieId = 1,
-                    //Categorie = new ProductCategorie { Name = "testcat" },
-                    CountInStock = 0,
-                    ExtraInfo = "dit is een geweldig produkt",
-                    Name = "testProduct",
-                    MinStock = 5,
-                    MaxStock = 100,
-                    RecommendedUnitPrice = 22.5,
-                    SolderPrice = 15,
-                },
-                new Product
-                {
-                    EAN = "44444444444",
-                    AverageRating = 3.8,
-                    RatingCount = 14,
-                    BTWPercentage = 21,
-                    CategorieId = 1,
-                    //Categorie = new ProductCategorie { Name = "testcat" },
-                    CountInStock = 0,
-                    ExtraInfo = "dit is een geweldig produkt",
-                    Name = "blikje cola",
-                    MinStock = 5,
-                    MaxStock = 100,
-                    RecommendedUnitPrice = 12,
-                    SolderPrice = 4.2,
-                }
-            };
-
-            #endregion
+            //foreach (var item in rrr.Data.OrderLineOUTs)
+            //{
+            //    Console.WriteLine(item.Id);
+            //}
 
 
-            //model.ProductsToShow = testlistProducts;
+            //Console.WriteLine("test");
 
-            var productsResult = await _repos.Products.GetAllAsync();
-            var productsResult2 = await _repos.Products.GetAllAsync();
 
-            model.ProductsToShow = productsResult.Data.ToList();
+
+            //var productsResult = await _repos.Products.GetAllAsync();
+            var productsResult = await _repos.Products.GetProductsByCategoryId(catId, isShowSubs.Value);
+
+            model.ProductsToShow = productsResult.Products;
 
 
 
