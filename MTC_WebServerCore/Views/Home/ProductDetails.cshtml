@@ -1,0 +1,75 @@
+﻿@model MTC_WebServerCore.ViewModels.Home.ProductDetailsViewModel
+@*<strong>Name</strong>*@
+<h1>@Model.Product.Name</h1>
+
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="2000" style="width:600px;height:400px">
+    <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div height="400px" width="600px" class="carousel-inner">
+        @{
+            if (Model.ProductImages != null)
+                @foreach (var item in Model.ProductImages)
+                {
+                    <div height="400px" width="600px" class="carousel-item @(item == Model.ProductImages.First() ? "active" : "")">
+                        <img height="400px" width="600px" src="@item">
+                    </div>
+                    }
+        }
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+
+@*<strong>Price: <p style=" text-size-adjust:72;color:seagreen ">@{Model.Product.RecommendedUnitPrice + (Model.Product.RecommendedUnitPrice * Model.Product.BTWPercentage / 100);} </p></strong>*@
+
+<strong>EAN:<p> @Model.Product.EAN</p></strong>
+
+<strong>Description</strong>
+<p>@Model.Product.ExtraInfo</p>
+@*<strong>BTW</strong>
+    <p>@Model.Product.BTWPercentage</p>*@
+<strong>Stock</strong>
+<p>@Model.Product.CountInStock</p>
+@*<strong>Maximum stock</strong>
+    <p>@Model.Product.MaxStock</p>
+    <strong>Minimum stock</strong>
+    <p>@Model.Product.MinStock</p>*@
+
+<strong>Solde</strong>
+<p>@Model.Product.SolderPrice %</p>
+@*<strong>Category</strong>
+    <p>@Model.CategoryName</p>*@
+@*<strong>Suppliers</strong>
+    @{ foreach (var item in Model.Product.Suppliers)
+        {
+            <p>●@item.Name</p>
+        }
+    }*@
+
+@*<strong>Images</strong>*@
+
+@*<br />
+    <strong>Returned</strong>
+    <p>@Model.Product.ReturnedProducts.Count(r => r.Outlet == true)</p>*@
+
+<strong>Rating</strong>
+<p>@Model.Product.AverageRating /5</p>
+<strong>Reviews</strong>
+@foreach (var item in Model.Product.ProductReviews)
+{
+    <p>@item.Rating /5</p>
+    <p>@item.Comment</p>
+}
+<br />
+<a asp-controller="Home" asp-action="Index">Back </a>
+

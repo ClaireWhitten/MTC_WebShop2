@@ -63,7 +63,11 @@
         <input type="file" multiple="multiple" class="form-control" id="Photos'" asp-for="ProductImages" />
         <span class="text-danger" asp-validation-for="ProductImages"></span>
     </div>
+
+
     <span class=" text-danger">@Html.ValidationSummary(true)</span>
     <button class="btn-primary" type="submit">Edit</button>
+
+
 </form>
 <a asp-controller="ProductAdmin" asp-action="IndexProductAdmin">Back </a>

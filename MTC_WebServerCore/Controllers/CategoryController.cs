@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using MTC_WebServerCore.ViewModels.Category;
@@ -337,5 +337,8 @@ namespace MTC_WebServerCore.Controllers
         }
     }
 }
+
+
+
 
 

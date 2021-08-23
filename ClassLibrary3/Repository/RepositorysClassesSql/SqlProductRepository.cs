@@ -65,12 +65,14 @@ namespace MTCrepository.Repository
         public override async Task<TSDreposResultOneObject<Product>> GetByIdAsync(params object[] aPrimaryKey)
         {
             var terug = new TSDreposResultOneObject<Product>();
-
-            
                 terug.Data = await _context.Set<Product>().Include(x => x.Images).Include(x => x.Suppliers).Include(x => x.ReturnedProducts).Include(x => x.ProductReviews).FirstOrDefaultAsync(p => p.EAN == aPrimaryKey[0].ToString());
                 return terug;
-           
+        }
 
+        public override Task<TSDreposResultOneObject<Product>> RemoveAsync(Product aEntity, bool autoSaveChange = true)
+        {
+            aEntity.IsActive = false;
+            return base.UpdateAsync(aEntity, autoSaveChange);
         }
     }
 }

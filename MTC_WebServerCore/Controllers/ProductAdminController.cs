@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MTC_WebServerCore.Controllers
@@ -32,7 +33,8 @@ namespace MTC_WebServerCore.Controllers
         public async Task<IActionResult> IndexProductAdminAsync()
         {
             TSDreposResultIenumerable<Product> resultProducts = await _repos.Products.GetProductsWithSuppliers();
-            IEnumerable<Product> Products = resultProducts.Data.Where(x => x.IsActive == true);
+
+            IEnumerable<Product> Products = resultProducts.Data.Where(x=>x.IsActive==true);
 
             //TSDreposResultIenumerable<ProductImage> resultProductImages = await _repos.ProductImages.GetAllAsync();
             //IEnumerable<ProductImage> ProductImages = resultProductImages.Data;
@@ -40,7 +42,14 @@ namespace MTC_WebServerCore.Controllers
             Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
 
 
-            if (Products.Count() > 0)
+            //TSDreposResultIenumerable<ProductImage> resultProductImages = await _repos.ProductImages.GetAllAsync();
+            //IEnumerable<ProductImage> ProductImages = resultProductImages.Data;
+            Categories = new List<SelectListItem>();
+            Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
+
+
+            if (Products.Count()>0)
+
             {
                 var vm = Products.Select(x => new ProductIndexViewModel
                 {
@@ -50,9 +59,11 @@ namespace MTC_WebServerCore.Controllers
                     CountInStock = x.CountInStock,
                     SolderPrice = x.SolderPrice,
                     CategorieName = Categories[x.CategorieId].Text,
-                    ProductImagesrc = x.Images.Count > 0 ? string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(x.Images.FirstOrDefault().Image)) : null,
-                    Suppliers = x.Suppliers.Select(x => x.Name).ToArray(),
+
+                    ProductImagesrc  = x.Images.Count>0 ? string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(x.Images.FirstOrDefault().Image)) : null ,
+                    Suppliers = x.Suppliers.Select(x=>x.Name).ToArray(),
                 });
+                
 
                 return View(vm);
 
@@ -86,10 +97,17 @@ namespace MTC_WebServerCore.Controllers
         public async Task<IActionResult> CreateProductAdminAsync([FromForm] ProductCreateViewModel product, List<IFormFile> ProductImages)
         {
 
+            Regex reg = new Regex(@"^[1-9]\\d*(\\.\\d+)?$");
+
+
             if (product.MinStock < 0)
                 ModelState.AddModelError(string.Empty, "Minimum stock most be equal to, or greater than 0.");
             if (product.MaxStock < product.MinStock)
                 ModelState.AddModelError(string.Empty, "Maximum stock cannot be less than Minimum stock.");
+
+            if(reg.IsMatch( product.RecommendedUnitPrice))
+                ModelState.AddModelError(string.Empty, "Recomended price must be a number and greater than 0.");
+
 
             if (TryValidateModel(product))
             {
@@ -102,7 +120,7 @@ namespace MTC_WebServerCore.Controllers
                     BTWPercentage = product.BTWPercentage,
                     MaxStock = product.MaxStock,
                     MinStock = product.MinStock,
-                    RecommendedUnitPrice = product.RecommendedUnitPrice,
+                    RecommendedUnitPrice = Convert.ToDouble(product.RecommendedUnitPrice.Replace('.',',')),
                     CategorieId = product.CategorieId,
                     SolderPrice = product.SolderPercentage
                 };
@@ -151,7 +169,9 @@ namespace MTC_WebServerCore.Controllers
             Product product = (await _repos.Products.GetByIdAsync(id)).Data;
             var vm = new ProductDetailViewModel
             {
-                Product = product,
+
+                Product=product,
+
                 CategoryName = Categories[product.CategorieId].Text,
                 //CategoryName = getcategoryPath(product.CategorieId),
             };
@@ -182,19 +202,22 @@ namespace MTC_WebServerCore.Controllers
             var vm = new ProductEditViewModel
             {
                 EAN = product.EAN,
-                Name = product.Name,
-                ExtraInfo = product.ExtraInfo,
-                RecommendedUnitPrice = product.RecommendedUnitPrice,
-                SolderPercentage = product.SolderPrice,
-                MaxStock = product.MaxStock,
-                MinStock = product.MaxStock,
-                CategorieId = product.CategorieId,
-                BTWPercentage = product.BTWPercentage,
-                SupplierIds = product.Suppliers.Select(x => x.Id).ToList(),
+
+                Name=product.Name,
+                ExtraInfo=product.ExtraInfo,
+                RecommendedUnitPrice=product.RecommendedUnitPrice.ToString().Replace(',', '.'),
+                SolderPercentage=product.SolderPrice,
+                MaxStock=product.MaxStock,
+                MinStock=product.MaxStock,
+                CategorieId=product.CategorieId,
+                BTWPercentage=product.BTWPercentage,
+                SupplierIds=product.Suppliers.Select(x=>x.Id).ToList(),
+
                 Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList()
             };
 
             //ViewBag.Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+
 
             Categories = new List<SelectListItem>();
             Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
@@ -208,11 +231,21 @@ namespace MTC_WebServerCore.Controllers
             return View(vm);
         }
 
+
+            ViewBag.Categories = Categories;
+
+
+
         //========================== Edit Product
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProductAdminAsync([FromForm] ProductEditViewModel oldproduct, List<IFormFile> ProductImages)
         {
+
+            Regex reg = new Regex(@"^[1-9]\\d*(\\.\\d+)?$");
+            if (reg.IsMatch(oldproduct.RecommendedUnitPrice))
+                ModelState.AddModelError(string.Empty, "Recomended price must be a number and greater than 0.");
+
             if (oldproduct.MinStock < 0)
                 ModelState.AddModelError(string.Empty, "Minimum stock most be greater than 0.");
             if (oldproduct.MaxStock < oldproduct.MinStock)
@@ -228,15 +261,17 @@ namespace MTC_WebServerCore.Controllers
                     BTWPercentage = oldproduct.BTWPercentage,
                     MaxStock = oldproduct.MaxStock,
                     MinStock = oldproduct.MinStock,
-                    RecommendedUnitPrice = oldproduct.RecommendedUnitPrice,
+
+                    RecommendedUnitPrice = Convert.ToDouble(oldproduct.RecommendedUnitPrice.Replace('.', ',')),
                     CategorieId = oldproduct.CategorieId,
                     SolderPrice = oldproduct.SolderPercentage
                 };
-
+                
                 newproduct.Suppliers = new List<Supplier>();
                 foreach (var item in oldproduct.SupplierIds)
                     newproduct.Suppliers.Add((await _repos.Suppliers.GetByIdAsync(item)).Data);
-                await _repos.ProductImages.RemoveByCondition(i => i.ProductEAN == oldproduct.EAN);
+                await _repos.ProductImages.RemoveByCondition(i=>i.ProductEAN==oldproduct.EAN);
+               
 
                 newproduct.Images = new List<ProductImage>();
                 foreach (var item in Request.Form.Files)
@@ -252,7 +287,9 @@ namespace MTC_WebServerCore.Controllers
                     newproduct.Images.Add(img);
 
                 }
-                var p = (await _repos.Products.GetByIdAsync(oldproduct.EAN)).Data;
+
+                var p= (await _repos.Products.GetByIdAsync(oldproduct.EAN)).Data;
+
                 p.EAN = newproduct.EAN;
                 p.Name = newproduct.Name;
                 p.ExtraInfo = newproduct.ExtraInfo;
@@ -279,8 +316,10 @@ namespace MTC_WebServerCore.Controllers
 
             ViewBag.Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
 
+
             Categories = new List<SelectListItem>();
             Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
+
 
             ViewBag.Categories = Categories;
 
@@ -298,7 +337,9 @@ namespace MTC_WebServerCore.Controllers
         public async Task<IActionResult> DeleteProductAdmin([FromRoute] string id)
         {
             var selectedProduct = (await _repos.Products.GetByIdAsync(id)).Data;
-            if (selectedProduct != null)
+
+            if (selectedProduct!=null)
+
             {
                 var deleteProduct = await _repos.Products.RemoveAsync(selectedProduct);
                 return RedirectToAction("IndexProductAdmin");
@@ -308,16 +349,5 @@ namespace MTC_WebServerCore.Controllers
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
 }
+

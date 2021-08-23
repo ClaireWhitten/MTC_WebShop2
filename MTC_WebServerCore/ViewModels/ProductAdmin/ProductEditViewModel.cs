@@ -48,12 +48,16 @@ namespace MTC_WebServerCore.ViewModels.ProductAdmin
         [Required]
         [Range(0, double.MaxValue)]
         [Display(Name = "Recommended Price")]
-        public double RecommendedUnitPrice { get; set; }
+
+        public string RecommendedUnitPrice { get; set; }
+
 
 
         [Display(Name = "Solde (%)")]
         public double? SolderPercentage { get; set; }
 
+
+        
 
 
 

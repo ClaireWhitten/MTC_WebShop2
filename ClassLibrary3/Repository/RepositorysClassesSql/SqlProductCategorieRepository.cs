@@ -154,6 +154,32 @@ namespace MTCrepository.Repository
 
 
 
+        //Method returns list of all parents of a given category
+        //optional parameter
+        public async Task<Dictionary<int, string>> GetAllPosiblePaths()
+        {
+            Dictionary<int, string> dicToFill = new Dictionary<int, string>();
+            List<ProductCategorie> allCategorys = await _context.Set<ProductCategorie>().ToListAsync();
+            //eerst iriteren vanaf de productcategorys zonder parent
+            foreach (var item in allCategorys.Where(x => x.ParentCategorieID == null))
+            {
+                dicToFill.Add(item.ID, item.Name);
+                GetAllNextPaths(item.ID, item.Name, allCategorys, dicToFill);
+            }
+
+            return dicToFill;
+        }
+        //Dictionary<int, string>
+        private void GetAllNextPaths(int id, string buildstringPath, List<ProductCategorie> allCategorys, Dictionary<int, string> dicToFill)
+        {
+            foreach (var item in allCategorys.Where(x => x.ParentCategorieID == id))
+            {
+                dicToFill.Add(item.ID, buildstringPath + ">" + item.Name);
+                GetAllNextPaths(item.ID, buildstringPath + ">" + item.Name, allCategorys, dicToFill);
+            }
+        }
+
+
 
 
 

@@ -19,6 +19,8 @@ namespace MTCrepository.Repository
         List<ProductCategorie> GetAllSubCats(int categoryId);
 
         Task<TSDreposResultOneObject<ProductCategorie>> GetCategoryWithProducts(int categoryId);
+        Task<Dictionary<int, string>> GetAllPosiblePaths();
+      //void GetAllNextPaths(int id, string buildstringPath, List<ProductCategorie> allCategorys, Dictionary<int, string> dicToFill);
 
         Task<TSDreposResultOneObject<ProductCategorie>> GetCategoryWithAll(int id);
 

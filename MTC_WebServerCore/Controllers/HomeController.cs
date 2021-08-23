@@ -147,5 +147,23 @@ namespace MTC_WebServerCore.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ProductDetailsAsync([FromRoute] string id)
+        {
+            Product product = (await _repos.Products.GetByIdAsync(id)).Data;
+            var vm = new ProductDetailsViewModel
+            {
+                Product = product
+            };
+            if (product.Images.Count > 0)
+            {
+                vm.ProductImages = new List<string>();
+                foreach (var item in product.Images)
+                    vm.ProductImages.Add(string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Image)));
+            }
+            return View(vm);
+        }
     }
 }
