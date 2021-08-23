@@ -33,45 +33,14 @@ namespace MTC_WebServerCore.ViewModels.ProductAdmin
         public double? SolderPrice { get; set; }
 
 
-        //[Required]
-        //[Range(0, 30, ErrorMessage = "{0} should be between {1} and {2}")]
-        //public double BTWPercentage { get; set; }
-
-
-
-
-
-
-
-        //====>===>===> most be a list of supliers<====<====<=====
-
         public  string[] Suppliers { get; set; }
-
-
 
 
         [Required(ErrorMessage = "Category cannot be empty")]
         public string CategorieName { get; set; }
 
 
-        //[Required(ErrorMessage = "Product must have at less 1 Supplier")]
-        //public ICollection<Supplier> Suppliers { get; set; }
-
-
-        //public ICollection<ProductImage> ProductImages { get; set; }
-
         public string ProductImagesrc { get; set; }
-
-        //[MaxLength(255, ErrorMessage = "maximum {1} characters allowed for Extra info")]
-        //public string ExtraInfo { get; set; }
-
-        ////-------------------------------------------------------------------
-
-        //public int MaxStock { get; set; }
-
-        ////-------------------------------------------------------------------
-
-        //public int MinStock { get; set; }
 
     }
 }

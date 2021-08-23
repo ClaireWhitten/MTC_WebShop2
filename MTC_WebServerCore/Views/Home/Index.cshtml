@@ -31,7 +31,9 @@ the javascriptfiles cookies.js and basket.js (see bottom of this page)*@
                 </div>
 
                 <div class="card-footer text-center">
-                    <button class="btn btn-primary">Details</button>
+                    <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@item.EAN">
+                        <input type="button" class="btn btn-primary m-1" value="Detail" />
+                    </a>
 
 
                     @*belangrijk bij het opmaken van de pagina layout
