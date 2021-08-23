@@ -107,25 +107,26 @@ namespace MTCrepository.Repository
 
         //Method returns list of all parents of a given category
         //optional parameter
-        public async Task<IEnumerable<ProductCategorie>> GetAllParents(int categoryId, List<ProductCategorie> productCategories = null)
+        public async Task<Dictionary<int, string>> GetAllPosiblePaths()
         {
-            //if no list has been passed as parameter, create a new list
-            productCategories = productCategories ?? new List<ProductCategorie>();
-
-            //Get chosen category with its parent category
-            var chosenCategory = await _context.Set<ProductCategorie>().Include(c => c.ParentCategorie).FirstOrDefaultAsync(c => c.ID == categoryId);
-
-
-            if (chosenCategory.ParentCategorie == null)
+            Dictionary<int, string> dicToFill = new Dictionary<int, string>();
+            List<ProductCategorie> allCategorys = await _context.Set<ProductCategorie>().ToListAsync();
+            //eerst iriteren vanaf de productcategorys zonder parent
+            foreach (var item in allCategorys.Where(x => x.ParentCategorieID == null))
             {
-                productCategories.Add(chosenCategory);
-                productCategories.Reverse();
-                return productCategories;
+                dicToFill.Add(item.ID, item.Name);
+                GetAllNextPaths(item.ID, item.Name, allCategorys, dicToFill);
             }
-            else
+
+            return dicToFill;
+        }
+        //Dictionary<int, string>
+        private void GetAllNextPaths(int id, string buildstringPath, List<ProductCategorie> allCategorys, Dictionary<int, string> dicToFill)
+        {
+            foreach (var item in allCategorys.Where(x => x.ParentCategorieID == id))
             {
-                productCategories.Add(chosenCategory);
-                return await GetAllParents(chosenCategory.ParentCategorie.ID, productCategories);
+                dicToFill.Add(item.ID, buildstringPath + ">" + item.Name);
+                GetAllNextPaths(item.ID, buildstringPath + ">" + item.Name, allCategorys, dicToFill);
             }
         }
 
