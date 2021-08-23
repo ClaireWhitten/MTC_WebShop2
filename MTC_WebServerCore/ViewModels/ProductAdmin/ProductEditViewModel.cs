@@ -48,13 +48,17 @@ namespace MTC_WebServerCore.ViewModels.ProductAdmin
         [Required]
         [Range(0, double.MaxValue)]
         [Display(Name = "Recommended Price")]
+
         public string RecommendedUnitPrice { get; set; }
+
 
 
         [Display(Name = "Solde (%)")]
         public double? SolderPercentage { get; set; }
 
+
         
+
 
 
         [Required(ErrorMessage = "Category cannot be empty")]
@@ -73,3 +77,4 @@ namespace MTC_WebServerCore.ViewModels.ProductAdmin
         public List<string> ProductImages { get; set; }
     }
 }
+

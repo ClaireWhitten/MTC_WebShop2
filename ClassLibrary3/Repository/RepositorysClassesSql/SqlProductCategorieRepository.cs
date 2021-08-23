@@ -24,7 +24,7 @@ namespace MTCrepository.Repository
         {
             var terug = new TSDreposResultIenumerable<ProductCategorie>();
 
-            terug.Data = await _context.Set<ProductCategorie>().Include(c=>c.ParentCategorie).Include(c=>c.SubCategories).Include(c=>c.Products).ToListAsync();
+            terug.Data = await _context.Set<ProductCategorie>().Include(c => c.ParentCategorie).Include(c => c.SubCategories).ToListAsync();
 
             return terug;
         }
@@ -65,6 +65,34 @@ namespace MTCrepository.Repository
 
 
 
+        //method gets parent paths
+        public async Task<Dictionary<int, string>> GetAllPosiblePaths()
+        {
+            Dictionary<int, string> dicToFill = new Dictionary<int, string>();
+            List<ProductCategorie> allCategorys = await _context.Set<ProductCategorie>().ToListAsync();
+            //eerst iriteren vanaf de productcategorys zonder parent
+            foreach (var item in allCategorys.Where(x => x.ParentCategorieID == null))
+            {
+                dicToFill.Add(item.ID, item.Name);
+                GetAllNextPaths(item.ID, item.Name, allCategorys, dicToFill);
+            }
+
+            return dicToFill;
+        }
+        //Dictionary<int, string>
+        private void GetAllNextPaths(int id, string buildstringPath, List<ProductCategorie> allCategorys, Dictionary<int, string> dicToFill)
+        {
+            foreach (var item in allCategorys.Where(x => x.ParentCategorieID == id))
+            {
+                dicToFill.Add(item.ID, buildstringPath + ">" + item.Name);
+                GetAllNextPaths(item.ID, buildstringPath + ">" + item.Name, allCategorys, dicToFill);
+            }
+        }
+
+
+
+
+
 
 
         ////Method returns list of all parents of a given category
@@ -73,16 +101,36 @@ namespace MTCrepository.Repository
         //{
         //    //r AllCategorys = await _context.Set<ProductCategorie>().Include(c => c.ParentCategorie).ToListAsync();
 
-        //    return await GetAllParentsPrivate(categoryId, AllCategorys);
-        //}
 
-        //private async Task<IEnumerable<ProductCategorie>> GetAllParentsPrivate(int categoryId,List<ProductCategorie>allCategorie, List<ProductCategorie> productCategories = null)
+
+
+
+
+
+
+        ////Method returns list of all parents of a given category
+        //                                                                                               //optional parameter
+        //public async Task<IEnumerable<ProductCategorie>> GetAllParents(int categoryId, List<ProductCategorie> productCategories = null)
         //{
         //    //if no list has been passed as parameter, create a new list
         //    productCategories = productCategories ?? new List<ProductCategorie>();
 
         //    //Get chosen category with its parent category
-        //    //var chosenCategory = await _context.Set<ProductCategorie>().Include(c => c.ParentCategorie).FirstOrDefaultAsync(c => c.ID == categoryId);
+        //    var chosenCategory = await _context.Set<ProductCategorie>().Include(c => c.ParentCategorie).FirstOrDefaultAsync(c => c.ID == categoryId);
+
+        //    if(chosenCategory.ParentCategorie == null)
+        //    {
+        //        productCategories.Add(chosenCategory);
+        //        productCategories.Reverse();
+        //        return productCategories;
+        //    }
+        //    else
+        //    {
+        //        productCategories.Add(chosenCategory);
+        //        return await GetAllParents(chosenCategory.ParentCategorie.ID,  productCategories);
+        //    }
+
+        //}
 
         //    var chosenCategory = allCategorie.FirstOrDefault(c => c.ID == categoryId);
 
@@ -99,6 +147,7 @@ namespace MTCrepository.Repository
         //        return await GetAllParentsPrivate(chosenCategory.ParentCategorie.ID, productCategories);
         //    }
         //}
+
 
 
 
@@ -129,6 +178,7 @@ namespace MTCrepository.Repository
                 GetAllNextPaths(item.ID, buildstringPath + ">" + item.Name, allCategorys, dicToFill);
             }
         }
+
 
 
 

@@ -1,4 +1,4 @@
-﻿@model MTC_WebServerCore.ViewModels.ProductAdmin.ProductEditViewModel 
+﻿@model MTC_WebServerCore.ViewModels.ProductAdmin.ProductEditViewModel
 
 
 <form asp-controller="ProductAdmin" asp-action="EditProductAdmin" method="post" enctype="multipart/form-data">
@@ -48,13 +48,9 @@
         <select class="form-control" asp-items="@ViewBag.Categories" asp-for="CategorieId"></select>
         <a asp-controller="Category" asp-action="AddCategory">New Category</a>
     </div>
-
-
     <div class="form-group">
-
         <label asp-for="SupplierIds"></label>
         <select multiple class="form-control" asp-items="@Model.Suppliers" asp-for="SupplierIds"></select>
-
         <a asp-controller="Administration" asp-action="RegisterSupplier">New Supplier</a>
     </div>
     <div class="form-group">
@@ -68,8 +64,10 @@
         <span class="text-danger" asp-validation-for="ProductImages"></span>
     </div>
 
+
     <span class=" text-danger">@Html.ValidationSummary(true)</span>
     <button class="btn-primary" type="submit">Edit</button>
+
 
 </form>
 <a asp-controller="ProductAdmin" asp-action="IndexProductAdmin">Back </a>
