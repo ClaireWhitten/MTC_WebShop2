@@ -23,7 +23,9 @@ namespace MTCrepository.Repository
       //void GetAllNextPaths(int id, string buildstringPath, List<ProductCategorie> allCategorys, Dictionary<int, string> dicToFill);
 
         Task<TSDreposResultOneObject<ProductCategorie>> GetCategoryWithAll(int id);
+//=====================================================================
 
         Task<Dictionary<int, string>> GetAllPosiblePaths();
+
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MTCmodel;
+using MTCrepository.DTO;
 using MTCrepository.TDSrepository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -74,5 +76,60 @@ namespace MTCrepository.Repository
             aEntity.IsActive = false;
             return base.UpdateAsync(aEntity, autoSaveChange);
         }
+
+
+
+
+
+        #region=============================================================================================================== DTO for the home/index
+        // new method writed by Tom
+        // give all the products by productcategory
+        // if the optional parameter 'isSubsIncluded' is true, also the subcats load his products
+        public async Task<HomeIndexDTO> GetProductsByCategoryId(int? categoryId=null, bool isSubsIncluded=true)
+        {
+            List<Product> foundedProducts;
+
+            if (categoryId == null)
+            {
+                foundedProducts = _context.Products.ToList();
+            }
+            else
+            {
+                //this is the list with  id of this cat,  and sub category if needed
+                List<int> foundedSubs = new List<int>() { categoryId.Value };
+
+                //subs capture if needed
+                if (isSubsIncluded)
+                {
+                    //alle categorys ophalen uit DB
+                    List<ProductCategorie> allProductCategorys = await _context.ProductCategories.ToListAsync();
+                    storeAlleSubcatsInListFoundedSubs(categoryId.Value, foundedSubs, allProductCategorys);
+                }
+
+                //do the bulck Select query, this give al the products by the list of category'ids
+                foundedProducts = _context.Products.Where(p => foundedSubs.Contains(p.CategorieId)).ToList();
+            }
+
+            return new HomeIndexDTO
+            {
+                Products = foundedProducts,
+            };
+
+        }
+        //recursivehelper for the above method
+        private void storeAlleSubcatsInListFoundedSubs(int categoryToSearch, List<int>foundedSubs , List<ProductCategorie>allCategorys  )
+        {
+            var alleInThisCat = allCategorys.Where(x => x.ParentCategorieID == categoryToSearch);
+
+            foreach (var item in alleInThisCat)
+            {
+                //store in list
+                foundedSubs.Add(item.ID);
+                //and recursive
+                storeAlleSubcatsInListFoundedSubs(item.ID, foundedSubs, allCategorys);
+            }
+        }
+        #endregion===================================================================================================================================
+
     }
 }

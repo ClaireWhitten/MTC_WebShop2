@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Bussiness\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\images\verboden.jpg" />
   </ItemGroup>
 

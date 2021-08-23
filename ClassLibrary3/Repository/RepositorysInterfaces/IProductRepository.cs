@@ -1,4 +1,5 @@
 ﻿using MTCmodel;
+using MTCrepository.DTO;
 using MTCrepository.TDSrepository;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,8 @@ namespace MTCrepository.Repository
     public interface IProductRepository : ITDSrepositoryAsync<Product>
     {
         Task<TSDreposResultIenumerable<Product>> GetProductsWithSuppliers();
+
+
+        Task<HomeIndexDTO> GetProductsByCategoryId(int? categoryId, bool isSubsIncluded=false);
     }
 }

@@ -42,7 +42,7 @@ namespace MTCmodel
         public int CountInStock { get; set; }
 
         //-------------------------------------------------------------------
-        public int MaxStock { get; set; }
+        public int MaxStock { get; set; } 
         //-------------------------------------------------------------------
         public int MinStock { get; set; }
         //-------------------------------------------------------------------

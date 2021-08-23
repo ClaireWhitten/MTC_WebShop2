@@ -1,0 +1,105 @@
+﻿
+@model OrderOutOverview_DTO
+@{
+    ViewData["Title"] = "Overview sent OrderOuts";
+}
+
+<h1>Overview sent OrderOuts</h1>
+
+
+@if (Model.OrderOutOverviewItems.Any())
+{
+
+
+    <form method="post" asp-controller="OrderOut" asp-action="OverviewSentToDelivered">
+
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Invoice/Order No.</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Client</th>
+                        <th scope="col">Transporter</th>
+                        <th scope="col">Set to delivered</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for (int i = 0; i < Model.OrderOutOverviewItems.Count; i++)
+                    {
+                        //Hidden fields nodig, anders zijn deze velden null of default in het model,
+                        //heb ze in feite niet allemaal nodig, is maar
+                        <input type="hidden" asp-for="@Model.OrderOutOverviewItems[i].OrderOutId" />
+                        <input type="hidden" asp-for="@Model.OrderOutOverviewItems[i].OrderOutDate" />
+                        <input type="hidden" asp-for="@Model.OrderOutOverviewItems[i].FullNameOfClient" />
+                        <input type="hidden" asp-for="@Model.OrderOutOverviewItems[i].EmailClient" />
+                        <input type="hidden" asp-for="@Model.OrderOutOverviewItems[i].TransporterId" />
+                        <input type="hidden" asp-for="@Model.OrderOutOverviewItems[i].TransporterName" />
+
+
+
+                        <tr>
+                            <td scope="row">@Model.OrderOutOverviewItems[i].OrderOutId.ConvertToInvoice()</td>
+                            <td scope="row">@Model.OrderOutOverviewItems[i].OrderOutDate</td>
+                            <td scope="row">@Model.OrderOutOverviewItems[i].FullNameOfClient</td>
+                            <td scope="row">@Model.OrderOutOverviewItems[i].TransporterName</td>
+
+
+                            @*textbox*@
+                            <td align="center">
+                                <input asp-for="@Model.OrderOutOverviewItems[i].IsChecked" class="form-check-input" />
+                            </td>
+                            @*knop*@
+                            <td>
+                                <a asp-controller="OrderOut" asp-action="Details" asp-route-id="@Model.OrderOutOverviewItems[i].OrderOutId">
+                                    <input type="button" class="btn btn-primary m-1" value="Detail" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @*<div asp-validation-summary="All" class="text-danger"></div>*@
+        <button id="btnProgressShow" type="submit" class=" btn btn-info">Set selected orders to Delivered</button>
+    </form>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            No sent Orderouts found
+        </div>
+    </div>
+}
+
+@*===========================================dialog in progress=================================================*@
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>processing, please wait</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    window.onload = function () {
+        var btnProgressShow = document.getElementById('btnProgressShow');
+
+        btnProgressShow.onclick = function () {
+
+            $('#myModal').modal({
+                keyboard: false,
+                backdrop: 'static',
+            });
+            console.log("test");
+        }
+    }
+</script>
