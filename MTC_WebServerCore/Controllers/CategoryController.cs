@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using MTC_WebServerCore.ViewModels.Category;
@@ -28,29 +28,19 @@ namespace MTC_WebServerCore.Controllers
         [HttpGet]
         public async Task<IActionResult> AddCategory()
         {
-            _logger.LogInformation("first");
-            //Get all product categories
-            var result = await _repos.ProductCategories.GetAllAsync();
-            var productCategories = result.Data;
 
-            _logger.LogInformation("next");
             AddCategoryViewModel vm = new AddCategoryViewModel();
-          
+            var catDictionary = await _repos.ProductCategories.GetAllPosiblePaths();
+
            //for each product cateogry find its parents and create a path
-            foreach (var productCategory in productCategories)
+            foreach (var category in catDictionary)
             {
-                var parentCategories = await _repos.ProductCategories.GetAllParents(productCategory.ID);
-                string parentPath = "";
-                foreach (var parentCategory in parentCategories)
-                {
-                    parentPath += ">" + parentCategory.Name;
-                }
+                
                 //set the path as the text in the select list
-                vm.productCategories.Add(new SelectListItem { Text = parentPath, Value = productCategory.ID.ToString() });
+                vm.productCategories.Add(new SelectListItem { Text = category.Value, Value = category.Key.ToString() });
                 
             }
 
-            _logger.LogInformation("last");
             return View(vm);
         }
 
@@ -107,34 +97,30 @@ namespace MTC_WebServerCore.Controllers
         {
             //get all existing categories
             var allCategories = await _repos.ProductCategories.GetCategoriesWithSubandParent();
-            var vm = allCategories.Data.Select(x => new OverviewCategoriesViewModel()
+            var categoryModels = allCategories.Data.Select(x => new OverviewCategoriesViewModel()
             {
                 Id = x.ID,
-                Products = x.Products,
-                Subcategories = x.SubCategories,
                 Name = x.Name,
-                ParentCategorie = x.ParentCategorie
+                Subcategories = x.SubCategories,
+                
+            }).ToList(); 
 
-            }).ToList(); // to list needed to set the parentPath property in foreach
+            var catDictionary = await _repos.ProductCategories.GetAllPosiblePaths();
 
 
-            foreach (var cat in vm)
+            foreach (var cat in categoryModels)
             {
-                var parents = (await _repos.ProductCategories.GetAllParents(cat.Id)).ToList();
-
-                string parentPath = "";
-                for (var i = 0; i < parents.Count(); i++)
-                {
-                 
-                    parentPath += ">" + parents[i].Name;
-
-                }
-                cat.ParentPath = parentPath;  
+                cat.FullPath = catDictionary.FirstOrDefault(d=>d.Key == cat.Id).Value;  
             }
-            return View(vm);
+            return View(categoryModels);
         }
 
         
+
+
+
+
+
         //Gets details of category 
         [HttpGet]
         public async Task<IActionResult> DetailCategory([FromRoute] int id)
@@ -156,12 +142,6 @@ namespace MTC_WebServerCore.Controllers
 
 
 
-
-
-
-
-
-
         //Gets the 'Edit cateogry' view and sets current details of the category
         [HttpGet]
         public async Task<IActionResult> EditCategory([FromRoute] int id)
@@ -169,40 +149,35 @@ namespace MTC_WebServerCore.Controllers
             //Get selected category
             var selectedCat = (await _repos.ProductCategories.GetByIdAsync(id)).Data;
 
-            //Get the location of the selected category
-            var currentParents = (await _repos.ProductCategories.GetAllParents(selectedCat.ID)).ToList();
-            currentParents.RemoveAt(currentParents.Count()-1);
-            string currentParentPath = string.Join(">", currentParents.Select(p => p.Name));
-            
+            //Get path of the category it belongs to (parent)
+            var catDictionary = await _repos.ProductCategories.GetAllPosiblePaths();
+            var belongsTo = catDictionary.FirstOrDefault(x => x.Key == selectedCat.ParentCategorieID).Value;
+
 
             //Create the vm
             EditCategoryViewModel vm = new EditCategoryViewModel()
             {
                 Name = selectedCat.Name,
-                CurrentLocation = currentParentPath
+                CurrentLocation = belongsTo
             };
 
-            //Set data for change parent selectlist 
-            var allCategories = (await _repos.ProductCategories.GetCategoriesWithSubandParent()).Data.ToList();
-            allCategories.Remove(selectedCat);
-            //allCategories.Remove(selectedCat.ParentCategorie);
+            //Set options for change parent selectlist 
+
+            //get all subcategories of selected category
             var subcats = _repos.ProductCategories.GetAllSubCats(id);
+            //remove the subcategories and the selected category from from the dictionary
             foreach (var sub in subcats)
             {
-                allCategories.Remove(sub);
+                catDictionary.Remove(sub.ID);
             }
-            
-            
-            //create path string for each new parent option
-            foreach (var productCategory in allCategories)
-            {
-                var parentCategories = await _repos.ProductCategories.GetAllParents(productCategory.ID);
-                string parentPath = string.Join(">", parentCategories.Select(p => p.Name));
-               
-                //set the path as the text in the select list
-                vm.productCategories.Add(new SelectListItem { Text = parentPath, Value = productCategory.ID.ToString() });
+            catDictionary.Remove(id);
 
+            foreach (var cat in catDictionary)
+            {
+                vm.productCategories.Add(new SelectListItem { Text = cat.Value, Value = cat.Key.ToString() });
             }
+    
+           
             //set current parent in drop down list
             if (selectedCat.ParentCategorieID == null)
             {
@@ -214,7 +189,7 @@ namespace MTC_WebServerCore.Controllers
                 var selected = vm.productCategories.FirstOrDefault(c => c.Value == selectedCat.ParentCategorieID.ToString());
                 selected.Selected = true;
             }
-            
+
             return View(vm);
         }
 
@@ -362,5 +337,8 @@ namespace MTC_WebServerCore.Controllers
         }
     }
 }
+
+
+
 
 

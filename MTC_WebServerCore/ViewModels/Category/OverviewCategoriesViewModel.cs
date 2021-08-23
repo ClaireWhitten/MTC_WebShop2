@@ -17,10 +17,9 @@ namespace MTC_WebServerCore.ViewModels.Category
         [Display(Name = "Category name:")]
         public string Name { get; set; }
 
-        public ProductCategorie ParentCategorie { get; set; }
-        public string ParentPath { get; set; }
 
-        public IEnumerable<MTCmodel.Product> Products { get; set; } = new List<MTCmodel.Product>();
+        public string FullPath { get; set; }
+
 
         public IEnumerable<ProductCategorie> Subcategories { get; set; } = new List<ProductCategorie>();
 

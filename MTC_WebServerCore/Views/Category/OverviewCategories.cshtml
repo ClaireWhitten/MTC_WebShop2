@@ -10,12 +10,11 @@
 {
 
     <div class="table-responsive">
-        <table class="table table-hover">
+        <table class="table table-hover" style="max-width:100%">
             <thead>
                 <tr>
                     <th scope="col">Name</th>
-                    <th scope="col">Parent Categories</th>
-                    <th scope="col">Number of products</th>
+                    <th scope="col">Full path</th>
                     <th scope="col">Subcategories</th>
                     <th scope="col">Modify</th>
                 </tr>
@@ -25,9 +24,7 @@
                 {
                     <tr>
                         <td scope="row">@cat.Name</td>
-                        <td scope="row">@cat.ParentPath</td>
-                        <td>@cat.Products.Count()</td>
-
+                        <td scope="row">@cat.FullPath</td>
                         @if (cat.Subcategories.Count() > 0)
                         {
                             <td>
