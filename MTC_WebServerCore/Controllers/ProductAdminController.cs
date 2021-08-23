@@ -19,7 +19,7 @@ namespace MTC_WebServerCore.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IApplicationRepository _repos;
         private readonly UserManager<ApplicationUser> _userManager;
-
+        List<SelectListItem> Categories;
         public ProductAdminController(ILogger<HomeController> logger, IApplicationRepository appRepos, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
@@ -27,18 +27,20 @@ namespace MTC_WebServerCore.Controllers
             _userManager = userManager;
         }
 
-        //[Route("")]
+
+        //=================== Admin Products overview
         public async Task<IActionResult> IndexProductAdminAsync()
         {
             TSDreposResultIenumerable<Product> resultProducts = await _repos.Products.GetProductsWithSuppliers();
-            IEnumerable<Product> Products = resultProducts.Data.Where(x=>x.IsActive==true);
+            IEnumerable<Product> Products = resultProducts.Data.Where(x => x.IsActive == true);
 
-            TSDreposResultIenumerable<ProductImage> resultProductImages = await _repos.ProductImages.GetAllAsync();
-            IEnumerable<ProductImage> ProductImages = resultProductImages.Data;
+            //TSDreposResultIenumerable<ProductImage> resultProductImages = await _repos.ProductImages.GetAllAsync();
+            //IEnumerable<ProductImage> ProductImages = resultProductImages.Data;
+            Categories = new List<SelectListItem>();
+            Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
 
 
-            if (Products.Count()>0)
-
+            if (Products.Count() > 0)
             {
                 var vm = Products.Select(x => new ProductIndexViewModel
                 {
@@ -47,28 +49,10 @@ namespace MTC_WebServerCore.Controllers
                     RecommendedUnitPrice = x.RecommendedUnitPrice,
                     CountInStock = x.CountInStock,
                     SolderPrice = x.SolderPrice,
-
-                    CategorieName = getcategoryPath( x.Categorie.ID),
-                    ProductImagesrc  = x.Images.Count>0 ? string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(x.Images.FirstOrDefault().Image)) : null ,
-                    Suppliers = x.Suppliers.Select(x=>x.Name).ToArray(),
+                    CategorieName = Categories[x.CategorieId].Text,
+                    ProductImagesrc = x.Images.Count > 0 ? string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(x.Images.FirstOrDefault().Image)) : null,
+                    Suppliers = x.Suppliers.Select(x => x.Name).ToArray(),
                 });
-                List<SelectListItem> Categories = new List<SelectListItem>();
-                var allCategories = (await _repos.ProductCategories.GetAllAsync()).Data;
-
-                //for each product cateogry get parent path
-                foreach (var productCategory in allCategories)
-                {
-                    var parentCategories = await _repos.ProductCategories.GetAllParents(productCategory.ID);
-                    string parentPath = "";
-                    foreach (var parentCategory in parentCategories)
-                    {
-                        parentPath += ">" + parentCategory.Name;
-                    }
-                    //set the path as the text in the select list
-                    Categories.Add(new SelectListItem { Text = parentPath, Value = productCategory.ID.ToString() });
-
-                }
-                ViewBag.Categories = Categories;
 
                 return View(vm);
 
@@ -76,52 +60,37 @@ namespace MTC_WebServerCore.Controllers
             return View();
         }
 
-        
-        public  string getcategoryPath(int id)
-        {
-            var parentCategories =  _repos.ProductCategories.GetAllParents(id);
-            string parentPath = "";
-            foreach (var parentCategory in parentCategories.Result)
-            {
-                parentPath += ">" + parentCategory.Name;
-            }
-            return parentPath;
-        }
-        
-
+        //================= add product view
         public async Task<IActionResult> CreateProductAdmin()
         {
-            TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
-            IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
+            //TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
+            //IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
 
             TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s => s.ApplicationUser.IsActive == true);
             IEnumerable<Supplier> suppliers = resultSuppliers.Data;
 
+            ViewBag.Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
 
-            var vm = new ProductCreateViewModel
-            {
+            Categories = new List<SelectListItem>();
+            Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
+            ViewBag.Categories = Categories;
 
-                //Categories = ProductCategories.Select(c => new SelectListItem { Text = c.Name, Value = c.ID.ToString() }),
-                Suppliers=suppliers.Select(s=>new SelectListItem { Text=s.Name,Value=s.Id.ToString()}).ToList()
-
-            };
-
-            vm.Categories = new List<SelectListItem>();
-            var allCategories = (await _repos.ProductCategories.GetAllAsync()).Data;
-            foreach (var productCategory in allCategories)
-                vm.Categories.Add(new SelectListItem { Text = getcategoryPath(productCategory.ID), Value = productCategory.ID.ToString() });
-
-            return View(vm);
+            return View();
         }
 
 
 
-
+        //======================= Add Product 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateProductAdminAsync([FromForm] ProductCreateViewModel product,List<IFormFile> ProductImages)
+        public async Task<IActionResult> CreateProductAdminAsync([FromForm] ProductCreateViewModel product, List<IFormFile> ProductImages)
         {
-            
+
+            if (product.MinStock < 0)
+                ModelState.AddModelError(string.Empty, "Minimum stock most be equal to, or greater than 0.");
+            if (product.MaxStock < product.MinStock)
+                ModelState.AddModelError(string.Empty, "Maximum stock cannot be less than Minimum stock.");
+
             if (TryValidateModel(product))
             {
                 var newproduct = new Product
@@ -135,73 +104,75 @@ namespace MTC_WebServerCore.Controllers
                     MinStock = product.MinStock,
                     RecommendedUnitPrice = product.RecommendedUnitPrice,
                     CategorieId = product.CategorieId,
-
-                    
-
                     SolderPrice = product.SolderPercentage
                 };
-                //newproduct.Suppliers = new List<Supplier>();
-                //TSDreposResultOneObject<Supplier> resultProductCategorie = await _repos.Suppliers.GetByIdAsync(product.SupplierId);
-                //newproduct.Suppliers.Add(resultProductCategorie.Data);
                 newproduct.Images = new List<ProductImage>();
-
                 newproduct.Suppliers = new List<Supplier>();
                 foreach (var item in product.SupplierIds)
-                {
                     newproduct.Suppliers.Add((await _repos.Suppliers.GetByIdAsync(item)).Data);
-                }
-
-
                 foreach (var item in Request.Form.Files)
                 {
                     ProductImage img = new ProductImage();
                     img.ID = Guid.NewGuid().ToString();
-                    
                     MemoryStream ms = new MemoryStream();
                     item.CopyTo(ms);
                     img.Image = ms.ToArray();
                     ms.Close();
                     ms.Dispose();
-
                     newproduct.Images.Add(img);
-
-
                 }
                 await _repos.Products.AddAsync(newproduct);
                 return RedirectToAction("IndexProductAdmin");
             }
 
+            //TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
+            //IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
+
+            TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s => s.ApplicationUser.IsActive == true);
+            IEnumerable<Supplier> suppliers = resultSuppliers.Data;
+
+            ViewBag.Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+
+            Categories = new List<SelectListItem>();
+            Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
+
+            ViewBag.Categories = Categories;
+
             return View();
         }
 
-
+        //========================== Product Details
         [HttpGet]
-        public async Task<IActionResult> DetailProductAdmin([FromRoute]string id)
+        public async Task<IActionResult> DetailProductAdmin([FromRoute] string id)
         {
+            Categories = new List<SelectListItem>();
+            Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
+
             Product product = (await _repos.Products.GetByIdAsync(id)).Data;
             var vm = new ProductDetailViewModel
             {
-                Product=product,
-                CategoryName= getcategoryPath(product.CategorieId),
+                Product = product,
+                CategoryName = Categories[product.CategorieId].Text,
+                //CategoryName = getcategoryPath(product.CategorieId),
             };
-            if(product.Images.Count>0)
+            if (product.Images.Count > 0)
             {
                 vm.ProductImages = new List<string>();
                 foreach (var item in product.Images)
-                vm.ProductImages.Add(string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Image)));
+                    vm.ProductImages.Add(string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Image)));
             }
-            
+
             return View(vm);
         }
 
 
 
-
+        //=========================== Product Edit View
         [HttpGet]
         public async Task<IActionResult> EditProductAdmin([FromRoute] string id)
         {
-            TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
-            IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
+            //TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
+            //IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
 
             TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s => s.ApplicationUser.IsActive == true);
             IEnumerable<Supplier> suppliers = resultSuppliers.Data;
@@ -210,81 +181,78 @@ namespace MTC_WebServerCore.Controllers
             Product product = (await _repos.Products.GetByIdAsync(id)).Data;
             var vm = new ProductEditViewModel
             {
-                Product = product,
+                EAN = product.EAN,
+                Name = product.Name,
+                ExtraInfo = product.ExtraInfo,
+                RecommendedUnitPrice = product.RecommendedUnitPrice,
+                SolderPercentage = product.SolderPrice,
+                MaxStock = product.MaxStock,
+                MinStock = product.MaxStock,
+                CategorieId = product.CategorieId,
+                BTWPercentage = product.BTWPercentage,
+                SupplierIds = product.Suppliers.Select(x => x.Id).ToList(),
                 Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList()
-                
             };
-            vm.ProductImages = new List<string>();
+
+            //ViewBag.Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+
+            Categories = new List<SelectListItem>();
+            Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
+
+            ViewBag.Categories = Categories;
+
+            List<string> ProductImages = new List<string>();
             foreach (var item in product.Images)
-            {
-                vm.ProductImages.Add(string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Image)));
-
-            }
-            vm.SupplierIds = new List<string>();
-            foreach (var item in product.Suppliers)
-            {
-                vm.SupplierIds.Add(item.Id);
-            }   
-
-        vm.Categories = new List<SelectListItem>();
-            var allCategories = (await _repos.ProductCategories.GetAllAsync()).Data;
-            foreach (var productCategory in allCategories)
-                vm.Categories.Add(new SelectListItem { Text = getcategoryPath(productCategory.ID), Value = productCategory.ID.ToString()});
+                ProductImages.Add(string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Image)));
+            ViewBag.ProductImages = ProductImages;
             return View(vm);
         }
 
-
-
+        //========================== Edit Product
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProductAdminAsync([FromForm] ProductEditViewModel oldproduct, List<IFormFile> ProductImages)
         {
-
+            if (oldproduct.MinStock < 0)
+                ModelState.AddModelError(string.Empty, "Minimum stock most be greater than 0.");
+            if (oldproduct.MaxStock < oldproduct.MinStock)
+                ModelState.AddModelError(string.Empty, "Maximum stock cannot be less than Minimum stock.");
             if (TryValidateModel(oldproduct))
             {
                 var newproduct = new Product
                 {
-                    EAN = oldproduct.Product.EAN,
+                    EAN = oldproduct.EAN,
                     IsActive = true,
-                    Name = oldproduct.Product.Name,
-                    ExtraInfo = oldproduct.Product.ExtraInfo,
-                    BTWPercentage = oldproduct.Product.BTWPercentage,
-                    MaxStock = oldproduct.Product.MaxStock,
-                    MinStock = oldproduct.Product.MinStock,
-                    RecommendedUnitPrice = oldproduct.Product.RecommendedUnitPrice,
-                    CategorieId = oldproduct.Product.CategorieId,
-
-                    SolderPrice = oldproduct.Product.SolderPrice
+                    Name = oldproduct.Name,
+                    ExtraInfo = oldproduct.ExtraInfo,
+                    BTWPercentage = oldproduct.BTWPercentage,
+                    MaxStock = oldproduct.MaxStock,
+                    MinStock = oldproduct.MinStock,
+                    RecommendedUnitPrice = oldproduct.RecommendedUnitPrice,
+                    CategorieId = oldproduct.CategorieId,
+                    SolderPrice = oldproduct.SolderPercentage
                 };
-                
-                
-               
 
                 newproduct.Suppliers = new List<Supplier>();
                 foreach (var item in oldproduct.SupplierIds)
-                {
                     newproduct.Suppliers.Add((await _repos.Suppliers.GetByIdAsync(item)).Data);
-                }
-                
-                    await _repos.ProductImages.RemoveByCondition(i=>i.ProductEAN==oldproduct.Product.EAN);
-               
-                //newproduct.Images = new List<ProductImage>();
+                await _repos.ProductImages.RemoveByCondition(i => i.ProductEAN == oldproduct.EAN);
+
+                newproduct.Images = new List<ProductImage>();
                 foreach (var item in Request.Form.Files)
                 {
                     ProductImage img = new ProductImage();
                     img.ID = Guid.NewGuid().ToString();
                     img.ProductEAN = newproduct.EAN;
-                    img.Product = newproduct;
                     MemoryStream ms = new MemoryStream();
                     item.CopyTo(ms);
                     img.Image = ms.ToArray();
                     ms.Close();
                     ms.Dispose();
-                    await _repos.ProductImages.AddAsync(img);
-                    //newproduct.Images.Add(img);
+                    newproduct.Images.Add(img);
 
                 }
-                var p= (await _repos.Products.GetByIdAsync(oldproduct.Product.EAN)).Data;
+                var p = (await _repos.Products.GetByIdAsync(oldproduct.EAN)).Data;
                 p.EAN = newproduct.EAN;
                 p.Name = newproduct.Name;
                 p.ExtraInfo = newproduct.ExtraInfo;
@@ -294,8 +262,7 @@ namespace MTC_WebServerCore.Controllers
                 p.MinStock = newproduct.MinStock;
                 p.MaxStock = newproduct.MaxStock;
                 p.CategorieId = newproduct.CategorieId;
-                //p.Images = null;
-                //p.Images = newproduct.Images;
+                p.Images = newproduct.Images;
                 p.Suppliers = newproduct.Suppliers;
                 p.CountInStock = newproduct.CountInStock;
                 p.Categorie = (await _repos.ProductCategories.GetByIdAsync(newproduct.CategorieId)).Data;
@@ -304,14 +271,53 @@ namespace MTC_WebServerCore.Controllers
 
                 return RedirectToAction("IndexProductAdmin");
             }
+            //TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
+            //IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
 
+            TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s => s.ApplicationUser.IsActive == true);
+            IEnumerable<Supplier> suppliers = resultSuppliers.Data;
+
+            ViewBag.Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+
+            Categories = new List<SelectListItem>();
+            Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
+
+            ViewBag.Categories = Categories;
+
+            Product pr = (await _repos.Products.GetByIdAsync(oldproduct.EAN)).Data;
+            List<string> Images = new List<string>();
+            foreach (var item in pr.Images)
+                Images.Add(string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Image)));
+            ViewBag.ProductImages = Images;
             return View();
         }
 
-    }
-}
-//var
-//    TSDreposResultIenumerable<Product> resultProducts = await _repos.Products.GetByConditionAsync(p => p.CategorieId == categoryId);
 
-//    //Make into viewModel instead
-//    IEnumerable<Product> allCategoryProducts = resultProducts.Data;
+        //===================== Delete Product
+        [HttpPost]
+        public async Task<IActionResult> DeleteProductAdmin([FromRoute] string id)
+        {
+            var selectedProduct = (await _repos.Products.GetByIdAsync(id)).Data;
+            if (selectedProduct != null)
+            {
+                var deleteProduct = await _repos.Products.RemoveAsync(selectedProduct);
+                return RedirectToAction("IndexProductAdmin");
+            }
+            else
+                return View();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

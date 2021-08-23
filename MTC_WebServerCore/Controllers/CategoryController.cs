@@ -103,7 +103,7 @@ namespace MTC_WebServerCore.Controllers
                 Name = x.Name,
                 Subcategories = x.SubCategories,
                 
-            }).ToList(); // to list needed to set the parentPath property in foreach
+            }).ToList(); 
 
             var catDictionary = await _repos.ProductCategories.GetAllPosiblePaths();
 
@@ -142,67 +142,56 @@ namespace MTC_WebServerCore.Controllers
 
 
 
+        //Gets the 'Edit cateogry' view and sets current details of the category
+        [HttpGet]
+        public async Task<IActionResult> EditCategory([FromRoute] int id)
+        {
+            //Get selected category
+            var selectedCat = (await _repos.ProductCategories.GetByIdAsync(id)).Data;
+
+            //Get path of the category it belongs to (parent)
+            var catDictionary = await _repos.ProductCategories.GetAllPosiblePaths();
+            var belongsTo = catDictionary.FirstOrDefault(x => x.Key == selectedCat.ParentCategorieID).Value;
 
 
+            //Create the vm
+            EditCategoryViewModel vm = new EditCategoryViewModel()
+            {
+                Name = selectedCat.Name,
+                CurrentLocation = belongsTo
+            };
 
+            //Set options for change parent selectlist 
 
-        //TODO: Fix this action 
+            //get all subcategories of selected category
+            var subcats = _repos.ProductCategories.GetAllSubCats(id);
+            //remove the subcategories and the selected category from from the dictionary
+            foreach (var sub in subcats)
+            {
+                catDictionary.Remove(sub.ID);
+            }
+            catDictionary.Remove(id);
 
-        ////Gets the 'Edit cateogry' view and sets current details of the category
-        //[HttpGet]
-        //public async Task<IActionResult> EditCategory([FromRoute] int id)
-        //{
-        //    //Get selected category
-        //    var selectedCat = (await _repos.ProductCategories.GetByIdAsync(id)).Data;
+            foreach (var cat in catDictionary)
+            {
+                vm.productCategories.Add(new SelectListItem { Text = cat.Value, Value = cat.Key.ToString() });
+            }
+    
+           
+            //set current parent in drop down list
+            if (selectedCat.ParentCategorieID == null)
+            {
+                ViewData["NoParent"] = true;
+            }
+            else
+            {
+                ViewData["NoParent"] = false;
+                var selected = vm.productCategories.FirstOrDefault(c => c.Value == selectedCat.ParentCategorieID.ToString());
+                selected.Selected = true;
+            }
 
-        //    //Get the location of the selected category
-        //    var currentParents = (await _repos.ProductCategories.GetAllParents(selectedCat.ID)).ToList();
-        //    currentParents.RemoveAt(currentParents.Count()-1);
-        //    string currentParentPath = string.Join(">", currentParents.Select(p => p.Name));
-            
-
-        //    //Create the vm
-        //    EditCategoryViewModel vm = new EditCategoryViewModel()
-        //    {
-        //        Name = selectedCat.Name,
-        //        CurrentLocation = currentParentPath
-        //    };
-
-        //    //Set data for change parent selectlist 
-        //    var allCategories = (await _repos.ProductCategories.GetCategoriesWithSubandParent()).Data.ToList();
-        //    allCategories.Remove(selectedCat);
-        //    //allCategories.Remove(selectedCat.ParentCategorie);
-        //    var subcats = _repos.ProductCategories.GetAllSubCats(id);
-        //    foreach (var sub in subcats)
-        //    {
-        //        allCategories.Remove(sub);
-        //    }
-            
-            
-        //    //create path string for each new parent option
-        //    foreach (var productCategory in allCategories)
-        //    {
-        //        var parentCategories = await _repos.ProductCategories.GetAllParents(productCategory.ID);
-        //        string parentPath = string.Join(">", parentCategories.Select(p => p.Name));
-               
-        //        //set the path as the text in the select list
-        //        vm.productCategories.Add(new SelectListItem { Text = parentPath, Value = productCategory.ID.ToString() });
-
-        //    }
-        //    //set current parent in drop down list
-        //    if (selectedCat.ParentCategorieID == null)
-        //    {
-        //        ViewData["NoParent"] = true;
-        //    }
-        //    else
-        //    {
-        //        ViewData["NoParent"] = false;
-        //        var selected = vm.productCategories.FirstOrDefault(c => c.Value == selectedCat.ParentCategorieID.ToString());
-        //        selected.Selected = true;
-        //    }
-            
-        //    return View(vm);
-        //}
+            return View(vm);
+        }
 
 
 

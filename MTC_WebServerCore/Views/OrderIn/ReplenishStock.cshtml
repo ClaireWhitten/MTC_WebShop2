@@ -1,0 +1,43 @@
+﻿@using  MTC_WebServerCore.ViewModels.OrderIn_VM
+
+@model IEnumerable<ReplenishStockViewModel>
+<div>
+    <div>
+        <h2>Products Low in Stock</h2>
+        <table id="orderTable">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Product EAN</th>
+                    <th>Product Name</th>
+                    <th>Left in stock</th>
+                    <th>Miniumum</th>
+                    <th>Maximum</th>
+                    <th>Amount</th>
+                    <th>Supplier</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var rp in Model)
+                {
+                <tr id="@rp.Product.EAN">
+                    <td> <input class="checkBox" type="checkbox" /></td>
+                    <td>@rp.Product.EAN</td>
+                    <td>@rp.Product.Name</td>
+                    <td class="table-danger">@rp.Product.CountInStock</td>
+                    <td>@rp.Product.MinStock</td>
+                    <td>@rp.Product.MaxStock</td>
+                    <td> <input class="amountToOrder" asp-for="@rp.AmountToOrder" type="number" /></td>
+                    <td><select asp-for="@rp.SupplierId" asp-items="@rp.Suppliers" style="width:100px" class="selectSupplier custom-select mr-sm-2"></select></td>
+                    
+                </tr>
+                }
+            </tbody>
+        </table>
+        <a id="ConfirmReplenishStock" onclick="confirmReplenishStock()" class="btn btn-success">Replenish Stock</a>
+
+
+
+
+    </div>
+</div>

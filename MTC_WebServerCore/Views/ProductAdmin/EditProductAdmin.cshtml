@@ -1,74 +1,69 @@
-﻿@model MTC_WebServerCore.ViewModels.ProductAdmin.ProductEditViewModel 
+﻿@model MTC_WebServerCore.ViewModels.ProductAdmin.ProductEditViewModel
 
 
 <form asp-controller="ProductAdmin" asp-action="EditProductAdmin" method="post" enctype="multipart/form-data">
     <!--belanrijk enctype voor een foto-->
     <div class="form-group" hidden="hidden">
-        <label asp-for="Product.EAN"></label>
-        <input class="form-control" asp-for="Product.EAN" />
-        <span class="text-danger" asp-validation-for="Product.EAN"></span>
+        <label asp-for="EAN"></label>
+        <input class="form-control" asp-for="EAN" />
+        <span class="text-danger" asp-validation-for="EAN"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Product.Name"></label>
-        <input class="form-control" asp-for="Product.Name" />
-        <span class="text-danger" asp-validation-for="Product.Name"></span>
+        <label asp-for="Name"></label>
+        <input class="form-control" asp-for="Name" />
+        <span class="text-danger" asp-validation-for="Name"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Product.ExtraInfo"></label>
-        <input class="form-control" asp-for="Product.ExtraInfo" />
-        <span class="text-danger" asp-validation-for="Product.ExtraInfo"></span>
+        <label asp-for="ExtraInfo"></label>
+        <input class="form-control" asp-for="ExtraInfo" />
+        <span class="text-danger" asp-validation-for="ExtraInfo"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Product.RecommendedUnitPrice"></label>
-        <input class="form-control" asp-for="Product.RecommendedUnitPrice" />
-        <span class="text-danger" asp-validation-for="Product.RecommendedUnitPrice"></span>
+        <label asp-for="RecommendedUnitPrice"></label>
+        <input class="form-control" asp-for="RecommendedUnitPrice" />
+        <span class="text-danger" asp-validation-for="RecommendedUnitPrice"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Product.SolderPrice"></label>
-        <input class="form-control" asp-for="Product.SolderPrice" />
-        <span class="text-danger" asp-validation-for="Product.SolderPrice"></span>
+        <label asp-for="SolderPercentage"></label>
+        <input class="form-control" asp-for="SolderPercentage" />
+        <span class="text-danger" asp-validation-for="SolderPercentage"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Product.BTWPercentage"></label>
-        <input class="form-control" asp-for="Product.BTWPercentage" />
-        <span class="text-danger" asp-validation-for="Product.BTWPercentage"></span>
+        <label asp-for="BTWPercentage"></label>
+        <input class="form-control" asp-for="BTWPercentage" />
+        <span class="text-danger" asp-validation-for="BTWPercentage"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Product.MinStock"></label>
-        <input class="form-control" asp-for="Product.MinStock" />
-        <span class="text-danger" asp-validation-for="Product.MinStock"></span>
+        <label asp-for="MinStock"></label>
+        <input class="form-control" asp-for="MinStock" />
+        <span class="text-danger" asp-validation-for="MinStock"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Product.MaxStock"></label>
-        <input class="form-control" asp-for="Product.MaxStock" />
-        <span class="text-danger" asp-validation-for="Product.MaxStock"></span>
+        <label asp-for="MaxStock"></label>
+        <input class="form-control" asp-for="MaxStock" />
+        <span class="text-danger" asp-validation-for="MaxStock"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Product.CategorieId"></label>
-        <select class="form-control" asp-items="@Model.Categories" asp-for="Product.CategorieId"></select>
+        <label asp-for="CategorieId"></label>
+        <select class="form-control" asp-items="@ViewBag.Categories" asp-for="CategorieId"></select>
         <a asp-controller="Category" asp-action="AddCategory">New Category</a>
     </div>
-
-
     <div class="form-group">
-
         <label asp-for="SupplierIds"></label>
         <select multiple class="form-control" asp-items="@Model.Suppliers" asp-for="SupplierIds"></select>
-
         <a asp-controller="Administration" asp-action="RegisterSupplier">New Supplier</a>
     </div>
     <div class="form-group">
-        <label asp-for="Product.Images"></label>
-        @{ foreach (var item in Model.ProductImages)
+        <label asp-for="ProductImages"></label>
+        @{ foreach (var item in ViewBag.ProductImages)
             {
                 <img class="img-responsive" width="200" height="200" src="@item" />
             }
         }
-        <input type="file" multiple="multiple" class="form-control" id="Photos'" asp-for="Product.Images" />
-        <span class="text-danger" asp-validation-for="Product.Images"></span>
+        <input type="file" multiple="multiple" class="form-control" id="Photos'" asp-for="ProductImages" />
+        <span class="text-danger" asp-validation-for="ProductImages"></span>
     </div>
-
-    <button class="btn-primary" type="submit">Update</button>
-
+    <span class=" text-danger">@Html.ValidationSummary(true)</span>
+    <button class="btn-primary" type="submit">Edit</button>
 </form>
 <a asp-controller="ProductAdmin" asp-action="IndexProductAdmin">Back </a>
