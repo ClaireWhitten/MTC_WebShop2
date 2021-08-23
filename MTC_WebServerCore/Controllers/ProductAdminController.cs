@@ -232,7 +232,7 @@ namespace MTC_WebServerCore.Controllers
         }
 
 
-            ViewBag.Categories = Categories;
+            //ViewBag.Categories = Categories;
 
 
 

@@ -25,7 +25,7 @@ namespace MTCrepository.Repository
         Task<TSDreposResultOneObject<ProductCategorie>> GetCategoryWithAll(int id);
 //=====================================================================
 
-        Task<Dictionary<int, string>> GetAllPosiblePaths();
+        //Task<Dictionary<int, string>> GetAllPosiblePaths();
 
     }
 }
