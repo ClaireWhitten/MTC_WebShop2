@@ -1,0 +1,51 @@
+﻿
+@model IEnumerable<OrderIN>
+@{
+    ViewData["Title"] = "Orders Overview Admin";
+}
+<div>
+    <h1>Overview Order-ins</h1>
+    <a asp-controller="OrderIn" asp-action="ReplenishStock">
+        <input type="button" class="btn btn-primary m-1" value="Make stock order" />
+    </a>
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Invoice/Order No.</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Order details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var orderIn in Model)
+                    {
+                        <tr>
+                            <td scope="row">@orderIn.ID</td>
+                            <td scope="row">@orderIn.Date</td>
+                            <td scope="row">@orderIn.Status</td>
+                            <td>
+                                <a asp-controller="OrderIn" asp-action="OrderInDetails" asp-route-id="@orderIn.ID">
+                                    <input type="button" class="btn btn-primary m-1" value="View" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">
+                There are no existing orders.
+            </div>
+        </div>
+    }
+
+</div>

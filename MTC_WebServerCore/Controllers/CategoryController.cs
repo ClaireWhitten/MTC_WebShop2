@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace MTC_WebServerCore.Controllers
 {
+    [Authorize(Roles = "Administrator,SuperAdmin")]
     public class CategoryController : Controller
     {
         private readonly ILogger<CategoryController> _logger;
@@ -25,6 +27,7 @@ namespace MTC_WebServerCore.Controllers
 
 
         //Gets 'add category' view
+       
         [HttpGet]
         public async Task<IActionResult> AddCategory()
         {
@@ -48,6 +51,7 @@ namespace MTC_WebServerCore.Controllers
 
 
         //Adds the new category to db
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromForm] AddCategoryViewModel model)
         {
@@ -197,7 +201,9 @@ namespace MTC_WebServerCore.Controllers
 
 
         //Edits the category in the db
+        [ValidateAntiForgeryToken]
         [HttpPost]
+
         public async Task<IActionResult> EditCategory([FromForm] EditCategoryViewModel model, [FromRoute] int id)
         {
 
@@ -259,9 +265,10 @@ namespace MTC_WebServerCore.Controllers
 
 
 
-        
+
         //Deletes the category 
-       [HttpPost]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
        public async Task<IActionResult> DeleteCategory([FromRoute] int id)
        {
             var selectedCategory = (await _repos.ProductCategories.GetByIdAsync(id)).Data;

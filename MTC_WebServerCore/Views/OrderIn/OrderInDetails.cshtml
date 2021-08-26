@@ -1,0 +1,27 @@
+﻿@model OrderIN
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+        <div>
+            <p>Order Number: @Model.ID</p>
+        </div>
+@foreach (var orderLineIn in Model.OrderLinesINs)
+    {
+        <hr>
+        <div>
+            <p>OrderLine ID: @orderLineIn.ID</p>
+            <p>Product ID: @orderLineIn.ProductID</p>
+            <p>Product Name: @orderLineIn.Product.Name</p>
+            <p>Quantity ordered: @orderLineIn.Quantity </p>
+            <p>Price: @orderLineIn.UnitPrice</p>
+            
+            @*<button type="button" class="btn btn-danger" asp-controller="OrdersIn" asp-action="OverviewOrders">Back to Orders Overview</button>
+            <button type="button" class="btn btn-danger" asp-controller="OrdersIn" asp-action="OverviewReservedToSent">Back to Reserved Orders</button>
+            <button type="button" class="btn btn-danger" asp-controller="OrdersIn" asp-action="OverviewSentToDelivered">Back to Sent Orders</button>*@
+        </div>
+        
+    }
+        <div>
+            <p>Total Price: @ViewBag.Total </p>
+        </div>

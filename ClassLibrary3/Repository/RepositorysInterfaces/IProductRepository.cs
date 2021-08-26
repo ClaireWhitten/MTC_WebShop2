@@ -14,5 +14,7 @@ namespace MTCrepository.Repository
 
 
         Task<HomeIndexDTO> GetProductsByCategoryId(int? categoryId, bool isSubsIncluded=false);
+
+        Task<TSDreposResultIenumerable<Product>> GetProductsLowInStock();
     }
 }

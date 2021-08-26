@@ -129,6 +129,25 @@ namespace MTCrepository.Repository
                 storeAlleSubcatsInListFoundedSubs(item.ID, foundedSubs, allCategorys);
             }
         }
+
+
+
+
+
+        public async Task<TSDreposResultIenumerable<Product>> GetProductsLowInStock()
+        {
+            var terug = new TSDreposResultIenumerable<Product>();
+
+            terug.Data = await _context.Products.Where(p => p.IsActive && p.CountInStock <= p.MinStock)
+                .Include(p => p.Suppliers)
+                .Include(p => p.OrderLineINs)
+                .ThenInclude(ol=>ol.OrderIN)
+                .ToListAsync();
+
+            return terug;
+            
+        }
+
         #endregion===================================================================================================================================
 
     }
