@@ -165,7 +165,8 @@ namespace MTC_WebServerCore.Controllers
             }
             return View(vm);
         }
-        
+        //[Authorize(Roles = "Client")]
+
         [HttpPost]
         public async Task<JsonResult> Comment(CommentViewModel model)
         { 

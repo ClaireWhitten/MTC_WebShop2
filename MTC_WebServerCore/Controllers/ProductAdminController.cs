@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,6 +16,8 @@ using System.Threading.Tasks;
 
 namespace MTC_WebServerCore.Controllers
 {
+    [Authorize(Roles = "SuperAdmin,Administration")]
+
     public class ProductAdminController : Controller
     {
         private readonly ILogger<HomeController> _logger;
