@@ -1,0 +1,60 @@
+﻿@using MTC_WebServerCore.ViewModels.OrderIn_VM
+@model List<OrderInOverviewViewModel>
+@{
+    ViewData["Title"] = "Supplier Orders";
+}
+<div>
+    <h1>Overview Supplier Orders</h1>
+
+    @if (Model.Any())
+    {
+        <form method="post" asp-controller="OrderIn" asp-action="OverviewReservedToSent">
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Invoice/Order No.</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Set to sent</th>
+                            <th scope="col">Order details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < Model.Count(); i++)
+                         {
+                            <input type="hidden" asp-for="@Model[i].OrderIn.ID" />
+                            @*<input type="hidden" asp-for="@Model[i].OrderIn.Date" />
+                            <input type="hidden" asp-for="@Model[i].OrderIn.Status" />
+                            <input type="hidden" asp-for="@Model[i].OrderIn.SupplierID" />*@
+                            <tr>
+                                <td scope="row">@Model[i].OrderIn.ID</td>
+                                <td scope="row">@Model[i].OrderIn.Date</td>
+                                <td scope="row">@Model[i].OrderIn.Status</td>
+                                <td scope="row">
+                                    <input asp-for="@Model[i].isChecked" class="form-check-input"/>
+                                </td>
+                                <td>
+                                    <a asp-controller="OrderIn" asp-action="OrderInDetails" asp-route-id="@Model[i].OrderIn.ID">
+                                        <input type="button" class="btn btn-primary m-1" value="View" />
+                                    </a>
+                                </td>
+                            </tr>
+                         }
+                    </tbody>
+                </table>
+            </div>
+            @*<div asp-validation-summary="All" class="text-danger"></div>*@
+            <button type="submit" class="btn btn-info">Set selected orders to Sent</button>
+        </form>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">
+                No orders
+            </div>
+        </div>
+    }
+</div>

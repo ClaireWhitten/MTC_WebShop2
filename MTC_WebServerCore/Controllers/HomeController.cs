@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MTC_WebServerCore.Models;
+using MTC_WebServerCore.ViewModels.Basket_VM;
 using MTC_WebServerCore.ViewModels.Home;
 using MTCmodel;
 using MTCrepository.TDSrepository;
@@ -9,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MTC_WebServerCore.Controllers
@@ -40,7 +43,6 @@ namespace MTC_WebServerCore.Controllers
         //public async Task<IActionResult> Index(int? id, [FromQuery(Name = "sub")] bool? isBar)
 
         [HttpGet]
-        [Route("")]
         public async Task<IActionResult> Index(int? catId, [FromQuery(Name = "sub")] bool? isShowSubs=false)
         {
             //var catDictionary = await _repos.ProductCategories.GetAllPosiblePaths();
@@ -105,9 +107,25 @@ namespace MTC_WebServerCore.Controllers
         [HttpGet]
         public async Task<IActionResult> ProductDetailsAsync([FromRoute] string id)
         {
+            if (Request.Cookies["MyBasket"] == null)
+            {
+                //ViewBag.message = "niet beschikbaar";
+                //niets doen, een leeg model sturen
+            }
+            else
+            {
+                //model = await CreateBasketViewModelFromCookieAsync();
+                List < BasketCookieContentItem > CokiesContent= ReadBasketCookie();
+                foreach (var item in CokiesContent)
+                {
+                    if (item.EAN == id)
+                        ViewBag.BascketCount = item.CNT;
+                }
+            }
             Product product = (await _repos.Products.GetByIdAsync(id)).Data;
             var vm = new ProductDetailsViewModel
             {
+                ClientId = _userManager.GetUserId(HttpContext.User),
                 Product = product
             };
             if (product.Images.Count > 0)
@@ -116,7 +134,45 @@ namespace MTC_WebServerCore.Controllers
                 foreach (var item in product.Images)
                     vm.ProductImages.Add(string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Image)));
             }
+            foreach (var item in vm.Product.ProductReviews)
+            {
+                item.Client = (await _repos.Clients.GetByIdAsync(item.ClientId)).Data;
+            }
             return View(vm);
+        }
+        //[Authorize(Roles = "Client")]
+
+        [HttpPost]
+        public async Task<JsonResult> Comment(CommentViewModel model)
+        { 
+                ProductReview comment = new ProductReview {
+                    DateTime = DateTime.UtcNow,
+                    Comment = model.Text,
+                    ClientId = model.ClientId,
+                    Client =(await _repos.Clients.GetByIdAsync(model.ClientId)).Data,
+                ProductEAN =model.EAN,
+                Rating=model.Rating
+                };
+                await _repos.ProductReviews.AddAsync(comment);
+               JsonResult result = new JsonResult(new { succes = true });
+            
+                return result;
+            
+        }
+
+        private List<BasketCookieContentItem> ReadBasketCookie()
+        {
+            if (Request.Cookies["MyBasket"] == null) { return new List<BasketCookieContentItem>(); }
+            string BasketCookieContent = string.Empty;
+
+            List<BasketViewModel> terug = new List<BasketViewModel>();
+            BasketCookieContent = Request.Cookies["MyBasket"];
+
+            //zie Basket.js waarom we dit doen
+            BasketCookieContent = BasketCookieContent.Replace("$", "\"");
+            BasketCookieContent = BasketCookieContent.Replace("#", ",");
+
+            return JsonSerializer.Deserialize<List<BasketCookieContentItem>>(BasketCookieContent);
         }
     }
 }

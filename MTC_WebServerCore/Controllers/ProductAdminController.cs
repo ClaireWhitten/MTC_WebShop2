@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,12 +16,13 @@ using System.Threading.Tasks;
 
 namespace MTC_WebServerCore.Controllers
 {
+    [Authorize(Roles = "SuperAdmin,Administration")]
+
     public class ProductAdminController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IApplicationRepository _repos;
         private readonly UserManager<ApplicationUser> _userManager;
-        List<SelectListItem> Categories;
         public ProductAdminController(ILogger<HomeController> logger, IApplicationRepository appRepos, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
@@ -29,60 +31,63 @@ namespace MTC_WebServerCore.Controllers
         }
 
 
+        
         //=================== Admin Products overview
-        public async Task<IActionResult> IndexProductAdminAsync()
+        public async Task<IActionResult> IndexProductAdminAsync(int CategoryId,string SearchTerm)
         {
             TSDreposResultIenumerable<Product> resultProducts = await _repos.Products.GetProductsWithSuppliers();
 
-            IEnumerable<Product> Products = resultProducts.Data.Where(x=>x.IsActive==true);
-
-            //TSDreposResultIenumerable<ProductImage> resultProductImages = await _repos.ProductImages.GetAllAsync();
-            //IEnumerable<ProductImage> ProductImages = resultProductImages.Data;
-            Categories = new List<SelectListItem>();
+            IEnumerable<Product> products = resultProducts.Data;
+            var Products = products.Where(x => x.IsActive == true).ToList();
+            List<SelectListItem> Categories=new List<SelectListItem>();
             Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
 
-
-            //TSDreposResultIenumerable<ProductImage> resultProductImages = await _repos.ProductImages.GetAllAsync();
-            //IEnumerable<ProductImage> ProductImages = resultProductImages.Data;
-            Categories = new List<SelectListItem>();
-            Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
 
 
             if (Products.Count()>0)
-
             {
-                var vm = Products.Select(x => new ProductIndexViewModel
+                if (!string.IsNullOrEmpty(SearchTerm))
+                {
+                    Products = Products.Where(s => s.Name.Contains(SearchTerm)).ToList();
+                }
+
+                if (CategoryId!=0)
+                {
+                    Products = Products.Where(x =>_repos.ProductCategories.GetAllSubCats(CategoryId).Select(c=>c.ID).Contains(x.CategorieId)|| x.CategorieId==CategoryId).ToList();
+                    
+                }
+
+                var vm = new ListIndexProductAdmin();
+                 vm.Products = Products.Select(x => new ProductIndexViewModel
                 {
                     EAN = x.EAN,
                     Name = x.Name,
                     RecommendedUnitPrice = x.RecommendedUnitPrice,
                     CountInStock = x.CountInStock,
                     SolderPrice = x.SolderPrice,
-                    CategorieName = Categories[x.CategorieId].Text,
+                    CategorieName = Categories.FirstOrDefault(c=>Convert.ToInt32( c.Value)==x.CategorieId).Text,
 
                     ProductImagesrc  = x.Images.Count>0 ? string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(x.Images.FirstOrDefault().Image)) : null ,
                     Suppliers = x.Suppliers.Select(x=>x.Name).ToArray(),
                 });
-                
+                vm.Categories = Categories;
 
-                return View(vm); 
+                return View(vm);
 
             }
             return View();
         }
-
+        
         //================= add product view
         public async Task<IActionResult> CreateProductAdmin()
         {
-            //TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
-            //IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
 
             TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s => s.ApplicationUser.IsActive == true);
             IEnumerable<Supplier> suppliers = resultSuppliers.Data;
 
             ViewBag.Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
 
-            Categories = new List<SelectListItem>();
+            List<SelectListItem> Categories = new List<SelectListItem>();
             Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
             ViewBag.Categories = Categories;
 
@@ -143,15 +148,13 @@ namespace MTC_WebServerCore.Controllers
                 return RedirectToAction("IndexProductAdmin");
             }
 
-            //TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
-            //IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
 
             TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s => s.ApplicationUser.IsActive == true);
             IEnumerable<Supplier> suppliers = resultSuppliers.Data;
 
             ViewBag.Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
 
-            Categories = new List<SelectListItem>();
+            List<SelectListItem> Categories = new List<SelectListItem>();
             Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
 
             ViewBag.Categories = Categories;
@@ -163,17 +166,14 @@ namespace MTC_WebServerCore.Controllers
         [HttpGet]
         public async Task<IActionResult> DetailProductAdmin([FromRoute] string id)
         {
-            Categories = new List<SelectListItem>();
+            List<SelectListItem> Categories = new List<SelectListItem>();
             Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
 
             Product product = (await _repos.Products.GetByIdAsync(id)).Data;
             var vm = new ProductDetailViewModel
             {
-
                 Product=product,
-
                 CategoryName = Categories[product.CategorieId].Text,
-                //CategoryName = getcategoryPath(product.CategorieId),
             };
             if (product.Images.Count > 0)
             {
@@ -191,8 +191,6 @@ namespace MTC_WebServerCore.Controllers
         [HttpGet]
         public async Task<IActionResult> EditProductAdmin([FromRoute] string id)
         {
-            //TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
-            //IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
 
             TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s => s.ApplicationUser.IsActive == true);
             IEnumerable<Supplier> suppliers = resultSuppliers.Data;
@@ -202,7 +200,6 @@ namespace MTC_WebServerCore.Controllers
             var vm = new ProductEditViewModel
             {
                 EAN = product.EAN,
-
                 Name=product.Name,
                 ExtraInfo=product.ExtraInfo,
                 RecommendedUnitPrice=product.RecommendedUnitPrice.ToString().Replace(',', '.'),
@@ -212,14 +209,12 @@ namespace MTC_WebServerCore.Controllers
                 CategorieId=product.CategorieId,
                 BTWPercentage=product.BTWPercentage,
                 SupplierIds=product.Suppliers.Select(x=>x.Id).ToList(),
-
                 Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList()
             };
 
-            //ViewBag.Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
 
 
-            Categories = new List<SelectListItem>();
+            List<SelectListItem> Categories = new List<SelectListItem>();
             Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
 
             ViewBag.Categories = Categories;
@@ -230,10 +225,6 @@ namespace MTC_WebServerCore.Controllers
             ViewBag.ProductImages = ProductImages;
             return View(vm);
         }
-
-
-            //ViewBag.Categories = Categories;
-
 
 
         //========================== Edit Product
@@ -308,8 +299,6 @@ namespace MTC_WebServerCore.Controllers
 
                 return RedirectToAction("IndexProductAdmin");
             }
-            //TSDreposResultIenumerable<ProductCategorie> resultProductCategories = await _repos.ProductCategories.GetAllAsync();
-            //IEnumerable<ProductCategorie> ProductCategories = resultProductCategories.Data;
 
             TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s => s.ApplicationUser.IsActive == true);
             IEnumerable<Supplier> suppliers = resultSuppliers.Data;
@@ -317,7 +306,7 @@ namespace MTC_WebServerCore.Controllers
             ViewBag.Suppliers = suppliers.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
 
 
-            Categories = new List<SelectListItem>();
+            List<SelectListItem> Categories = new List<SelectListItem>();
             Categories.AddRange((await _repos.ProductCategories.GetAllPosiblePaths()).Select(x => new SelectListItem { Text = x.Value, Value = x.Key.ToString() }));
 
 
