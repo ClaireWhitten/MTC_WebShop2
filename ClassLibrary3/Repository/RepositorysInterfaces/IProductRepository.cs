@@ -13,8 +13,11 @@ namespace MTCrepository.Repository
         Task<TSDreposResultIenumerable<Product>> GetProductsWithSuppliers();
 
 
-        Task<HomeIndexDTO> GetProductsByCategoryId(int? categoryId, bool isSubsIncluded=false);
+        Task<List<Product>> GetProductsByCategoryId(int? categoryId, bool isSubsIncluded=false);
+
+
 
         Task<TSDreposResultIenumerable<Product>> GetProductsLowInStock();
+
     }
 }

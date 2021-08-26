@@ -71,7 +71,7 @@ namespace MTC_WebServerCore.Controllers
                     Suppliers = x.Suppliers.Select(x=>x.Name).ToArray(),
                 });
                 vm.Categories = Categories;
-                
+
                 return View(vm);
 
             }

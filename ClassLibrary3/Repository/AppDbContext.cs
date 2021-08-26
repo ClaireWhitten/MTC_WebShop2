@@ -34,6 +34,8 @@ namespace MTCrepository.Repository
 
         public DbSet<ProductImage> ProductImages { get; set; }
 
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+
         //----------------------------------------------testing
         public DbSet<TestModel> TestModel { get; set; }
 
@@ -554,14 +556,22 @@ namespace MTCrepository.Repository
                 .HasForeignKey<Transporter>(ad => ad.Id);
 
             modelBuilder.Entity<ApplicationUser>()
-    .HasOne<Supplier>(s => s.Supplier)
-    .WithOne(ad => ad.ApplicationUser)
-    .HasForeignKey<Supplier>(ad => ad.Id);
+                .HasOne<Supplier>(s => s.Supplier)
+                .WithOne(ad => ad.ApplicationUser)
+                .HasForeignKey<Supplier>(ad => ad.Id);
 
             modelBuilder.Entity<ApplicationUser>()
-    .HasOne<Client>(s => s.Client)
-    .WithOne(ad => ad.ApplicationUser)
-    .HasForeignKey<Client>(ad => ad.Id);
+                .HasOne<Client>(s => s.Client)
+                .WithOne(ad => ad.ApplicationUser)
+                .HasForeignKey<Client>(ad => ad.Id);
+
+
+            //======================================================= for chat ============================
+
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne<ApplicationUser>(cm => cm.Client)
+                .WithMany(d => d.ChatMessages)
+                .HasForeignKey(cm => cm.CliendId);
 
 
 

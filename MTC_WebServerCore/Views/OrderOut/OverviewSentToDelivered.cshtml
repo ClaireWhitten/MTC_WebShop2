@@ -64,7 +64,7 @@
             </table>
         </div>
         @*<div asp-validation-summary="All" class="text-danger"></div>*@
-        <button id="btnProgressShow" type="submit" class=" btn btn-info">Set selected orders to Delivered</button>
+        <button  type="submit" class="btnProgressShow btn btn-info">Set selected orders to Delivered</button>
     </form>
 }
 else
@@ -90,16 +90,20 @@ else
 
 
 <script type="text/javascript">
-    window.onload = function () {
-        var btnProgressShow = document.getElementById('btnProgressShow');
+    window.addEventListener("load", function () {
+        console.log("joske");
+        var btnProgressShow = document.getElementsByClassName('btnProgressShow');
+        console.log("jos");
+        for (var i = 0; i < btnProgressShow.length; i++) {
+            console.log("kaka");
+            btnProgressShow[i].onclick = function () {
 
-        btnProgressShow.onclick = function () {
-
-            $('#myModal').modal({
-                keyboard: false,
-                backdrop: 'static',
-            });
-            console.log("test");
+                $('#myModal').modal({
+                    keyboard: false,
+                    backdrop: 'static',
+                });
+                console.log("test");
+            }
         }
-    }
+    });
 </script>

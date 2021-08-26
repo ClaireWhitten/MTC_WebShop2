@@ -21,6 +21,20 @@ namespace MTCmodel
             new Claim("DeliveredOrderIn","DeliveredOrderIn"),
 
 
+
+            //add here claims, do this below your name, then it's easy to merge the conflicts in Github
+            //give the claims the same name for type and value... see the claims above
+
+            //============  Claire  ==============
+
+
+            //===========  Mohammed ==============
+
+
+            //===========  Tom ===================
+
+
+
         };
     }
 }

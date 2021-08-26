@@ -61,6 +61,10 @@ namespace MTCrepository.TDSrepository
         private IITestModelRepository _IITestModelRepository;
         public IITestModelRepository TestModel => _IITestModelRepository ?? new SqlTestModelRepository(_context);
         //-------------------------------------------------------------------
+        private IChatMessageRepository _IChatMessageRepository;
+        public IChatMessageRepository ChatImages => _IChatMessageRepository ?? new SqlChatMesageRepository(_context);
+        //-------------------------------------------------------------------
+
         //================================================================================================ ctor
 
         public ApplicationRepository(AppDbContext aApplicationContext)

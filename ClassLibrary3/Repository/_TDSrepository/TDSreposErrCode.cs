@@ -16,6 +16,11 @@ namespace MTCrepository.TDSrepository
         //als er nog fouten bekend geraken, dan hierboven setten, 
         //(machten van 2 gebruiken)
 
+
+
+        STOCK_UNDERFLOW = (int)0b_0001_0000_0000_0000_0000_0000_0000_0000,
+
+
         WRONG_ARGUMENTTYPE = (int)0b_0010_0000_0000_0000_0000_0000_0000_0000,
         UNKNOW_ERROR = (int)0b_0100_0000_0000_0000_0000_0000_0000_0000,
 

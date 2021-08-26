@@ -3,7 +3,6 @@
 window.onload = function () {
     var tmp = getObjectFromMyBasketCookie();
 
-    
 
     if (tmp == null) {
         setMyBasketButtonValue();

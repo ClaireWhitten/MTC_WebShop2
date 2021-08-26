@@ -116,7 +116,7 @@ namespace MTC_WebServerCore.Controllers
             {
                 ViewBag.message = "niet ingelogd";
             }
-            return View();
+            return View(null);
         }
 
         //===============================================================================================================
@@ -173,6 +173,11 @@ namespace MTC_WebServerCore.Controllers
 
             else
             {
+                if(dbAddResult.ErrorCode == TDSreposErrCode.STOCK_UNDERFLOW)
+                {
+                    ViewBag.StockUnderflow = true;
+                    return RedirectToAction("index", "Basket");
+                }
                 throw new Exception("orderOUt not added to DB");
             }
 

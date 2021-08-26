@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MTC_WebServerCore.Hubs;
 using MTCmodel;
 using MTCrepository.Repository;
 using MTCrepository.TDSrepository;
@@ -55,10 +56,26 @@ namespace MTC_WebServerCore
 
             services.AddScoped<IApplicationRepository, ApplicationRepository>();
 
-            //services.AddDbContext<AppDbContext>(o=>
-            //{ 
-            //    o.us
-            //});
+
+            services.AddSignalR();
+
+
+            //.RequireClaim("Create Role")
+            //eventueel nog een cleam toevoegen aan de policy, het komt er wel
+            //op neer dat de gebruiker dan pas voldoet aan de policy als deze alle 
+            //cleams bevat, als je een 'of' relatie wil moet je een custom builder toevoegen
+            //zie doc 99-105 => policy.RequireAssertion()
+            services.AddAuthorization(options =>
+            {
+                foreach (var item in ClaimsStore.AllClaims)
+                {
+                    options.AddPolicy(item.Value,
+                        policy => policy
+                            .RequireClaim(item.Type)
+                            .RequireRole("Administrator")
+                        );
+                }
+            });
         }
 
 
@@ -88,6 +105,22 @@ namespace MTC_WebServerCore
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            //DIT WERKT NIET
+            //app.UseSignalR(route =>
+            //{
+            //    route.MapHub<ChatHub>("CCC/dd");
+            //});
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapHub<ChatHub>("/Chat/index");
+            //});
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<ChatHub>("/chatHub");
+            });
 
             app.UseEndpoints(endpoints =>
             {
