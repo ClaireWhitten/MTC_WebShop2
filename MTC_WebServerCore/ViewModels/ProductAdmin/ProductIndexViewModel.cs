@@ -43,7 +43,6 @@ namespace MTC_WebServerCore.ViewModels.ProductAdmin
         public string ProductImagesrc { get; set; }
 
 
-        public string SearchTerm { get; set; }
 
     }
 }

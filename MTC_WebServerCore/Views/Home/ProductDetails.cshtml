@@ -178,7 +178,7 @@
                     <input type="hidden" name="Rating" id="ratingsValue" />
                     <textarea class="form-control" rows="3" name="Text" placeholder="Write here..."></textarea>
                 </div>
-                <button  class="btn btn-success" id="btnComment" type="button" @{ if(@Model.ClientId == null) { 
+                <button  class="btn btn-success" id="btnComment" type="button" @{ if(@Model.ClientId == null || Model.Product.ProductReviews.FirstOrDefault(x=>x.ClientId==Model.ClientId)!=null) { 
                                                                                      @:disabled="disabled" 
                                                                                 } }
                                                                                 >Comment</button>
