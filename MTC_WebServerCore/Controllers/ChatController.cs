@@ -32,6 +32,8 @@ namespace MTC_WebServerCore.Controllers
 
             //ViewBag.CurrentUsername = currentUser.UserName;
 
+            int i = 5;
+            Console.WriteLine(i);
 
 
             return View();
