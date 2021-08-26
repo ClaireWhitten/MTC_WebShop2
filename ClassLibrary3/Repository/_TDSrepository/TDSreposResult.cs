@@ -47,6 +47,10 @@ namespace MTCrepository.TDSrepository
                 }
             }
         }
+        public void setErrorCode(TDSreposErrCode aCode)
+        {
+            ErrorCode = aCode;
+        }
     }
 
     //=================================================================================================================

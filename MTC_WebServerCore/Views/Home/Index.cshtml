@@ -2,11 +2,18 @@
 @model IndexPageViewModel
 @{
     ViewData["Title"] = "Home Page";
+
+
+    
 }
 
 @*the global mybasketbutton, you can this use in every page, but then include 
 the javascriptfiles cookies.js and basket.js (see bottom of this page)*@
-<a id="btnMyBasket" asp-controller="Basket" class="btn btn-primary btn-lg "> </a>
+
+
+
+@*now it is in the navbar, see _layout*@
+@*<a id="btnMyBasket" asp-controller="Basket" class="btn btn-primary btn-lg "> </a>*@
 
 
 
@@ -15,6 +22,11 @@ the javascriptfiles cookies.js and basket.js (see bottom of this page)*@
 
     @foreach (var item in Model.ProductsToShow)
     {
+        //string image = toAdd.ProductImagesrc = item.Image != null ? string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Image.Image)) : null;
+
+        string productImage = item.Images.FirstOrDefault()  != null ? string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Images.FirstOrDefault().Image))  : "~/images/noProductImage.png";
+        //string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Images.FirstOrDefault().Image))
+
         <div class="col-sm-6 col-lg-4 mb-3">
             <div class="card mb-3">
 
@@ -24,7 +36,7 @@ the javascriptfiles cookies.js and basket.js (see bottom of this page)*@
                 </div>
 
                 <div class="card-body text-center">
-                    <img class="card-img-top" src="~/images/noProductImage.png" asp-append-version="true" />
+                    <img class="card-img-top" src="@productImage" asp-append-version="true" />
                     <h5>@item.ExtraInfo</h5>
                     <h5>@item.AverageRating</h5>
                     <h5>prijs: @String.Format("{0:0.00}€", item.RecommendedUnitPrice)</h5>
@@ -56,7 +68,8 @@ the javascriptfiles cookies.js and basket.js (see bottom of this page)*@
 
 
 @section Scripts {
-    <script src="~/js/cookies.js"></script>
-    <script src="~/js/basket.js"></script>
+@*notneeded anymore, its now in the _layout*@
+    @*<script src="~/js/cookies.js"></script>
+    <script src="~/js/basket.js"></script>*@
 }
 

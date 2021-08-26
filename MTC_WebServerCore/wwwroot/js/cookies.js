@@ -13,7 +13,7 @@
         var vervalDatum = new Date(vandaag.getTime() + dagen * 24 * 60 * 60 * 1000);
         verval = vervalDatum.toUTCString();
     }
-    document.cookie = naam + "=" + waarde + ";expires=" + verval;
+    document.cookie = naam + "=" + waarde + ";expires=" + verval + ";Path=/";
 }
 
 

@@ -36,6 +36,102 @@ namespace MTCrepository.Repository
             return terug;
         }
 
+        public override async Task<TSDreposResultOneObject<OrderOUT>> AddAsync(OrderOUT aEntity, bool autoSaveChange = true)
+        {
+            //using _context;
+            using var _transaction = _context.Database.BeginTransaction();
+            var terug = new TSDreposResultOneObject<OrderOUT>();
+
+
+            try
+            {
+                //alle countinstocks ophalen van alle id's in de orderlijst
+                List<string> allProductIdsInOrderLineOuts = aEntity.OrderLineOUTs.Select(oo => oo.ProductEAN).ToList();
+
+
+
+                //de countInstock verlagen in de database, we doen nog geen commit
+                //================================================================
+
+                //https://stackoverflow.com/questions/44194877/how-to-bulk-update-records-in-entity-framework
+                var onlyEANAndCountInStock = await _context.Products.Where(p => allProductIdsInOrderLineOuts.Contains(p.EAN)).Select(p => new { p.EAN, p.CountInStock }).ToListAsync();
+
+                foreach (var olout in onlyEANAndCountInStock)
+                {
+                    //nieuw tijdelijk product maken, enkel met ean en countinstock props
+                    Product tmpproduct = new Product { EAN = olout.EAN, CountInStock = olout.CountInStock };
+                    tmpproduct.CountInStock -= aEntity.OrderLineOUTs.FirstOrDefault(oo => oo.ProductEAN == olout.EAN).Quantity; 
+
+                    _context.Set<Product>().Attach(tmpproduct);
+                    _context.Entry(tmpproduct).Property(x => x.CountInStock).IsModified = true;
+                }
+                _context.SaveChanges(); //dit is nog geen commit
+
+
+
+
+
+                // controleren voor understock, 
+                // dit doen we na het verlagen van de stockwaardes, dit omdat ondertussen een 
+                // andere client de stock al verlaagd kan hebben
+                //==================================================================================
+                //uit db de stockvalues halen
+                var EAN_countInStock = await _context.Products.Where(p => allProductIdsInOrderLineOuts.Contains(p.EAN)).Select( p=> new { p.EAN, p.CountInStock }).ToListAsync();
+                foreach (var item in EAN_countInStock)
+                {
+                    if ( item.CountInStock<0)
+                    {
+                        throw new Exception("understock");
+                    }
+
+                }
+
+
+
+
+
+                //de orderlines toevoegen aan de database
+                //=============================================
+                var addResult = await _context.Set<OrderOUT>().AddAsync(aEntity);
+                terug.SaveChangeCount = await _context.SaveChangesAsync();
+
+
+
+                //committen als er geen exceptions zijn, anders gebeurd een automtische rollback
+                //==================================================================================
+                _transaction.Commit();
+
+
+                if (terug.SaveChangeCount == 0)
+                    terug.Data = null;
+                else
+                    terug.Data = aEntity;
+
+            }
+            catch (DbUpdateException ex)
+            {
+                terug.setErrorCode(ex);
+                terug.SaveChangeCount = 0;
+                terug.Data = null;
+                terug.Succeeded = false;
+                terug.DbUpdateException = ex;
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "understock")
+                    terug.setErrorCode(TDSreposErrCode.STOCK_UNDERFLOW);
+                else
+                    terug.setErrorCode(TDSreposErrCode.UNKNOW_ERROR);
+                terug.SaveChangeCount = 0;
+                terug.Data = null;
+                terug.Succeeded = false;
+                terug.DbUpdateException = null;
+            }
+            return terug;
+
+
+        }
+
 
         public async Task<OrderOutOverview_DTO> getOrderOutDTO(StatusOfOrder aOrderStateToGet, bool captureAvailableTransportersForListbox= false)
         {

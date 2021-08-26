@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MTC_WebServerCore.Bussiness;
@@ -31,6 +32,7 @@ namespace MTC_WebServerCore.Controllers
 
 
         #region ========================================================================================================================================== Reserved to prepared
+        [Authorize(Policy = "PreparingOrderOUT")]
         [HttpGet]
         public async Task<IActionResult> OverviewReservedToPrepared()
         {
@@ -43,6 +45,7 @@ namespace MTC_WebServerCore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "PreparingOrderOUT")]
         public async Task<IActionResult> OverviewReservedToPrepared([FromForm] OrderOutOverview_DTO model)
         {
 

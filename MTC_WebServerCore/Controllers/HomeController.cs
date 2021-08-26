@@ -43,47 +43,22 @@ namespace MTC_WebServerCore.Controllers
         [Route("")]
         public async Task<IActionResult> Index(int? catId, [FromQuery(Name = "sub")] bool? isShowSubs=false)
         {
-            if (!isShowSubs.HasValue) isShowSubs = false;
+            //var catDictionary = await _repos.ProductCategories.GetAllPosiblePaths();
 
-            ////=======================================================test
-            var testResult = await _repos.ProductCategories.GetAllPosiblePaths();
+            ////for each product cateogry find its parents and create a path
+            //foreach (var category in catDictionary)
+            //{
 
-            foreach (var item in testResult)
-            {
-                Console.WriteLine(item.Key + " === " + item.Value);
-            }
-            //===========================================================
+            //    //set the path as the text in the select list
+            //    Console.WriteLine(category.Key + "======" + category.Value); 
 
-            ////========================================================test
-            //var testResult2 = await _repos.Products.GetProductsByCategoryId(1, true);
-
-
-            ////============================================================
-
-
+            //}
 
             var model = new IndexPageViewModel();
 
-            var xx = await _repos.OrderOUTs.getOrderOutDTO(StatusOfOrder.Reserved);
 
-            //var rrr = await _repos.OrderOUTs.GetSingleOrDefaultAsync(x=>x.Id == 3);
-
-            //foreach (var item in rrr.Data.OrderLineOUTs)
-            //{
-            //    Console.WriteLine(item.Id);
-            //}
-
-
-            //Console.WriteLine("test");
-
-
-
-            //var productsResult = await _repos.Products.GetAllAsync();
-            var productsResult = await _repos.Products.GetProductsByCategoryId(catId, isShowSubs.Value);
-
-            model.ProductsToShow = productsResult.Products;
-
-
+            if (!isShowSubs.HasValue) isShowSubs = false;
+            model.ProductsToShow = await _repos.Products.GetProductsByCategoryId(catId, isShowSubs.Value);
 
             return View(model);
         }

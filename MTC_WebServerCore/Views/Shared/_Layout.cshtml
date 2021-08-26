@@ -1,19 +1,95 @@
 ﻿@inject SignInManager<ApplicationUser> _signInManager
+@inject IApplicationRepository _appRepos
+
+@{
+    bool showFirstNavbar = _signInManager.IsSignedIn(User) && (User.IsInRole("Transporter") || User.IsInRole("Administrator") || User.IsInRole("Supplier"));
+    string secondNavbarHeight = showFirstNavbar ? "56px" : "0px";
+
+    var allCategoriesResult = await _appRepos.ProductCategories.GetAllAsync();
+    List<ProductCategorie> allCategories = allCategoriesResult.Data.ToList();
+
+    List<ProductCategorie> alleMainCategories = allCategories.Where(x => x.ParentCategorie == null).ToList();
+
+
+    //===================================================================================================
+    //dit maakt een lijst van Categorys, van de huidige categorie waar je je momenteel in bevind
+    //als categoryid niet gevonden is of het argument in de querystring is niet aanwezig, dan is deze 
+    //lijst null
+    //example Clothes - Woman - shoes... for showing and clickable in the index-page
+    List<ProductCategorie> fullPath = null;
+    Microsoft.Extensions.Primitives.StringValues queryVal;
+    if (Context.Request.Query.TryGetValue("catId", out queryVal))
+    {
+        //de list init
+        fullPath = new List<ProductCategorie>();
+        ProductCategorie tmp = allCategories.FirstOrDefault(x => x.ID.ToString() == queryVal);
+        if (tmp != null)
+        {
+            while (true)
+            {
+                fullPath.Insert(0, tmp);
+                tmp = allCategories.FirstOrDefault(x => x.ID == tmp.ParentCategorieID);
+                if (tmp == null)
+                {
+                    break;
+                }
+            }
+        }
+    }
+    //===================================================================================================
+
+    void renderSubCategorys(int aProductCat)
+    {
+        List<ProductCategorie> mySubs = allCategories.Where(x => x.ParentCategorieID == aProductCat).ToList();
+
+        <li><a class="dropdown-item" href="?catId=@aProductCat">Get all</a></li>
+        <li><a class="dropdown-item" href="?catId=@aProductCat&sub=true">Get all with subs</a></li>
+
+        if (mySubs.Any())
+        {
+            <div class="dropdown-divider"></div>
+
+            @foreach (var item in mySubs)
+            {
+                <li class="dropdown-submenu">
+                    <a class="dropdown-item dropdown-toggle">@item.Name</a>
+                    <ul class="dropdown-menu">
+                        @{ 
+                            renderSubCategorys(item.ID);
+                        }
+                    </ul>
+                </li>
+            }
+        }
+    }
+
+
+}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MTC_WebServerCore</title>
+    <title>@ViewData["Title"] - MTC</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/MTC.css" />
 
     <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <!--<header>-->@*  *@
+
+    @*i try this, but it fails, solved, => sticky-top work not if the navs are in another elements,
+        therefor i comment the <header>
+        https://www.codeply.com/p/sIIXzlAW3V*@
+
+
+    @if (showFirstNavbar == true)
+    {
+
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-info border-bottom box-shadow mb-3 sticky-top">
             <div class="container">
                 @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MTC_WebServerCore</a>*@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -33,44 +109,8 @@
 
 
                         @*=========================================================================
-        tempory Testbuttons for the mega super developpers :-)
-        removed because we don't use this
-        =========================================================================*@
-
-                        <!--<li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        TestPages
-    </a>
-    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">-->
-                        @*================ testpages for Claire ===============*@
-
-                        <!--<a class="dropdown-item" asp-controller=""
-       asp-action="">Claire_testPage_1</a>
-    <a class="dropdown-item" asp-controller=""
-       asp-action="">Claire_testPage_2</a>
-    <a class="dropdown-item" asp-controller=""
-       asp-action="">Claire_testPage_3</a>-->
-                        @*================ testpages for Mohammed ===============*@
-
-                        <!--<a class="dropdown-item" asp-controller=""
-       asp-action="">Mohammed_testPage_1</a>
-    <a class="dropdown-item" asp-controller=""
-       asp-action="">Mohammed_testPage_2</a>
-    <a class="dropdown-item" asp-controller=""
-       asp-action="">Mohammed_testPage_3</a>-->
-                        @*================ testpages for Tom ===============*@
-                        <!--<a class="dropdown-item" asp-controller="Account"
-               asp-action="_test_Authorize">Tom_authorizePage</a>
-            <a class="dropdown-item" asp-controller=""
-               asp-action="">Tom_testPage_2</a>
-            <a class="dropdown-item" asp-controller=""
-               asp-action="">Tom_testPage_3</a>
-        </div>
-    </li>-->
-                        @*=========================================================================
-        visible somtings dependent on the Roles of the inlogged user
-        =========================================================================*@
+                            visible somtings dependent on the Roles of the inlogged user
+                            =========================================================================*@
 
 
                         @if (_signInManager.IsSignedIn(User) && User.IsInRole("Transporter"))
@@ -84,8 +124,9 @@
                                     <a class="dropdown-item" asp-controller="orderout"
                                        asp-action="OverviewSentToDelivered">Set sent orders to delivered</a>
                                     @*<a class="dropdown-item" asp-controller="Administration"
-                    asp-action="ListRoles">sometest</a>*@
+                                        asp-action="ListRoles">sometest</a>*@
                                 </div>
+
                             </li>
                         }
 
@@ -105,23 +146,6 @@
                             </li>
                         }
 
-                        @*een klant gebruikt dit niet, dus commenten*@
-
-                        @*@if (_signInManager.IsSignedIn(User) && User.IsInRole("Client"))
-        {
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Client management
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" asp-controller="Administration"
-                       asp-action="ListUsers">sometest</a>
-                    <a class="dropdown-item" asp-controller="Administration"
-                       asp-action="ListRoles">sometest</a>
-                </div>
-            </li>
-        }*@
 
 
                         @if (_signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
@@ -148,58 +172,155 @@
 
                                     <div class="dropdown-divider"></div>
 
-                         
+                                </div>
                             </li>
                         }
-
-
-
 
                     </ul>
-
-
-
-
-                    @*=========================================================================
-                    login, logout and register buttons on the right site of the navigationbar
-                    =========================================================================*@
-
-                    <ul class="navbar-nav ml-auto">
-                        @*If the user is signed-in display Logout link*@
-                        @if (_signInManager.IsSignedIn(User))
-                        {
-                            <li class="nav-item">
-                                <form method="post" asp-controller="account" asp-action="logout">
-                                    <button type="submit" style="width:auto"
-                                            class="nav-link btn btn-link py-0">
-                                        Logout @User.Identity.Name
-                                    </button>
-                                </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="account" asp-action="RegisterClient">
-                                    Register
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="account" asp-action="login">
-                                    Login
-                                </a>
-                            </li>
-                        }
-                    </ul>
-
-
-
-
                 </div>
             </div>
         </nav>
-    </header>
-    <div class="container">
+    }; @*einde eerste nav*@
+    @*================================================  SECOND navigation menu  ===============================================*@
+
+    <h1>maybe a banner here or something, it's up too you, womans are better in designing :-)</h1>
+
+
+    @*================================================  SECOND navigation menu  ===============================================*@
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top" style="top:@secondNavbarHeight">
+
+        <div class="container-fluid ">
+            <a class="navbar-brand" href="#">Fixed navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav m-auto justify-content-center">
+
+
+                    <li class="nav-item active">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
+                    </li>
+
+                    @*=============== here render the navigationmenu's ========================*@
+
+                    @for (int i = 0; i < alleMainCategories.Count; i++)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" role="button" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @alleMainCategories[i].Name
+                            </a>
+
+                            <ul class="dropdown-menu" id="sss" aria-labelledby="navbarDropdownMenuLink">
+                                @{
+                                    renderSubCategorys(alleMainCategories[i].ID);
+                                }
+                            </ul>
+                        </li>
+                    }
+                    @*============================================================================*@
+
+                </ul>
+
+
+
+
+                @*een zoekbalk, misschien kan je deze nog gebruiken????   *@
+
+                @*<form class="form-inline mt-2 mt-md-0">
+                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>*@
+
+
+                @*=========================================================================
+                    login, logout and register buttons on the right site of the navigationbar
+                    =========================================================================*@
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        @*<a id="btnMyBasket" class="nav-link" asp-controller="Basket">
+                                sdfsdfsdf
+                            </a>*@
+                        <a id="btnMyBasket" asp-controller="Basket" class="btn btn-dark btn-lg "> </a>
+                    </li>
+
+
+
+                    @*If the user is signed-in display Logout link*@
+                    @if (_signInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item">
+                            <form method="post" asp-controller="account" asp-action="logout">
+                                <button type="submit" style="width:auto"
+                                        class="nav-link btn btn-link ">
+                                    Logout @User.Identity.Name
+                                </button>
+                            </form>
+                        </li>
+                        @*<li class="nav-item">
+                                <a class="nav-link" asp-controller="account" asp-action="logout">
+                                    Logout @User.Identity.Name
+                                </a>
+                            </li>*@
+                    }
+                    else
+                    {
+
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="account" asp-action="RegisterClient">
+                                Register
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="account" asp-action="login">
+                                Login
+                            </a>
+                        </li>
+
+
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>@*einde tweede  nav*@
+
+
+    @*==================================================================================*@
+    @*de fullpath tonen*@
+    @if (fullPath != null)
+    {
+
+        <div style="margin: 10px 10px">
+            <span>
+                <a href="/">Home</a>
+            </span>
+            <span>
+                >
+            </span>
+            @for (int i = 0; i < fullPath.Count - 1; i++)
+            {
+                <span>
+                    <a href="?catId=@fullPath[i].ID">@fullPath[i].Name</a>
+                </span>
+                <span>
+                    >
+                </span>
+            }
+            @*de laatste zonder href*@
+            <span>
+                <a href="#">@fullPath[fullPath.Count - 1].Name</a>
+            </span>
+        </div>
+    }
+
+    @*=====================================================================================*@
+
+
+
+    <div class="container" style="margin-top:20px">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -210,6 +331,24 @@
             &copy; 2021 - MTC_WebServerCore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    @*//==================================================================model dialog voor progress*@
+
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>processing, please wait</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    @*//================================================================================================*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -217,7 +356,34 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/cookies.js" asp-append-version="true"></script>
+    <script src="~/js/basket.js" asp-append-version="true"></script>
+    <script src="~/js/useCookieNotification.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+
+
+
+    <script type="text/javascript">
+        window.addEventListener("load", function () {
+            console.log("joske");
+            var btnProgressShow = document.getElementsByClassName('btnProgressShow');
+            console.log("jos");
+            for (var i = 0; i < btnProgressShow.length; i++) {
+                console.log("kaka");
+                btnProgressShow[i].onclick = function () {
+
+                    $('#myModal').modal({
+                        keyboard: false,
+                        backdrop: 'static',
+                    });
+                    console.log("test");
+                }
+            }
+        });
+    </script>
+
 </body>
 </html>
+
