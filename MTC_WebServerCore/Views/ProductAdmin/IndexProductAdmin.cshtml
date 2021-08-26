@@ -10,11 +10,11 @@
 
     else
     {
-@*<form method="post">
-    <div class="form-group">
-        <select class="form-control" asp-items="@ViewBag.Categories" onselect="submitdata"></select>
+<form method="get">
+    <div class="input-group">
+        <input class="form-control" asp-for="SearchTerm" ></input>
     </div>
-</form>*@
+</form>
 
 @*<div class="table-responsive">*@
     <table class="table table-hover" style="max-width:100%">
@@ -80,9 +80,9 @@
                         </form>
                     </td>
                 </tr>
-            }
+                            }
         </tbody>
     </table>
-    @*</div>*@
-    }
+                            }
+    
     }

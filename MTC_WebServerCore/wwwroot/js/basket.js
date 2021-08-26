@@ -156,12 +156,14 @@ function setToBasketCookie(Ean, bRefresh) {
             //change the value
             if (tmp[i].EAN == Ean) {
                 tmp[i].CNT = numberSelected;
+               
                 founded = true;
                 break; //Stop this loop, we found it!
             }
         }
         //added if not exist
         if (founded == false) {
+            
             tmp.push({ EAN: Ean, CNT: numberSelected });
         }
     }
@@ -170,7 +172,8 @@ function setToBasketCookie(Ean, bRefresh) {
 
     //change the content of the cookie, if there not a cookie then make new
     var jsonBasket = JSON.stringify(tmp);
-    setCookie("MyBasket", convertToCookie(jsonBasket), 2);
+    
+    setCookie('MyBasket', convertToCookie(jsonBasket), 2);
 
 
     setMyBasketButtonValue();

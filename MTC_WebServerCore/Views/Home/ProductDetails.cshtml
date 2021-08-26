@@ -1,75 +1,225 @@
 ﻿@model MTC_WebServerCore.ViewModels.Home.ProductDetailsViewModel
 @*<strong>Name</strong>*@
-<h1>@Model.Product.Name</h1>
+@using MTCmodel
+<div style="width:100%">
 
-<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="2000" style="width:600px;height:400px">
-    <ol class="carousel-indicators">
-        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-    </ol>
-    <div height="400px" width="600px" class="carousel-inner">
-        @{
-            if (Model.ProductImages != null)
-                @foreach (var item in Model.ProductImages)
-                {
-                    <div height="400px" width="600px" class="carousel-item @(item == Model.ProductImages.First() ? "active" : "")">
-                        <img height="400px" width="600px" src="@item">
+
+
+    <div class="container-fluid p-0">
+        <div class="row">
+            <div class="col-12 mt-3">
+                <div class="card">
+                    <div class="card-horizontal " style="display:inline-flex">
+                        <div class="img-square-wrapper" style="width:50%">
+                            <div id="carouselExampleIndicators" class="carousel slide m-0" data-ride="carousel" data-interval="2000" style="width: 100%; height: 440px; ">
+                                <ol class="carousel-indicators">
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                                </ol>
+                                <div style=" height:100%; width:100%" class="carousel-inner">
+                                    @if (Model.ProductImages != null)
+                                        foreach (var item in Model.ProductImages)
+                                        {
+                                            <div style="height:100%; width:100%" class="carousel-item @(item == Model.ProductImages.First() ? "active" : "")">
+                                                <img style="max-height: 100%; max-width:100% ;min-height:100%;min-width:100%" class="" src="@item">
+                                            </div>
+                                        }
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+
+                        </div>
+                        <div class="card-body bg-light" style="width:50%">
+                            <div class="card-header">
+                                <h1>@Model.Product.Name</h1>
+                                @{
+                                    var defaultStars = 5 - @Model.Product.AverageRating;
+
+
+                                    <span class="text-warning ">
+                                        @for (int i = 1; i <= @Model.Product.AverageRating; i++)
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        @for (int i = 0; i < defaultStars; i++)
+                                        {
+                                            <i class="far fa-star"></i>
+                                        }
+                                    </span>
+                                }
+                                <p>@Math.Round(Convert.ToDecimal(@Model.Product.AverageRating), 1) / 5 (@Model.Product.RatingCount reviews).</p>
+                            </div>
+                            @{
+                                if (Model.Product.SolderPrice > 0)
+                                {
+                                    <strong> <span class="m-0" style="font-size: 30px; color: red"> -@Math.Round(Convert.ToDecimal(Model.Product.SolderPrice), 2)%</span><span> Save </span><span span class="m-0" style="font-size: 30px; color: darkblue"> @Math.Round( Model.PriceSaved,2)€ </span></strong>
+                                    <br />
+                                    <strong>   <span style=" font-size:60px;color:red">@Math.Round(Convert.ToDecimal(Model.PricewithSold), 2)€ </span>  <span style=" font-size:40px;color:seagreen;text-decoration:line-through;text-decoration-color:red">@Math.Round(Convert.ToDecimal(Model.PricewithBTW), 2)€</span></strong>
+                                }
+                                else
+                                {
+                                    <strong>Price: <p style=" font-size:80px;color:seagreen">@Math.Round(Convert.ToDecimal(Model.PricewithBTW), 2)€ </p></strong>
+                                }
+                            }
+                            <div class="card-footer bg-light" @*style="width:50%"*@>
+                                <p>@Model.Product.CountInStock in stock</p>
+                                <div style="display:flex;flex-wrap:wrap ;width:80%">
+
+
+
+
+
+             @*=================================*@        
+                                    @*=========================Bascket Button*@
+
+                                    <label style="margin-top: 5px; width: 40%">Quantity :</label> <input style="width:40%" id="AmountOf_EAN_@Model.Product.EAN" type="number" min="1" max="5000" value="1" class="form-control" />
+
+
+
+
+
+
+                                    <label style="margin-top: 10px; width: 40%">Add to bascket</label> <button style="width:40%" id="ButtonAddToBasket_EAN_@Model.Product.EAN" class="btn btn-info" onclick="setToBasketCookie('@Model.Product.EAN')"><i class="fas fa-baby-carriage"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
-                    }
-        }
+
+
+
+
+                </div>
+            </div>
+
+        </div>
     </div>
-    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>
+    <br />
+    <div class="card">
+        <div class="card-header">
+            <h3> Descriptions</h3>
+        </div>
+        <div class="card-body">
+            @Model.Product.ExtraInfo
+        </div>
+    </div>
 
 
-@*<strong>Price: <p style=" text-size-adjust:72;color:seagreen ">@{Model.Product.RecommendedUnitPrice + (Model.Product.RecommendedUnitPrice * Model.Product.BTWPercentage / 100);} </p></strong>*@
-
-<strong>EAN:<p> @Model.Product.EAN</p></strong>
-
-<strong>Description</strong>
-<p>@Model.Product.ExtraInfo</p>
-@*<strong>BTW</strong>
-    <p>@Model.Product.BTWPercentage</p>*@
-<strong>Stock</strong>
-<p>@Model.Product.CountInStock</p>
-@*<strong>Maximum stock</strong>
-    <p>@Model.Product.MaxStock</p>
-    <strong>Minimum stock</strong>
-    <p>@Model.Product.MinStock</p>*@
-
-<strong>Solde</strong>
-<p>@Model.Product.SolderPrice %</p>
-@*<strong>Category</strong>
-    <p>@Model.CategoryName</p>*@
-@*<strong>Suppliers</strong>
-    @{ foreach (var item in Model.Product.Suppliers)
+    @*<p>@Model.Product.AverageRating /5</p>*@
+    @*<strong>Reviews</strong>
+        @foreach (var item in Model.Product.ProductReviews)
         {
-            <p>●@item.Name</p>
-        }
-    }*@
+            <p>@item.Rating /5</p>
+            <p>@item.Comment</p>
+        }*@
+    <br />
 
-@*<strong>Images</strong>*@
+    <div class="card">
+        <div class="card-header">
+            <h3>Product Reviews</h3>
+            @{
+                var Stars = 5 - @Model.Product.AverageRating;
 
-@*<br />
-    <strong>Returned</strong>
-    <p>@Model.Product.ReturnedProducts.Count(r => r.Outlet == true)</p>*@
 
-<strong>Rating</strong>
-<p>@Model.Product.AverageRating /5</p>
-<strong>Reviews</strong>
-@foreach (var item in Model.Product.ProductReviews)
-{
-    <p>@item.Rating /5</p>
-    <p>@item.Comment</p>
-}
-<br />
-<a asp-controller="Home" asp-action="Index">Back </a>
+                <span class="text-warning ">
+                    @for (int i = 1; i <= @Model.Product.AverageRating; i++)
+                    {
+                        <i class="fas fa-star"></i>
+                    }
+                    @for (int i = 0; i < Stars; i++)
+                    {
+                        <i class="far fa-star"></i>
+                    }
+                </span>
+            }
+            <p>@Math.Round(Convert.ToDecimal(@Model.Product.AverageRating), 1) / 5 (@Model.Product.RatingCount reviews).</p>
+        </div>
+        <div class="card-body">
+            @foreach (var item in Model.Product.ProductReviews)
+            {
+                var defaults = 5 - item.Rating;
 
+                <p>@item.Comment</p>
+                <span class="text-warning ">
+                    @for (int i = 1; i <= item.Rating; i++)
+                    {
+                        <i class="fas fa-star"></i>
+                    }
+                    @for (int i = 0; i < defaults; i++)
+                    {
+                        <i class="far fa-star"></i>
+                    }
+                </span>
+                <small class="text-muted">Posted by<span class="text-primary"> @item.Client.FirstName @item.Client.NameAdditional @item.Client.LastName</span>, on @item.DateTime</small>
+                <hr />
+            }
+
+            <form id="commentForm">
+                <input type="hidden" name="EAN" value="@Model.Product.EAN" />
+                <input type="hidden" name="ClientId" value="@Model.ClientId" />
+                <div class="form-group">
+                    <label> Write your comment...</label>
+                    <span class="text-warning float-lg-right">
+                        <i class="ratingStar far fa-star" data-value="1"></i>
+                        <i class="ratingStar far fa-star" data-value="2"></i>
+                        <i class="ratingStar far fa-star" data-value="3"></i>
+                        <i class="ratingStar far fa-star" data-value="4"></i>
+                        <i class="ratingStar far fa-star" data-value="5"></i>
+                    </span>
+                    <input type="hidden" name="Rating" id="ratingsValue" />
+                    <textarea class="form-control" rows="3" name="Text" placeholder="Write here..."></textarea>
+                </div>
+                <button  class="btn btn-success" id="btnComment" type="button" @{ if(@Model.ClientId == null) { 
+                                                                                     @:disabled="disabled" 
+                                                                                } }
+                                                                                >Comment</button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <a asp-controller="Home" asp-action="Index">Back </a>
+    @section Scripts
+    {
+        <script src="~/js/cookies.js"></script>
+        <script src="~/js/basket.js"></script>
+        <script type="text/javascript">
+        $(".ratingStar").hover(function () {
+            $(".ratingStar").addClass("far").removeClass("fas");
+            $(this).addClass("fas").removeClass("far");
+            $(this).prevAll(".ratingStar").addClass("fas").removeClass("far");
+        });
+
+        $(".ratingStar").click(function () {
+            var starvalue = $(this).attr("data-value");
+            $("#ratingsValue").val(starvalue);
+        });
+
+        $("#btnComment").click(function () {
+            $.ajax({
+                url: "@Url.Action("Comment","Home")",
+                type: "post",
+                data: $("#commentForm").serialize()
+            }).done(function (response) {
+                if (response.succes) {
+                    window.location.reload();
+                }
+                else {
+                    swal("Error!", response.Message, "error");
+                }
+            }).fail(function () {
+                swal("Error!","Error ","error");
+            });
+        });
+        </script>
+    }
