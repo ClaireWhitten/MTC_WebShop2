@@ -18,7 +18,7 @@ the javascriptfiles cookies.js and basket.js (see bottom of this page)*@
 
 
 
-<div class="card-deck">
+<div class="card-deck row">
 
     @foreach (var item in Model.ProductsToShow)
     {
@@ -27,36 +27,67 @@ the javascriptfiles cookies.js and basket.js (see bottom of this page)*@
         string productImage = item.Images.FirstOrDefault()  != null ? string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Images.FirstOrDefault().Image))  : "~/images/noProductImage.png";
         //string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(item.Images.FirstOrDefault().Image))
 
-        <div class="col-sm-6 col-lg-4 mb-3">
-            <div class="card mb-3">
+        <div class="col-10 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-3 columns-for-cards">
+            <div class="card mb-3 product-card">
+                <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@item.EAN">
+                    <div class="card-header">
+                        <h3>@item.Name</h3>
+                        @{
+                            var defaultStars = 5 - @item.AverageRating;
 
 
-                <div class="card-header">
-                    <h3>@item.Name</h3>
-                </div>
+                            <span id="starRating" class="text-warning">
+                                @for (int i = 1; i <= @item.AverageRating; i++)
+                                {
+                                    <i class="fas fa-star"></i>
+                                }
+                                @for (int i = 0; i < defaultStars; i++)
+                                {
+                                    <i class="far fa-star"></i>
+                                }
+                           
+                            </span>
+                        }
+                    </div>
 
-                <div class="card-body text-center">
-                    <img class="card-img-top" src="@productImage" asp-append-version="true" />
-                    <h5>@item.ExtraInfo</h5>
-                    <h5>@item.AverageRating</h5>
-                    <h5>prijs: @String.Format("{0:0.00}€", item.RecommendedUnitPrice)</h5>
-                </div>
+                    <div class="card-body text-center">
+                        <img class="card-img-top" src="@productImage" asp-append-version="true" />
+                        @*<h5>@item.ExtraInfo</h5>*@
 
+                        @*@for (int i = 0; i < defaultStars; i++)
+                        {
+                            <i class="far fa-star"></i>
+                        }*@
+                        <h5 class="d-inline font-weight-bold">£@item.RecommendedUnitPrice.ToString("0.00")</h5>
+
+                        @if (item.SolderPrice != 0)
+                        {
+                            <h5 class="saleIcon">On sale!</h5>
+                        }
+
+                    </div>
+                </a>
                 <div class="card-footer text-center">
-                    <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@item.EAN">
-                        <input type="button" class="btn btn-primary m-1" value="Detail" />
-                    </a>
+                    <div class="row">
+                        @*<div class="col-4">
+                            <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@item.EAN">
+                                <input type="button" class="btn btn-primary d-inline" value="Detail" />
+                            </a>
+                        </div>*@
+                        @*belangrijk bij het opmaken van de pagina layout
+        -    dat de id's niet veranderd worden van naam,
+        -    het argument van de setToBasketCookie niet wordt verandander van naam
+        -    het number type een value property heeft
+        dit alles omdat dit gebruik maken van de javascriptfile basket.js (wwwroot/js)*@
 
-
-                    @*belangrijk bij het opmaken van de pagina layout
-                        -    dat de id's niet veranderd worden van naam,
-                        -    het argument van de setToBasketCookie niet wordt verandander van naam
-                        -    het number type een value property heeft
-                        dit alles omdat dit gebruik maken van de javascriptfile basket.js (wwwroot/js)*@
-                    <button id="ButtonAddToBasket_EAN_@item.EAN" class="btn btn-info" onclick="setToBasketCookie('@item.EAN')"><i class="fas fa-baby-carriage"></i></button>
-                    <input id="AmountOf_EAN_@item.EAN" type="number" min="1" max="5000" value="1" class="form-control" />
-
-                </div>
+                        <div class="col-6">
+                            <button id="ButtonAddToBasket_EAN_@item.EAN" class="btn basketButtonIndex d-inline" onclick="setToBasketCookie('@item.EAN')"><i class="fas fa-baby-carriage"></i></button>
+                        </div>
+                        <div class="col-6">
+                            <input id="AmountOf_EAN_@item.EAN" type="number" min="1" max="5000" value="1" class="form-control d-inline" />
+                            </div>
+                        </div>
+                    </div>
             </div>
 
         </div>
