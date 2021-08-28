@@ -28,9 +28,7 @@
 
   <ItemGroup>
     <Reference Include="MTCmailServer">
-
-      <HintPath>..\..\..\..\Desktop\MTCmailServer.dll</HintPath>
-
+      <HintPath>..\..\..\..\Downloads\MTCmailServer.dll</HintPath>
     </Reference>
   </ItemGroup>
 

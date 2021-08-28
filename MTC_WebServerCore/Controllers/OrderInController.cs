@@ -76,7 +76,7 @@ namespace MTC_WebServerCore.Controllers
 
         //Updates database with new orders (jquery post request used)
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,SuperAdmin")]
         public async Task<IActionResult> ReplenishStock(IEnumerable<ReplenishStockViewModel> orders)
         {
