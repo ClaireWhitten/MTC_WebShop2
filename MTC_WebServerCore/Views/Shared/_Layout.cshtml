@@ -15,7 +15,7 @@
     //dit maakt een lijst van Categorys, van de huidige categorie waar je je momenteel in bevind
     //als categoryid niet gevonden is of het argument in de querystring is niet aanwezig, dan is deze 
     //lijst null
-    //example Clothes - Woman - shoes... for showing and clickable in the index-page
+    //example Clothes - Woman - shoes... for showing and clickable in the index-page.
     List<ProductCategorie> fullPath = null;
     Microsoft.Extensions.Primitives.StringValues queryVal;
     if (Context.Request.Query.TryGetValue("catId", out queryVal))
@@ -42,8 +42,8 @@
     {
         List<ProductCategorie> mySubs = allCategories.Where(x => x.ParentCategorieID == aProductCat).ToList();
 
-        <li><a class="dropdown-item" href="?catId=@aProductCat">Get all</a></li>
-        <li><a class="dropdown-item" href="?catId=@aProductCat&sub=true">Get all with subs</a></li>
+        <li><a class="dropdown-item" href="/?catId=@aProductCat">Get all</a></li>
+        <li><a class="dropdown-item" href="/?catId=@aProductCat&sub=true">Get all with subs</a></li>
 
         if (mySubs.Any())
         {
@@ -75,7 +75,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/MTC.css" />
-
+    @*<link href="~/css/chatbox2.css" rel="stylesheet" />*@
+    <link rel="stylesheet" href="~/css/chatbox2.css" />
     <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
 </head>
 <body>
@@ -156,7 +157,7 @@
                                     Administrator management
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" asp-controller="Administration"
+                                    <a class="dropdown-item btnProgressShow" asp-controller="Administration"
                                        asp-action="OverviewAdministrators">Administrators overview</a>
                                     <a class="dropdown-item" asp-controller="Administration"
                                        asp-action="OverviewSuppliers">Suppliers overview</a>
@@ -360,6 +361,8 @@
     <script src="~/js/basket.js" asp-append-version="true"></script>
     <script src="~/js/useCookieNotification.js" asp-append-version="true"></script>
 
+
+
     @await RenderSectionAsync("Scripts", required: false)
 
 
@@ -367,11 +370,11 @@
 
     <script type="text/javascript">
         window.addEventListener("load", function () {
-            console.log("joske");
+
             var btnProgressShow = document.getElementsByClassName('btnProgressShow');
-            console.log("jos");
+
             for (var i = 0; i < btnProgressShow.length; i++) {
-                console.log("kaka");
+
                 btnProgressShow[i].onclick = function () {
 
                     $('#myModal').modal({

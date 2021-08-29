@@ -42,7 +42,6 @@ namespace MTCmodel
 
         public ICollection<Address> Addresses { get; set; }
 
-        public ICollection<ChatMessage> ChatMessages { get; set; }
 
 
         //================================ Extra's ==============================================

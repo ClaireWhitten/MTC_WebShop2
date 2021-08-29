@@ -29,6 +29,8 @@ namespace MTCrepository.TDSrepository
 
         IProductImageRepository ProductImages { get; }
 
+        IChatMessageRepository ChatMessages { get;  }
+
         //void SaveChanged();
     }
 }

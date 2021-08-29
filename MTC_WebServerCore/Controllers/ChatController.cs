@@ -28,27 +28,42 @@ namespace MTC_WebServerCore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //var currentUser = await _userManager.GetUserAsync(User);
+            var currentUser = await _userManager.GetUserAsync(User);
 
-            //ViewBag.CurrentUsername = currentUser.UserName;
 
-            int i = 5;
-            Console.WriteLine(i);
+
+            if (User.IsInRole("Client"))
+            {
+                ViewBag.CurrentUsername = currentUser.UserName;
+                //var msgsResult = await _repos.ChatMessages.GetAllAsync();
+            }
 
 
             return View();
         }
 
-        public async Task<IActionResult> Create(ChatMessage aChatMessage)
+
+
+
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllShortClientData(/*[FromBody] string aISBN*/)
         {
-            if (ModelState.IsValid)
-            {
-                //14:31
-                //aChatMessage.UserNameReceiver = lalaa
-                
-                return Ok();
-            }
-            return BadRequest();
+            var clientData = await _repos.ChatMessages.GetAllShortClientDataAsync();
+
+            var model = clientData;
+
+            return Ok(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetClientMessagesByClientId([FromQuery]string aClientId)
+        {
+            var clientData = await _repos.ChatMessages.GetByConditionAsync(cm=>cm.CliendId == aClientId);
+
+            var model = clientData.Data;
+
+            return Ok(model);
         }
     }
 }

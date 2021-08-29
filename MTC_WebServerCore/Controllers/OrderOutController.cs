@@ -52,18 +52,18 @@ namespace MTC_WebServerCore.Controllers
             //first we check if combobox Transporter is setted on rows where checkbox is checked
             for (int i = 0; i < model.OrderOutOverviewItems.Count; i++)
             {
-                if(model.OrderOutOverviewItems[i].IsChecked && model.OrderOutOverviewItems[i].TransporterId == null)
+                if (model.OrderOutOverviewItems[i].IsChecked && model.OrderOutOverviewItems[i].TransporterId == null)
                 {
                     ModelState.AddModelError($"OrderOutOverviewItems[{i}].TransporterId", "checked items must be a Transporter");
                 }
             }
 
 
-            if ( !ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
-        
+
 
             foreach (var item in model.OrderOutOverviewItems)
             {
@@ -71,7 +71,7 @@ namespace MTC_WebServerCore.Controllers
                 {
                     var xxx = await _repos.OrderOUTs.GetById_withOrderlineOut_Async(item.OrderOutId);
                     (xxx.Data).Status = StatusOfOrder.Preparing;
-                   
+
                     foreach (var oolo in (xxx.Data).OrderLineOUTs.ToList())
                     {
                         oolo.TransporterId = item.TransporterId;
@@ -93,13 +93,14 @@ namespace MTC_WebServerCore.Controllers
 
 
                     MTCmail mail = new MTCmail(item.EmailClient, "Order status gewijzigd naar klaargemaakt", sbBody.ToString());
+
                     var emailResult = await mail.SendHtmlAsync();
                     #endregion
                 }
             }
 
             return RedirectToAction(nameof(OverviewReservedToPrepared));
-      
+
         }
 
         #endregion
@@ -108,6 +109,7 @@ namespace MTC_WebServerCore.Controllers
 
         #region ================================================================================================================================================== prepared to send
         [HttpGet]
+        [Authorize(Policy = "PreparingOrderOUT")]
         public async Task<IActionResult> OverviewPreparedToSent()
         {
             //get all existing categories
@@ -119,6 +121,7 @@ namespace MTC_WebServerCore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "PreparingOrderOUT")]
         public async Task<IActionResult> OverviewPreparedToSent([FromForm] OrderOutOverview_DTO model)
         {
 
@@ -160,6 +163,8 @@ namespace MTC_WebServerCore.Controllers
 
         #region ================================================================================================================================================== sent to delivered
         [HttpGet]
+
+        [Authorize(Roles = "Transporter")]
         public async Task<IActionResult> OverviewSentToDelivered()
         {
             //get all existing categories
@@ -171,6 +176,7 @@ namespace MTC_WebServerCore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "PreparingOrderOUT")]
         public async Task<IActionResult> OverviewSentToDelivered([FromForm] OrderOutOverview_DTO model)
         {
             Thread.Sleep(5000);
