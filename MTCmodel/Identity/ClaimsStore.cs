@@ -26,6 +26,10 @@ namespace MTCmodel
             //give the claims the same name for type and value... see the claims above
 
             //============  Claire  ==============
+            new Claim("PreparingOrderIn","PreparingOrderIn"),
+            
+             
+
 
 
             //===========  Mohammed ==============

@@ -21,8 +21,8 @@
                                     @if (Model.ProductImages != null)
                                         foreach (var item in Model.ProductImages)
                                         {
-                                            <div style="height:100%; width:100%" class="carousel-item @(item == Model.ProductImages.First() ? "active" : "")">
-                                                <img @*style="max-height: 100%; max-width:100% ;min-height:100%;min-width:100%"*@ class="" src="@item">
+                                            <div style="height:100%; width:100%" id="largeImageContainer" class="carousel-item @(item == Model.ProductImages.First() ? "active" : "")">
+                                                <img @*style="max-height: 100%; max-width:100% ;min-height:100%;min-width:100%"*@ class="" id="largeImage" src="@item">
                                             </div>
                                         }
                                 </div>
@@ -38,8 +38,8 @@
 
                         </div>
                         <div class="card-body bg-light" style="width:50%">
-                            <div class="card-header">
-                                <h1>@Model.Product.Name</h1>
+                            <div class="card-header blueBright">
+                                <h1 class="text-white">@Model.Product.Name</h1>
                                 @{
                                     var defaultStars = 5 - @Model.Product.AverageRating;
 
@@ -69,7 +69,7 @@
                                     <strong>Price: <p style=" font-size:80px;color:seagreen">@Math.Round(Convert.ToDecimal(Model.PricewithBTW), 2)€ </p></strong>
                                 }
                             }
-                            <div class="card-footer bg-light" @*style="width:50%"*@>
+                            <div class="card-footer bg-light blueBright" @*style="width:50%"*@>
                                 <p>@Model.Product.CountInStock in stock</p>
                                 <div style="display:flex;flex-wrap:wrap ;width:80%">
 
@@ -105,8 +105,8 @@
     </div>
     <br />
     <div class="card">
-        <div class="card-header">
-            <h3> Descriptions</h3>
+        <div class="card-header blueBright">
+            <h3 class="text-white"> Descriptions</h3>
         </div>
         <div class="card-body">
             @Model.Product.ExtraInfo
@@ -124,8 +124,8 @@
     <br />
 
     <div class="card">
-        <div class="card-header">
-            <h3>Product Reviews</h3>
+        <div class="card-header blueBright">
+            <h3 class="text-white">Product Reviews</h3>
             @{
                 var Stars = 5 - @Model.Product.AverageRating;
 

@@ -76,7 +76,7 @@ namespace MTC_WebServerCore.Controllers
 
         //Updates database with new orders (jquery post request used)
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        //problem with validating - do not add validation token for tomorrow or will not work (jquery post - need to solve at later date)
         [Authorize(Roles = "Administrator,SuperAdmin")]
         public async Task<IActionResult> ReplenishStock(IEnumerable<ReplenishStockViewModel> orders)
         {
@@ -209,7 +209,8 @@ namespace MTC_WebServerCore.Controllers
         //Gets overview of sent orders for the admin
 
         [HttpGet]
-        [Authorize(Roles = "SuperAdmin,Administration")]
+        //[Authorize(Roles = "SuperAdmin,Administration")]
+        [Authorize(Policy = "DeliveredOrderIn")]
         public async Task<IActionResult> OverviewSentToDelivered()
         {
             
@@ -228,7 +229,8 @@ namespace MTC_WebServerCore.Controllers
         //Updates the status of the delivered orders in db - admin
         [ValidateAntiForgeryToken]
         [HttpPost]
-        [Authorize(Roles = "SuperAdmin,Administration")]
+        //[Authorize(Roles = "SuperAdmin,Administration")]
+        [Authorize(Policy = "DeliveredOrderIn")]
         public async Task<IActionResult> OverviewSentToDelivered([FromForm] IEnumerable<OrderInOverviewViewModel> model)
         {
             foreach (var order in model)
