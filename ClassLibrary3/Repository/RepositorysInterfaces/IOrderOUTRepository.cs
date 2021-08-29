@@ -13,5 +13,7 @@ namespace MTCrepository.Repository
         public Task<OrderOutOverview_DTO> getOrderOutDTO(StatusOfOrder aOrderStateToGet, bool captureAvailableTransportersForListbox = false);
 
         public Task<TSDreposResultOneObject<OrderOUT>> GetById_withOrderlineOut_Async(int aId);
+        Task<TSDreposResultOneObject<OrderOUT>> GetById_withAll_Async(int aId);
+        Task<TSDreposResultOneObject<OrderOUT>> GetById_withOrderlineOutAndClient_Async(int aId);
     }
 }

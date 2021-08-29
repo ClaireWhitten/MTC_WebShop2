@@ -1,0 +1,140 @@
+﻿@model OrderOUT
+
+
+
+@{ double bonusPercentage = 0;
+    double bonusAmount = 0;
+}
+<strong>Date</strong>
+<p>@Model.Date</p>
+<strong>Id</strong>
+<p>@Model.Id</p>
+<strong>Status</strong>
+<p>@Model.Status</p>
+<strong>Client</strong>
+<p>@Model.Client.FirstName @Model.Client.NameAdditional @Model.Client.LastName</p>
+<strong>Client discount</strong>
+<p>@Model.DiscountClientPercentage %</p>
+@if (Model.Bonusses.Count != 0)
+{
+    <strong>Bonusses</strong>
+    foreach (var item in Model.Bonusses)
+    {
+        if (item.IsPercentage)
+        {
+            bonusPercentage += item.Value;
+            <p>•@item.Value %</p>
+        }
+        else
+        {
+            bonusAmount += item.Value;
+            <p>•@item.Value €</p>
+        }
+    }
+}
+
+
+
+@if (Model.OrderLineOUTs.Any())
+{
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">OrderLine No.</th>
+                        <th scope="col">EAN</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Transporter</th>
+                        <th scope="col">Price (€)</th>
+                        <th scope="col">BTW</th>
+                        <th scope="col">Solde (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        double total = 0;
+                        double btw = 0;
+                        double solde = 0;
+                    }
+                    @foreach (var item in Model.OrderLineOUTs)
+                    {
+                        total += item.UnitPrice*item.Quantity;
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.ProductEAN</td>
+                            <td>@item.Product.Name</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Status</td>
+                            @if (item.Transporter != null)
+                            {
+                                <td>@item.Transporter.Name</td>
+                            }
+                            else
+                            {
+                                <td>
+                                    -
+                                </td>
+                            }
+                            <td>@item.UnitPrice</td>
+                            <td>@item.Product.BTWPercentage</td>
+                            <td>@item.Product.SolderPrice</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="float-lg-right">
+                    <tr>
+                        <th scope="row">Total Price</th>
+                        <td>@Math.Round(total, 2) €</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">BTW</th>
+                        @foreach (var item in Model.OrderLineOUTs)
+                        {
+                            btw += item.Product.BTWPercentage * item.Product.RecommendedUnitPrice / 100*item.Quantity;
+                            solde += Convert.ToDouble(item.Product.SolderPrice) * item.Product.RecommendedUnitPrice / 100*item.Quantity;
+                        }
+                        <td>@Math.Round(btw, 2) €</td>
+                    </tr>
+                    @if (solde > 0)
+                    {
+                        <tr>
+                            <th scope="row">Solde</th>
+                            <td>-@Math.Round(solde, 2) €</td>
+                        </tr>
+                    }
+                    @if (Model.Client.DiscountPercentage > 0)
+                    {
+                        <tr>
+                            <th scope="row">Discount</th>
+                            <td>-@Math.Round((Model.Client.DiscountPercentage * total), 2)€</td>
+                        </tr>
+                    }
+                    @if (Model.Bonusses.Count != 0)
+                    {
+                        <tr>
+                            <th scope="row">Bonus(ses)</th>
+                            <td>@Math.Round((total * bonusPercentage / 100) + bonusAmount, 2)€</td>
+                        </tr>
+                    }
+                        <tr>
+                            <th scope="row">TOTAL</th>
+                            <td>@Math.Round((total + btw - solde - (Model.Client.DiscountPercentage * total)), 2)€</td>
+                        </tr>
+                    </tfoot>
+            </table>
+        </div>
+    
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            No orderlines found.
+        </div>
+    </div>
+}
+
+

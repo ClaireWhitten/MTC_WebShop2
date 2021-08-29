@@ -10,7 +10,7 @@
             <div class="col-12 mt-3">
                 <div class="card">
                     <div class="card-horizontal " style="display:inline-flex">
-                        <div class="img-square-wrapper" style="width:50%">
+                        <div class="img-square-wrapper" style="width:50% ;height:100%">
                             <div id="carouselExampleIndicators" class="carousel slide m-0" data-ride="carousel" data-interval="2000" style="width: 100%; height: 440px; ">
                                 <ol class="carousel-indicators">
                                     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -22,7 +22,7 @@
                                         foreach (var item in Model.ProductImages)
                                         {
                                             <div style="height:100%; width:100%" class="carousel-item @(item == Model.ProductImages.First() ? "active" : "")">
-                                                <img style="max-height: 100%; max-width:100% ;min-height:100%;min-width:100%" class="" src="@item">
+                                                <img style="max-height: 100%; max-width:100% ;min-height:100%;min-width:100%"  src="@item">
                                             </div>
                                         }
                                 </div>
@@ -60,7 +60,7 @@
                             @{
                                 if (Model.Product.SolderPrice > 0)
                                 {
-                                    <strong> <span class="m-0" style="font-size: 30px; color: red"> -@Math.Round(Convert.ToDecimal(Model.Product.SolderPrice), 2)%</span><span> Save </span><span span class="m-0" style="font-size: 30px; color: darkblue"> @Math.Round( Model.PriceSaved,2)€ </span></strong>
+                                    <strong> <span class="m-0" style="font-size: 30px; color: red"> -@Math.Round(Convert.ToDecimal(Model.Product.SolderPrice), 2)%</span><span> Save </span><span span class="m-0" style="font-size: 30px; color: darkblue"> @Math.Round(Model.PriceSaved, 2)€ </span></strong>
                                     <br />
                                     <strong>   <span style=" font-size:60px;color:red">@Math.Round(Convert.ToDecimal(Model.PricewithSold), 2)€ </span>  <span style=" font-size:40px;color:seagreen;text-decoration:line-through;text-decoration-color:red">@Math.Round(Convert.ToDecimal(Model.PricewithBTW), 2)€</span></strong>
                                 }
@@ -162,7 +162,8 @@
                 <small class="text-muted">Posted by<span class="text-primary"> @item.Client.FirstName @item.Client.NameAdditional @item.Client.LastName</span>, on @item.DateTime</small>
                 <hr />
             }
-
+            @{ if (Model.ClientId != null && Model.Product.ProductReviews.Select(x => x.ClientId ).ToArray().Contains( Model.ClientId)==false)
+                {
             <form id="commentForm">
                 <input type="hidden" name="EAN" value="@Model.Product.EAN" />
                 <input type="hidden" name="ClientId" value="@Model.ClientId" />
@@ -178,11 +179,17 @@
                     <input type="hidden" name="Rating" id="ratingsValue" />
                     <textarea class="form-control" rows="3" name="Text" placeholder="Write here..."></textarea>
                 </div>
-                <button  class="btn btn-success" id="btnComment" type="button" @{ if(@Model.ClientId == null || Model.Product.ProductReviews.FirstOrDefault(x=>x.ClientId==Model.ClientId)!=null) { 
-                                                                                     @:disabled="disabled" 
-                                                                                } }
-                                                                                >Comment</button>
+                <button class="btn btn-success" id="btnComment" type="button">Comment</button>
             </form>
+                }
+                else if (Model.ClientId == null)
+                {
+                <h1>Login to Comment this product.</h1>
+                }
+                else if (Model.ClientId != null && Model.Product.ProductReviews.FirstOrDefault(x => x.ClientId == Model.ClientId) != null)
+                {
+                <h1>You earledy posted a comment for this product.</h1>
+                    } }
         </div>
     </div>
 

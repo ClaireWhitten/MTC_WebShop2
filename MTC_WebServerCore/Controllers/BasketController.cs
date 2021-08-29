@@ -147,7 +147,8 @@ namespace MTC_WebServerCore.Controllers
                 Zipcode = model.Address.ZipCode,
                 City = model.Address.City,
                 Country = model.Address.Country,
-                ClientId = model.Client.Id
+                ClientId= model.Client.Id,
+                //Client=model.Client
             };
             orderOut.OrderLineOUTs = new List<OrderLineOUT>();
 
@@ -156,6 +157,7 @@ namespace MTC_WebServerCore.Controllers
                 //Id	Quantity	UnitPrice	Status	TransporterId	ProductEAN	OrderOUTId
                 OrderLineOUT tmpLine = new OrderLineOUT
                 {
+                    //Product=item.Product,
                     Quantity = item.CountOfProducts,
                     UnitPrice = item.Product.RecommendedUnitPrice,
                     ProductEAN = item.Product.EAN,
@@ -167,6 +169,19 @@ namespace MTC_WebServerCore.Controllers
 
             if (dbAddResult.Succeeded)
             {
+                //List<OrderLineOUT> oerderlineouts = orderOut.OrderLineOUTs.ToList();
+                //for (int i = 0; i < oerderlineouts.Count; i++)
+                //{
+                //    oerderlineouts[i].Product.Name= (await _repos.Products.GetByIdAsync(oerderlineouts[i].ProductEAN)).Data.Name;
+                //}
+                //orderOut.OrderLineOUTs = oerderlineouts;
+                ////foreach (var item in orderOut.OrderLineOUTs)
+                ////{
+                ////    item.Product.Name = (await _repos.Products.GetByConditionAsync(p=>p.EAN==item.ProductEAN)).Data.FirstOrDefault(p=>p.EAN==item.ProductEAN).Name;
+                ////}
+                //orderOut.Client = (await _repos.Clients.GetByIdAsync(orderOut.ClientId)).Data;
+                //var ordot = (await _repos.OrderOUTs.GetById_withOrderlineOutAndClient_Async(orderOut.Id)).Data;
+                //PDFInvoice.PDFinvoice.Create(ordot);
                 //clear the cookie,
                 //go to the payconfirmed page
             }

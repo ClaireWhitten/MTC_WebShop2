@@ -13,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ImageMagick;
+using System.Globalization;
 
 namespace MTC_WebServerCore.Controllers
 {
@@ -125,7 +127,8 @@ namespace MTC_WebServerCore.Controllers
                     BTWPercentage = product.BTWPercentage,
                     MaxStock = product.MaxStock,
                     MinStock = product.MinStock,
-                    RecommendedUnitPrice = Convert.ToDouble(product.RecommendedUnitPrice.Replace('.',',')),
+                    RecommendedUnitPrice = double.Parse(product.RecommendedUnitPrice, CultureInfo.InvariantCulture),
+                    //RecommendedUnitPrice = Convert.ToDouble(product.RecommendedUnitPrice.Replace('.',',')),
                     CategorieId = product.CategorieId,
                     SolderPrice = product.SolderPercentage
                 };
@@ -133,6 +136,7 @@ namespace MTC_WebServerCore.Controllers
                 newproduct.Suppliers = new List<Supplier>();
                 foreach (var item in product.SupplierIds)
                     newproduct.Suppliers.Add((await _repos.Suppliers.GetByIdAsync(item)).Data);
+                
                 foreach (var item in Request.Form.Files)
                 {
                     ProductImage img = new ProductImage();
@@ -140,8 +144,18 @@ namespace MTC_WebServerCore.Controllers
                     MemoryStream ms = new MemoryStream();
                     item.CopyTo(ms);
                     img.Image = ms.ToArray();
-                    ms.Close();
+                        ms.Close();
                     ms.Dispose();
+                    //MagickReadSettings settings = new MagickReadSettings();
+                    //settings.Width = 60;
+                    //settings.Height = 44;
+                    //settings.Compression = CompressionMethod.JPEG;
+                    
+                    var image = new MagickImage(img.Image);
+                    image.Resize(440, 550);
+                    image.Quality = 40;
+                    image.Format = MagickFormat.Jpeg;
+                    img.Image = image.ToByteArray();
                     newproduct.Images.Add(img);
                 }
                 await _repos.Products.AddAsync(newproduct);
@@ -172,9 +186,10 @@ namespace MTC_WebServerCore.Controllers
             Product product = (await _repos.Products.GetByIdAsync(id)).Data;
             var vm = new ProductDetailViewModel
             {
-                Product=product,
-                CategoryName = Categories[product.CategorieId].Text,
+                Product = product,
+                CategoryName = Categories.FirstOrDefault(x => Convert.ToInt32(x.Value) == product.CategorieId).Text
             };
+            vm.CategoryName ="ttttteeeeesstttt" ;
             if (product.Images.Count > 0)
             {
                 vm.ProductImages = new List<string>();
@@ -195,7 +210,7 @@ namespace MTC_WebServerCore.Controllers
             TSDreposResultIenumerable<Supplier> resultSuppliers = await _repos.Suppliers.GetByConditionAsync(s => s.ApplicationUser.IsActive == true);
             IEnumerable<Supplier> suppliers = resultSuppliers.Data;
 
-
+            
             Product product = (await _repos.Products.GetByIdAsync(id)).Data;
             var vm = new ProductEditViewModel
             {
@@ -262,21 +277,23 @@ namespace MTC_WebServerCore.Controllers
                 foreach (var item in oldproduct.SupplierIds)
                     newproduct.Suppliers.Add((await _repos.Suppliers.GetByIdAsync(item)).Data);
                 await _repos.ProductImages.RemoveByCondition(i=>i.ProductEAN==oldproduct.EAN);
-               
 
-                newproduct.Images = new List<ProductImage>();
-                foreach (var item in Request.Form.Files)
+                if (Request.Form.Files.Count > 0)
                 {
-                    ProductImage img = new ProductImage();
-                    img.ID = Guid.NewGuid().ToString();
-                    img.ProductEAN = newproduct.EAN;
-                    MemoryStream ms = new MemoryStream();
-                    item.CopyTo(ms);
-                    img.Image = ms.ToArray();
-                    ms.Close();
-                    ms.Dispose();
-                    newproduct.Images.Add(img);
+                    newproduct.Images = new List<ProductImage>();
+                    foreach (var item in Request.Form.Files)
+                    {
+                        ProductImage img = new ProductImage();
+                        img.ID = Guid.NewGuid().ToString();
+                        img.ProductEAN = newproduct.EAN;
+                        MemoryStream ms = new MemoryStream();
+                        item.CopyTo(ms);
+                        img.Image = ms.ToArray();
+                        ms.Close();
+                        ms.Dispose();
+                        newproduct.Images.Add(img);
 
+                    }
                 }
 
                 var p= (await _repos.Products.GetByIdAsync(oldproduct.EAN)).Data;
@@ -322,6 +339,7 @@ namespace MTC_WebServerCore.Controllers
 
 
         //===================== Delete Product
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> DeleteProductAdmin([FromRoute] string id)
         {

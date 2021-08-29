@@ -30,7 +30,7 @@ namespace MTC_WebServerCore.ViewModels.Home
 
         public double PriceSaved
         {
-            get { return Convert.ToDouble( Product.RecommendedUnitPrice*Product.SolderPrice/100); }
+            get { return Convert.ToDouble( PricewithBTW*Product.SolderPrice/100); }
             set { priceSaved = value; }
         }
 
