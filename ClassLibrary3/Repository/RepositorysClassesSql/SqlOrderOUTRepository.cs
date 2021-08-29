@@ -154,27 +154,30 @@ namespace MTCrepository.Repository
         public async Task<OrderOutOverview_DTO> getOrderOutDTO(StatusOfOrder aOrderStateToGet, bool captureAvailableTransportersForListbox= false)
         {
             OrderOutOverview_DTO terug = new OrderOutOverview_DTO();
-            
 
-            terug.OrderOutOverviewItems = await _context.Set<OrderOUT>()
-                .Where(oo => oo.Status == aOrderStateToGet)
-                //.Include(cl => cl.Client)
-                //.Include(lines=> lines.OrderLineOUTs) //just for capture the count
-                .Select(x => new OrderOutOverview_DTO.OrderOutOverviewItem
-                {
-                    OrderOutId = x.Id,
-                    OrderOutDate = x.Date,
-                    //LineCount = x.OrderLineOUTs.Count,
-                    FullNameOfClient = x.Client.FirstName + " " + x.Client.NameAdditional + " " + x.Client.LastName,
-                    EmailClient = x.Client.ApplicationUser.Email,
-                    
-                    //we set the transporterid for this model on the first founded transprortid from the oredlineout item,
-                    //we work on this moment on 1 transporter for the orderline... it's too much work for multiple transporters on this moment
-                    //we have not time enough for implementate this.
-                    TransporterId = x.OrderLineOUTs.First().TransporterId,
-                    TransporterName = x.OrderLineOUTs.First().Transporter.Name
-                }
-                ).ToListAsync();
+
+
+         
+                terug.OrderOutOverviewItems = await _context.Set<OrderOUT>()
+                    .Where(oo => oo.Status == aOrderStateToGet)
+                    //.Include(cl => cl.Client)
+                    //.Include(lines=> lines.OrderLineOUTs) //just for capture the count
+                    .Select(x => new OrderOutOverview_DTO.OrderOutOverviewItem
+                    {
+                        OrderOutId = x.Id,
+                        OrderOutDate = x.Date,
+                        //LineCount = x.OrderLineOUTs.Count,
+                        FullNameOfClient = x.Client.FirstName + " " + x.Client.NameAdditional + " " + x.Client.LastName,
+                        EmailClient = x.Client.ApplicationUser.Email,
+
+                        //we set the transporterid for this model on the first founded transprortid from the oredlineout item,
+                        //we work on this moment on 1 transporter for the orderline... it's too much work for multiple transporters on this moment
+                        //we have not time enough for implementate this.
+                        TransporterId = x.OrderLineOUTs.First().TransporterId,
+                        TransporterName = x.OrderLineOUTs.First().Transporter.Name
+                    }
+                    ).ToListAsync();
+         
 
             terug.AvaillableTransproters = new List<SelectListItem>();
             if(captureAvailableTransportersForListbox)
@@ -189,5 +192,38 @@ namespace MTCrepository.Repository
     
             return terug;
         }
+        public async Task<OrderOutOverview_DTO> getOrderOutForTransporterDTO(string aTransporterId)
+        {
+            OrderOutOverview_DTO terug = new OrderOutOverview_DTO();
+
+
+
+
+            terug.OrderOutOverviewItems = await _context.Set<OrderOUT>()
+                .Where(oo => oo.Status == StatusOfOrder.Sent && ( oo.OrderLineOUTs.First().TransporterId == aTransporterId))
+                //.Include(cl => cl.Client)
+                //.Include(lines=> lines.OrderLineOUTs) //just for capture the count
+                .Select(x => new OrderOutOverview_DTO.OrderOutOverviewItem
+                {
+                    OrderOutId = x.Id,
+                    OrderOutDate = x.Date,
+                        //LineCount = x.OrderLineOUTs.Count,
+                        FullNameOfClient = x.Client.FirstName + " " + x.Client.NameAdditional + " " + x.Client.LastName,
+                    EmailClient = x.Client.ApplicationUser.Email,
+
+                        //we set the transporterid for this model on the first founded transprortid from the oredlineout item,
+                        //we work on this moment on 1 transporter for the orderline... it's too much work for multiple transporters on this moment
+                        //we have not time enough for implementate this.
+                        TransporterId = x.OrderLineOUTs.First().TransporterId,
+                    TransporterName = x.OrderLineOUTs.First().Transporter.Name
+                }
+                ).ToListAsync();
+
+
+            terug.AvaillableTransproters = new List<SelectListItem>();
+
+            return terug;
+        }
+
     }
 }

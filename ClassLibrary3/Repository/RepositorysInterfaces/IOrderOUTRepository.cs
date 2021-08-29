@@ -15,5 +15,6 @@ namespace MTCrepository.Repository
         public Task<TSDreposResultOneObject<OrderOUT>> GetById_withOrderlineOut_Async(int aId);
         Task<TSDreposResultOneObject<OrderOUT>> GetById_withAll_Async(int aId);
         Task<TSDreposResultOneObject<OrderOUT>> GetById_withOrderlineOutAndClient_Async(int aId);
+        Task<OrderOutOverview_DTO> getOrderOutForTransporterDTO(string aTransporterId);
     }
 }
