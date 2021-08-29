@@ -52,17 +52,12 @@ the javascriptfiles cookies.js and basket.js (see bottom of this page)*@
 
                     <div class="card-body text-center">
                         <img class="card-img-top" src="@productImage" asp-append-version="true" />
-                        @*<h5>@item.ExtraInfo</h5>*@
-
-                        @*@for (int i = 0; i < defaultStars; i++)
-                        {
-                            <i class="far fa-star"></i>
-                        }*@
-                        <h5 class="d-inline font-weight-bold">£@item.RecommendedUnitPrice.ToString("0.00")</h5>
+                        
+                        <h5 class="priceIcon d-inline font-weight-bold mt-2">£@item.RecommendedUnitPrice.ToString("0.00")</h5>
 
                         @if (item.SolderPrice != 0)
                         {
-                            <h5 class="saleIcon">On sale!</h5>
+                            <h5 class="saleIcon mt-2">On sale!</h5>
                         }
 
                     </div>
