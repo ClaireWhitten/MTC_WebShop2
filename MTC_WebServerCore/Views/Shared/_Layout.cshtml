@@ -1,5 +1,6 @@
 ﻿@inject SignInManager<ApplicationUser> _signInManager
 @inject IApplicationRepository _appRepos
+@inject UserManager<ApplicationUser> _userManager;
 
 @{
     bool showFirstNavbar = _signInManager.IsSignedIn(User) && (User.IsInRole("Transporter") || User.IsInRole("Administrator") || User.IsInRole("Supplier"));
@@ -9,6 +10,32 @@
     List<ProductCategorie> allCategories = allCategoriesResult.Data.ToList();
 
     List<ProductCategorie> alleMainCategories = allCategories.Where(x => x.ParentCategorie == null).ToList();
+
+    //needed for the chat------------------------------------------------------------------
+    string chatUserId = string.Empty;
+    string chatUserNaam = string.Empty;
+    List<ChatMessage> chatMessages = new List<ChatMessage>();
+    bool isChatClient = false;
+    bool isReadedAllChatMessages = true;
+
+    if (_signInManager.IsSignedIn(User) && User.IsInRole("Client"))
+    {
+        isChatClient = true;
+
+        var userResult = await _userManager.GetUserAsync(User);
+        chatUserId = userResult.Id;
+
+        var clientResult = _appRepos.Clients.GetSingleOrDefaultAsync(cl => cl.Id == chatUserId);
+        chatUserNaam = clientResult.Result.Data.FirstName;
+
+        var cmResult = await _appRepos.ChatMessages.GetByConditionAsync(cm => cm.CliendId == userResult.Id);
+        chatMessages = cmResult.Data.OrderBy(cm => cm.DateTime).ToList();
+
+        isReadedAllChatMessages = !(chatMessages.Count(cm => cm.IsFromAdmin && cm.IsReaded == false) > 0);
+
+    }
+    //-------------------------------------------------------------------------------------end chat
+
 
 
     //===================================================================================================
@@ -88,13 +115,16 @@
         therefor i comment the <header>
         https://www.codeply.com/p/sIIXzlAW3V*@
 
+    <input type="hidden" id="chatUserId" value="@chatUserId" />
+    <input type="hidden" id="chatUserName" value="@chatUserNaam" />
+    <input type="hidden" id="isReadedAllChatMessages" value="@isReadedAllChatMessages" />
 
     @if (showFirstNavbar == true)
     {
 
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow sticky-top adminNavBar">
             <div class="container">
-                @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MTC_WebServerCore</a>*@
+                @* <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MTC_WebServerCore</a>*@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -223,102 +253,102 @@
 
     @*================================================  SECOND navigation menu  ===============================================*@
 
-    <nav id="main" class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top container-fluid" style="top:@secondNavbarHeight">
+    <nav id="main" class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top container-fluid" style="z-index:800; top:@secondNavbarHeight">
 
-            <div class="d-inline">
-                <img src="/images/Logo/logo_grey_yellow_blue.png" alt="mtc_logo" class="img-fluid d-block" id="companyLogo" />
-            </div>
-            @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>*@
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul id="menu-block" class="navbar-nav my-2 justify-content-center">
-            <li class="nav-item active mx-3">
-                <a class="nav-link" asp-controller="Home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
-            </li>
-
-            @*=============== here render the navigationmenu's ========================*@
-
-            @for (int i = 0; i < alleMainCategories.Count; i++)
-            {
-                <li class="nav-item dropdown navbar-dark mx-3">
-                    <a class="nav-link dropdown-toggle navbar-dark" role="button" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        @alleMainCategories[i].Name
-                    </a>
-
-                    <ul class="dropdown-menu navbar-dark" id="sss" aria-labelledby="navbarDropdownMenuLink">
-                        @{
-                            renderSubCategorys(alleMainCategories[i].ID);
-                        }
-                    </ul>
+        <div class="d-inline">
+            <img src="/images/Logo/logo_grey_yellow_blue.png" alt="mtc_logo" class="img-fluid d-block" id="companyLogo" />
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul id="menu-block" class="navbar-nav my-2 justify-content-center">
+                <li class="nav-item active mx-3">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
                 </li>
-            }
-            @*============================================================================*@
 
-        </ul>
-       
+                @*=============== here render the navigationmenu's ========================*@
 
+                @for (int i = 0; i < alleMainCategories.Count; i++)
+                {
+                    <li class="nav-item dropdown navbar-dark mx-3">
+                        <a class="nav-link dropdown-toggle navbar-dark" role="button" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @alleMainCategories[i].Name
+                        </a>
 
+                        <ul class="dropdown-menu navbar-dark" id="sss" aria-labelledby="navbarDropdownMenuLink">
+                            @{
+                                renderSubCategorys(alleMainCategories[i].ID);
+                            }
+                        </ul>
+                    </li>
+                }
+                @*============================================================================*@
 
-        @*een zoekbalk, misschien kan je deze nog gebruiken????   *@
-
-        @*<form class="form-inline mt-2 mt-md-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>*@
-
-
-        @*=========================================================================
-        login, logout and register buttons on the right site of the navigationbar
-        =========================================================================*@
-
-        <ul id="login-block" class="navbar-nav">
-            <li class="nav-item">
-                @*<a id="btnMyBasket" class="nav-link" asp-controller="Basket">
-                    sdfsdfsdf
-                </a>*@
-                <a id="btnMyBasket" asp-controller="Basket" class="btn btn-dark btn-lg"> </a>
-            </li>
+            </ul>
 
 
 
-            @*If the user is signed-in display Logout link*@
-            @if (_signInManager.IsSignedIn(User))
-            {
+
+            @*een zoekbalk, misschien kan je deze nog gebruiken????   *@
+
+            @*<form class="form-inline mt-2 mt-md-0">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>*@
+
+
+            @*=========================================================================
+                login, logout and register buttons on the right site of the navigationbar
+                =========================================================================*@
+
+            <ul id="login-block" class="navbar-nav">
                 <li class="nav-item">
-                    <form method="post" asp-controller="account" asp-action="logout">
-                        <button type="submit" style="width:auto"
-                                class="nav-link btn btn-link warmYellow">
-                            Logout @User.Identity.Name
-                        </button>
-                    </form>
-                </li>
-                @*<li class="nav-item">
-                    <a class="nav-link" asp-controller="account" asp-action="logout">
-                        Logout @User.Identity.Name
-                    </a>
-                </li>*@
-            }
-            else
-            {
-
-
-                <li class="nav-item">
-                    <a class="nav-link warmYellow" asp-controller="account" asp-action="RegisterClient">
-                        Register
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link warmYellow" asp-controller="account" asp-action="login">
-                        Login
-                    </a>
+                    @*<a id="btnMyBasket" class="nav-link" asp-controller="Basket">
+                            sdfsdfsdf
+                        </a>*@
+                    <a id="btnMyBasket" asp-controller="Basket" class="btn btn-dark btn-lg"> </a>
                 </li>
 
 
-            }
-        </ul>
-    </div>
-        
+
+                @*If the user is signed-in display Logout link*@
+                @if (_signInManager.IsSignedIn(User))
+                {
+                    <li class="nav-item">
+                        <form method="post" asp-controller="account" asp-action="logout">
+                            <button type="submit" style="width:auto"
+                                    class="nav-link btn btn-link warmYellow">
+                                Logout @User.Identity.Name
+                            </button>
+                        </form>
+                    </li>
+                    @*<li class="nav-item">
+                            <a class="nav-link" asp-controller="account" asp-action="logout">
+                                Logout @User.Identity.Name
+                            </a>
+                        </li>*@
+                }
+                else
+                {
+
+
+                    <li class="nav-item">
+                        <a class="nav-link warmYellow" asp-controller="account" asp-action="RegisterClient">
+                            Register
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link warmYellow" asp-controller="account" asp-action="login">
+                            Login
+                        </a>
+                    </li>
+
+
+                }
+            </ul>
+        </div>
+
     </nav>@*einde tweede  nav*@
 
 
@@ -354,13 +384,13 @@
 
 
 
-    
-<main role="main" class="pb-3">
-    <div class="container product-card-container"  style="margin-top:20px">
-        @RenderBody()
-    </div>
-</main>
-    
+
+    <main role="main" class="pb-3">
+        <div class="container product-card-container" style="margin-top:20px">
+            @RenderBody()
+        </div>
+    </main>
+
 
     <footer class="border-top footer text-muted">
         <div class="container">
@@ -395,7 +425,7 @@
     <script src="~/js/cookies.js" asp-append-version="true"></script>
     <script src="~/js/basket.js" asp-append-version="true"></script>
     <script src="~/js/useCookieNotification.js" asp-append-version="true"></script>
-
+    <script src="~/lib/aspnet/signalr/dist/browser/signalr.js"></script>
 
 
     @await RenderSectionAsync("Scripts", required: false)
@@ -421,6 +451,184 @@
             }
         });
     </script>
+
+    @*//========================================================================= CODE FOR THE CHAT ======================================*@
+
+    @if (isChatClient)
+    {
+        <div class="chat-box">
+            <div class="chat-head">
+                <h3>MTC-chat</h3>
+                <img src="https://maxcdn.icons8.com/windows10/PNG/16/Arrows/angle_down-16.png" id="toggleExpandChatbox" title="Expand Arrow">
+                <img src="~/images/led_off.png" id="newMessage" title="No Messages">
+                <img src="~/images/led_off.png" id="adminOnline" title="no employee of MTC online">
+            </div>
+            <div class="chat-body">
+                <div class="msg-insert">
+                    @foreach (var item in chatMessages)
+                    {
+                        if (item.IsFromAdmin)
+                        {
+                            <div class="msg-send"> @item.Message</div>
+                        }
+                        else
+                        {
+                            <div class="msg-receive"> @item.Message</div>
+                        }
+                    }
+
+                </div>
+                <div class="chat-text">
+                    <input type="text" maxlength="20" id="ChatOut" placeholder="Send">
+                    @* <textarea placeholder="Send"></textarea>*@
+                </div>
+            </div>
+        </div>
+        <script src="~/js/chat2.js"></script>
+
+        @*=============================================================================================================================*@
+
+
+
+        <!--<script type="text/javascript">
+        //minimalizeren chatbox
+        $('.chat-body').slideToggle(0);
+
+
+        var clientId = document.getElementById('chatUserId').value;//read from the hidden field
+        var chatUserName = document.getElementById('chatUserName').value; //read from the hidden field
+        var adminOnlineImage = document.getElementById('adminOnline');
+        var newMessageImage = document.getElementById('newMessage');
+        var isReadedAllChatMessages = document.getElementById('isReadedAllChatMessages').value;
+        var chatContent = document.getElementsByClassName('chat-body')[0];
+
+
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub/").build();
+        //document.getElementById('btnSendMessage').disabled = true;
+
+        console.log(isReadedAllChatMessages);
+        if (!isReadedAllChatMessages) {
+            newMessageImage.src = '/images/led_red.png';
+        }
+
+
+        connection.on("receiveMessage", function (oMessage) {
+            console.log(oMessage);
+            oMessage.message = oMessage.message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            //cliendId: "8e445865-a24d-4543-a6c6-9443d048cdb9"
+            //client: null
+            //dateTime: "2021-08-28T13:34:15.2455799+02:00"
+            //id: 19
+            //isFromAdmin: false
+            //isReaded: false
+            //message: "ik bn hier graag"
+            //userNameReceiver: ""
+            //usernameSender: "Super"
+
+            if (oMessage.isFromAdmin) {
+                $('.msg-insert').append("<div class='msg-send'>" + oMessage.message + "</div>");
+                newMessageImage.src = '/images/led_red.png';
+            }
+            else {
+                $('.msg-insert').append("<div class='msg-receive'>" + oMessage.message + "</div>");
+            }
+            //scrollen tot beneden
+            chatContent.scrollTop = chatContent.scrollHeight;
+            console.log(chatContent);
+        });
+
+        connection.on("adminsConnected", function (bIsConnectedSomeAdmin) {
+            //console.log(bIsConnectedSomeAdmin);
+
+
+            if (bIsConnectedSomeAdmin === true) {
+                adminOnlineImage.src = '/images/led_green.png';
+                adminOnlineImage.title = "af employee of MTC online";
+            }
+            else {
+                adminOnlineImage.src = '/images/led_off.png';
+                adminOnlineImage.title = "no employee of MTC online";
+            }
+        });
+
+
+
+        connection.start().then(function () {
+            //document.getElementById('btnSendMessage').disabled = false;
+            connection.invoke("Connect", clientId, false).catch(function (err) {
+                return console.error(err.toString());
+            });
+
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });-->
+
+
+    @*=======================================================================================*@
+
+        <!--var arrow = $('#toggleExpandChatbox');
+        var textarea = $('.chat-text input');
+
+
+        arrow.on('click', function () {
+            var src = arrow.attr('src');
+
+            $('.chat-body').slideToggle('fast', function () {
+                //scrollen tot beneden
+                chatContent.scrollTop = chatContent.scrollHeight;
+                console.log(chatContent);
+            });
+            if (src == 'https://maxcdn.icons8.com/windows10/PNG/16/Arrows/angle_down-16.png') {
+                arrow.attr('src', 'https://maxcdn.icons8.com/windows10/PNG/16/Arrows/angle_up-16.png');
+
+                if (newMessageImage.getAttribute('src') == '/images/led_red.png') {
+                    newMessageImage.src = '/images/led_off.png';
+                    connection.invoke("SetAllAdminMessagesAsReaded", clientId).catch(function (err) {
+                        return console.error(err.toString());
+                    });
+                }
+            }
+            else {
+                arrow.attr('src', 'https://maxcdn.icons8.com/windows10/PNG/16/Arrows/angle_down-16.png');
+            }
+        });
+
+        textarea.keypress(function (event) {
+            var $this = $(this);
+
+            if (event.keyCode == 13) {
+                var msg = $this.val();
+                $this.val('');
+
+                //verzenden naar de hub
+                const ChatMessage = {
+                    "UsernameSender": chatUserName,
+                    "UserNameReceiver": '',
+                    "Message": msg,
+                    "CliendId": clientId,
+                    "isFromAdmin" : false,
+                };
+                console.log(ChatMessage);
+                connection.invoke("SendMessage", ChatMessage).catch(function (err) {
+                    return console.error(err.toString());
+                });
+            }
+        });
+        textarea.click(function (event) {
+            if (newMessageImage.getAttribute('src') == '/images/led_red.png') {
+                newMessageImage.src = '/images/led_off.png';
+                connection.invoke("SetAllAdminMessagesAsReaded", clientId).catch(function (err) {
+                    return console.error(err.toString());
+                });
+            }
+        });
+
+
+        </script>-->
+
+    }
 
 </body>
 </html>

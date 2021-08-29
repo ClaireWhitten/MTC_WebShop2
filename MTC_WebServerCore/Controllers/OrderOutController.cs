@@ -173,8 +173,9 @@ namespace MTC_WebServerCore.Controllers
         [Authorize(Roles = "Transporter")]
         public async Task<IActionResult> OverviewSentToDelivered()
         {
+            var currentUser = await _userManager.GetUserAsync(User);
             //get all existing categories
-            var model = await _repos.OrderOUTs.getOrderOutDTO(StatusOfOrder.Sent);
+            var model = await _repos.OrderOUTs.getOrderOutForTransporterDTO(currentUser.Id);
             return View(model);
         }
 
