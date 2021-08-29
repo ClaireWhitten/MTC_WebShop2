@@ -36,6 +36,24 @@ namespace MTCrepository.Repository
             return terug;
         }
 
+        public async Task<TSDreposResultOneObject<OrderOUT>> GetById_withOrderlineOutAndClient_Async(int aId)
+        {
+            var terug = new TSDreposResultOneObject<OrderOUT>();
+
+            terug.Data = await _context.Set<OrderOUT>().Include(x => x.OrderLineOUTs).Include(x => x.OrderLineOUTs).ThenInclude(x=>x.Product).Include(x=>x.Client).FirstOrDefaultAsync(x => x.Id == aId);
+
+            return terug;
+        }
+
+        public async Task<TSDreposResultOneObject<OrderOUT>> GetById_withAll_Async(int aId)
+        {
+            var terug = new TSDreposResultOneObject<OrderOUT>();
+
+            terug.Data = await _context.Set<OrderOUT>().Include(x => x.Bonusses).Include(x => x.Client).Include(x=>x.OrderLineOUTs).ThenInclude(x=>x.Product).Include(x => x.OrderLineOUTs).ThenInclude(x => x.Transporter).FirstOrDefaultAsync(x => x.Id == aId);
+
+            return terug;
+        }
+
         public override async Task<TSDreposResultOneObject<OrderOUT>> AddAsync(OrderOUT aEntity, bool autoSaveChange = true)
         {
             //using _context;

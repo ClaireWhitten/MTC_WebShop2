@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MTCmodel;
+using MTCmodel.CustomAnnotationAttributes;
 using MTCrepository.TDSrepository;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ namespace MTC_WebServerCore.ViewModels.ProductAdmin
     public class ProductCreateViewModel
     {
         [Key()]
-        [Required(ErrorMessage = "EAN must be 13 digit characters")]
+        [Required(ErrorMessage = "EAN is required")]
+        [EAN]
         public string EAN { get; set; }
 
 

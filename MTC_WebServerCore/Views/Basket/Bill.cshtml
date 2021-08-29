@@ -81,8 +81,12 @@ else{
         <input hidden asp-for="@Model.BasketViewModel.BasketProductsItem[i].Product.EAN" />
         <input hidden asp-for="@Model.BasketViewModel.BasketProductsItem[i].CountOfProducts" />
         <input hidden asp-for="@Model.BasketViewModel.BasketProductsItem[i].Product.RecommendedUnitPrice" />
+        <input hidden asp-for="@Model.BasketViewModel.BasketProductsItem[i].Product.Name" />
     }
     <input hidden asp-for="@Model.Client.Id" />
+    <input hidden asp-for="@Model.Client.FirstName" />
+    <input hidden asp-for="@Model.Client.NameAdditional" />
+    <input hidden asp-for="@Model.Client.LastName" />
 
 
     <div class="form-group row">
