@@ -117,16 +117,22 @@ namespace MTC_WebServerCore
             //    endpoints.MapHub<ChatHub>("/Chat/index");
             //});
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<ChatHub>("/chatHub");
-            });
+            //ik denk nodig voor signalR
+            //app.UseCors("AllowCors");
 
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapHub<ChatHub>("/chatHub");
+            //});
+            app.UseWebSockets();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
         }
     }

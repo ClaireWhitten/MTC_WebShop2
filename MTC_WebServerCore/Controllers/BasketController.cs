@@ -58,6 +58,7 @@ namespace MTC_WebServerCore.Controllers
         //===============================================================================================================
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
         //===============================================================================================================
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> BillAsync()
         {
             //Als de gebruiker is aangemeld 
@@ -184,6 +185,7 @@ namespace MTC_WebServerCore.Controllers
                 //PDFInvoice.PDFinvoice.Create(ordot);
                 //clear the cookie,
                 //go to the payconfirmed page
+                Response.Cookies.Delete("MyBasket");
             }
 
             else

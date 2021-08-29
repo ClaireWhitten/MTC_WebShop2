@@ -34,7 +34,7 @@ namespace MTCmodel
         //=================================================================================
         [MaxLength(450)]
         public string CliendId{ get; set; }
-        public virtual ApplicationUser Client { get; set; }
+        public virtual Client Client { get; set; }
         ////--------------------------------------------------------------------------------
         
 

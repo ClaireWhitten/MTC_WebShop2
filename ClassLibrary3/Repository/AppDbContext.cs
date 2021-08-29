@@ -569,7 +569,7 @@ namespace MTCrepository.Repository
             //======================================================= for chat ============================
 
             modelBuilder.Entity<ChatMessage>()
-                .HasOne<ApplicationUser>(cm => cm.Client)
+                .HasOne<Client>(cm => cm.Client)
                 .WithMany(d => d.ChatMessages)
                 .HasForeignKey(cm => cm.CliendId);
 

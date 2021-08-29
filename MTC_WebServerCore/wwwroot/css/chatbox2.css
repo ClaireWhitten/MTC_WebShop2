@@ -1,0 +1,133 @@
+﻿/*@mixin fancy-background() {
+    background: -moz-linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);
+    background: -webkit-linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}*/
+
+/** {
+    padding: 0px;
+    margin: 0px;
+    font-family: 'Fira Code';
+}*/
+
+/*body {
+    height: 100%;
+    background: #95a5a6;
+}
+*/
+.chat-box {
+    z-index: 1000;
+    position: fixed;
+    right: 20px;
+    bottom: 0px;
+    background-color: #404040;
+    width: 300px;
+    border-radius: 5px 5px 0px 0px;
+    /*    background-image: -moz-linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);
+    background-image: -webkit-linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);*/
+    /* background: linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);*/
+    /*    background: linear-gradient(45deg,red,yellow,green);
+    background-repeat: no-repeat;
+    background-attachment: fixed;*/
+}
+
+.chat-head {
+    width: inherit;
+    height: 45px;
+    background: #373634;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.chat-head h3 {
+    color: dimgray;
+    padding: 4px;
+    display: inline-block;
+    margin: 4px;
+}
+
+#toggleExpandChatbox {
+    cursor: pointer;
+    float: right;
+    width: 25px;
+    margin: 10px;
+}
+#newMessage, #adminOnline {
+    float: right;
+    width: 35px;
+    margin: 5px -5px;
+}
+
+.chat-body {
+    height: 355px;
+    width: inherit;
+    overflow: auto;
+    margin-bottom: 45px;
+}
+
+.chat-text {
+    position: fixed;
+    bottom: 0px;
+    height: 45px;
+    width: inherit;
+}
+
+#ChatOut {
+    width: inherit;
+    height: inherit;
+    box-sizing: border-box;
+    border: 1px solid #bdc3c7;
+    padding: 10px;
+    resize: none;
+    color: whitesmoke;
+    background-color:dimgray;
+}
+
+#ChatOut:active, #ChatOut:focus, #ChatOut:hover {
+    border-color: red;
+}
+
+.msg-send {
+    background: #00193F;
+}
+
+.msg-receive {
+    background: #003D2B;
+}
+
+.msg-send, .msg-receive {
+    width: 200px;
+    height: 35px;
+    padding: 5px 5px 5px 10px;
+    margin: 10px auto;
+    border-radius: 3px;
+    line-height: 32px;
+    position: relative;
+    color: #bdc3c7;
+}
+
+    .msg-receive:before {
+        content: '';
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border: 13px solid;
+        border-color: transparent #003D2B transparent transparent;
+        left: -24px;
+        top: 2px;
+    }
+
+    .msg-send:after {
+        content: '';
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border: 13px solid;
+        border-color: transparent transparent transparent #00193F;
+        right: -24px;
+        top: 2px;
+    }
+
+    .msg-receive:hover, .msg-send:hover {
+        opacity: .9;
+    }

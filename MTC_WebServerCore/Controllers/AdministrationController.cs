@@ -37,6 +37,7 @@ namespace MTC_WebServerCore.Controllers
             _repos = appRepos;
         }
 
+
         public IActionResult Index()
         {
             return View();

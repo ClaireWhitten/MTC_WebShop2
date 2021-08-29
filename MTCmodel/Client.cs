@@ -58,7 +58,8 @@ namespace MTCmodel
 
         public ICollection<ProductReview> ProductReviews { get; set; }
 
-        
+
+        public ICollection<ChatMessage> ChatMessages { get; set; }
 
         //================================ Extra's ==============================================
 
