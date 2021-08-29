@@ -43,7 +43,7 @@ namespace MTC_WebServerCore.Controllers
         //public async Task<IActionResult> Index(int? id, [FromQuery(Name = "sub")] bool? isBar)
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? catId, [FromQuery(Name = "sub")] bool? isShowSubs=false)
+        public async Task<IActionResult> Index(string searchTerm, int? catId, [FromQuery(Name = "sub")] bool? isShowSubs=false)
         {
             //var catDictionary = await _repos.ProductCategories.GetAllPosiblePaths();
 
@@ -61,6 +61,12 @@ namespace MTC_WebServerCore.Controllers
 
             if (!isShowSubs.HasValue) isShowSubs = false;
             model.ProductsToShow = await _repos.Products.GetProductsByCategoryId(catId, isShowSubs.Value);
+
+            if (searchTerm != null)
+            {
+                var searchedProducts = await _repos.Products.GetByConditionAsync(p => p.Name.Contains(searchTerm));
+                model.ProductsToShow = searchedProducts.Data.ToList();
+            }
 
             return View(model);
         }

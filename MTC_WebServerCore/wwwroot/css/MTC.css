@@ -51,6 +51,12 @@ body {
 
 .product-card {
     z-index: 0;
+    justify-content: space-between;
+    
+}
+
+.columns-for-cards {
+    margin-top: 50px;
 }
 
 .adminNavBar, .adminNavBar > ul {
@@ -68,6 +74,10 @@ body {
     color: #fcd448;
 }
 
+.warmYellowBackground {
+    background-color: #fcd448;
+}
+
 #sss * :hover, #navbarCollapse * :hover {
     color: #fcd448;
 }
@@ -77,7 +87,7 @@ body {
 }
 
 
-#sss, #sss *, ul {
+#sss, #sss * {
     background-color: #343a40;
     border:0px;
 }
@@ -92,22 +102,72 @@ a{
     color:black;
 }
 
-.saleIcon {
+/*.saleIcon {
     background-color: #cc0000;
     padding: 2px;
     border-radius: 5px;
     display: inline;
     color: white;
     float: right;
+}*/
+
+#saleIcon{
+    height:70px;
+    width:70px;
+    float:right;
+
 }
 
- .card-header {
-    background-color: #343a40;
+.priceIcon {
+    color: #237fff;
+    padding: 2px;
+    border-radius: 5px;
+    display: inline;
+    font-size:2rem;
+    float: left;
 }
 
-.card-header {
-    color: #c6c5c3;
-    height: 80px;
+.productCardBody{
+    align-self:center;
+
+}
+
+
+.product-card .card-header {
+    background-color: #294ccc;
+    color: white;
+    height: 100px;
+}
+
+
+
+
+#largeImage{
+    max-width:100%;
+    max-height:100%;
+    margin:0 auto;
+   
+
+}
+
+#largeImageContainer {
+    text-align: center;
+
+}
+
+
+.product-card .card-footer {
+    /*align-self: flex-end;*/
+    height: 100px;
+    background-color: #294ccc;
+}
+
+.blueBright {
+    background-color: #294ccc;
+}
+
+.btn-primary {
+background-color: #237fff;
 }
 
 #starRating{
@@ -172,11 +232,15 @@ a{
         text-align:left;
         justify-content: left;*/
         margin-right: auto;
-        flex-direction: column;
+        /*flex-direction: column;*/
         
     }
 
-    #companyLogo{
+    /*#companyLogo{
         visibility:hidden;
-    }
+    }*/
+}
+
+#menu-block{
+    margin-left:40px;
 }
