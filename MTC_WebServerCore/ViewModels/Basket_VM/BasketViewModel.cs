@@ -16,7 +16,7 @@ namespace MTC_WebServerCore.ViewModels.Basket_VM
             public double TTbtwThisProduct { get; set; }
             public double TTinclBtwThisProduct { get; set; }
             public double TTexclBtwThisProduct { get; set; }
-
+            public string ProductImagesrc { get; set; }
         }
         //===============================================================================
 
