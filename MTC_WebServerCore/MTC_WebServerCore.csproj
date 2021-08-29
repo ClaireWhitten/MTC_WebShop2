@@ -30,10 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
+
     <Folder Include="wwwroot\invoices\" />
   </ItemGroup>
 
   <ItemGroup>
+
     <Reference Include="MTCmailServer">
       <HintPath>..\..\..\..\Downloads\MTCmailServer.dll</HintPath>
     </Reference>

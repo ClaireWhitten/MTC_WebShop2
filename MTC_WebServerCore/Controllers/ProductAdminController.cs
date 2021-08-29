@@ -9,6 +9,7 @@ using MTCmodel;
 using MTCrepository.TDSrepository;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -115,6 +116,7 @@ namespace MTC_WebServerCore.Controllers
             if(reg.IsMatch( product.RecommendedUnitPrice))
                 ModelState.AddModelError(string.Empty, "Recomended price must be a number and greater than 0.");
 
+           
 
             if (TryValidateModel(product))
             {
@@ -128,7 +130,7 @@ namespace MTC_WebServerCore.Controllers
                     MaxStock = product.MaxStock,
                     MinStock = product.MinStock,
                     RecommendedUnitPrice = double.Parse(product.RecommendedUnitPrice, CultureInfo.InvariantCulture),
-                    //RecommendedUnitPrice = Convert.ToDouble(product.RecommendedUnitPrice.Replace('.',',')),
+
                     CategorieId = product.CategorieId,
                     SolderPrice = product.SolderPercentage
                 };
@@ -267,8 +269,8 @@ namespace MTC_WebServerCore.Controllers
                     BTWPercentage = oldproduct.BTWPercentage,
                     MaxStock = oldproduct.MaxStock,
                     MinStock = oldproduct.MinStock,
-
-                    RecommendedUnitPrice = Convert.ToDouble(oldproduct.RecommendedUnitPrice.Replace('.', ',')),
+                    RecommendedUnitPrice = double.Parse(oldproduct.RecommendedUnitPrice, CultureInfo.InvariantCulture),
+                    //RecommendedUnitPrice = Convert.ToDouble(oldproduct.RecommendedUnitPrice.Replace('.', ',')),
                     CategorieId = oldproduct.CategorieId,
                     SolderPrice = oldproduct.SolderPercentage
                 };

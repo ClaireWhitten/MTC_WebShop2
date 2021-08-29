@@ -13,7 +13,7 @@
 
     //===================================================================================================
     //dit maakt een lijst van Categorys, van de huidige categorie waar je je momenteel in bevind
-    //als categoryid niet gevonden is of het argument in de querystring is niet aanwezig, dan is deze 
+    //als categoryid niet gevonden is of het argument in de querystring is niet aanwezig, dan is deze
     //lijst null
     //example Clothes - Woman - shoes... for showing and clickable in the index-page
     List<ProductCategorie> fullPath = null;
@@ -42,25 +42,28 @@
     {
         List<ProductCategorie> mySubs = allCategories.Where(x => x.ParentCategorieID == aProductCat).ToList();
 
-        <li><a class="dropdown-item" href="?catId=@aProductCat">Get all</a></li>
-        <li><a class="dropdown-item" href="?catId=@aProductCat&sub=true">Get all with subs</a></li>
+        <li><a class="dropdown-item" href="/?catId=@aProductCat&sub=true">All</a></li>
+
+
 
         if (mySubs.Any())
         {
-            <div class="dropdown-divider"></div>
+            @*<div class="dropdown-divider"></div>*@
 
             @foreach (var item in mySubs)
             {
                 <li class="dropdown-submenu">
                     <a class="dropdown-item dropdown-toggle">@item.Name</a>
                     <ul class="dropdown-menu">
-                        @{ 
+                        @{
                             renderSubCategorys(item.ID);
                         }
                     </ul>
                 </li>
             }
         }
+
+        <li><a class="dropdown-item" href="/?catId=@aProductCat">Other</a></li>
     }
 
 
@@ -89,14 +92,14 @@
     @if (showFirstNavbar == true)
     {
 
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-info border-bottom box-shadow mb-3 sticky-top">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow sticky-top adminNavBar">
             <div class="container">
                 @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MTC_WebServerCore</a>*@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between adminNavBar">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -121,8 +124,9 @@
                                     Transporter management
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <h6 class="dropdown-header text-primary">Orders in Transit</h6>
                                     <a class="dropdown-item" asp-controller="orderout"
-                                       asp-action="OverviewSentToDelivered">Set sent orders to delivered</a>
+                                       asp-action="OverviewSentToDelivered">Set to delivered</a>
                                     @*<a class="dropdown-item" asp-controller="Administration"
                                         asp-action="ListRoles">sometest</a>*@
                                 </div>
@@ -138,10 +142,9 @@
                                     Supplier management
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" asp-controller="Administration"
-                                       asp-action="ListUsers">sometest</a>
-                                    <a class="dropdown-item" asp-controller="Administration"
-                                       asp-action="ListRoles">sometest</a>
+                                    <h6 class="dropdown-header text-primary">Outgoing orders</h6>
+                                    <a class="dropdown-item" asp-controller="OrderIn"
+                                       asp-action="OverviewReservedToSent">Set to sent</a>
                                 </div>
                             </li>
                         }
@@ -155,22 +158,52 @@
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Administrator management
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <div id="adminManagementMenu" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                     <a class="dropdown-item" asp-controller="Administration"
-                                       asp-action="OverviewAdministrators">Administrators overview</a>
+                                       asp-action="OverviewAdministrators">Manage Administrators</a>
+
+                                    <div class="dropdown-divider"></div>
+                                    <h6 class="dropdown-header text-primary">Transport and suppliers</h6>
                                     <a class="dropdown-item" asp-controller="Administration"
                                        asp-action="OverviewSuppliers">Suppliers overview</a>
                                     <a class="dropdown-item" asp-controller="Administration"
                                        asp-action="OverviewTransporters">Transporters overview</a>
 
                                     <div class="dropdown-divider"></div>
+                                    <h6 class="dropdown-header text-primary">Outgoing orders</h6>
+                                    <a class="dropdown-item" asp-controller="orderout"
+                                       asp-action="OverviewReservedToPrepared">Set to prepared</a>
+                                    <a class="dropdown-item" asp-controller="orderout"
+                                       asp-action="OverviewPreparedToSent">Set to sent</a>
 
-                                    <a class="dropdown-item" asp-controller="orderout"
-                                       asp-action="OverviewReservedToPrepared">Set reserved orderOuts to prepared</a>
-                                    <a class="dropdown-item" asp-controller="orderout"
-                                       asp-action="OverviewPreparedToSent">Set prepared orderOuts to sent</a>
 
                                     <div class="dropdown-divider"></div>
+                                    <h6 class="dropdown-header text-primary">Incoming Orders</h6>
+                                    <a class="dropdown-item" asp-controller="OrderIn"
+                                       asp-action="OverviewOrders">View all</a>
+                                    <a class="dropdown-item" asp-controller="OrderIn"
+                                       asp-action="OverviewSentToDelivered">Set to delivered</a>
+
+
+                                    <div class="dropdown-divider"></div>
+                                    <h6 class="dropdown-header text-primary">Stock</h6>
+                                    <a class="dropdown-item" asp-controller="OrderIn"
+                                       asp-action="ReplenishStock">Reorder stock</a>
+
+
+                                    <div class="dropdown-divider"></div>
+                                    <h6 class="dropdown-header text-primary">Products</h6>
+                                    <a class="dropdown-item" asp-controller="ProductAdmin"
+                                       asp-action="IndexProductAdmin">Manage Products</a>
+                                    <a class="dropdown-item" asp-controller="ProductAdmin"
+                                       asp-action="CreateProductAdmin">Add new Product</a>
+
+                                    <div class="dropdown-divider"></div>
+                                    <h6 class="dropdown-header text-primary">Categories</h6>
+                                    <a class="dropdown-item" asp-controller="Category"
+                                       asp-action="OverviewCategories">Manage Categories</a>
+                                    <a class="dropdown-item" asp-controller="Category"
+                                       asp-action="AddCategory">Add new Category</a>
 
                                 </div>
                             </li>
@@ -180,111 +213,110 @@
                 </div>
             </div>
         </nav>
-    }; @*einde eerste nav*@
+    } @*einde eerste nav*@
+    @*================================================ Website  Banner  ===============================================*@
+
+    <img src="/images/Banner/banner_2.jpg" class="img-fluid d-block mx-auto" alt="banner showing photos of products">
+
+
     @*================================================  SECOND navigation menu  ===============================================*@
 
-    <h1>maybe a banner here or something, it's up too you, womans are better in designing :-)</h1>
+    <nav id="main" class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top container-fluid" style="top:@secondNavbarHeight">
 
-
-    @*================================================  SECOND navigation menu  ===============================================*@
-
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top" style="top:@secondNavbarHeight">
-
-        <div class="container-fluid ">
-            <a class="navbar-brand" href="#">Fixed navbar</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav m-auto justify-content-center">
-
-
-                    <li class="nav-item active">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
-                    </li>
-
-                    @*=============== here render the navigationmenu's ========================*@
-
-                    @for (int i = 0; i < alleMainCategories.Count; i++)
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                @alleMainCategories[i].Name
-                            </a>
-
-                            <ul class="dropdown-menu" id="sss" aria-labelledby="navbarDropdownMenuLink">
-                                @{
-                                    renderSubCategorys(alleMainCategories[i].ID);
-                                }
-                            </ul>
-                        </li>
-                    }
-                    @*============================================================================*@
-
-                </ul>
-
-
-
-
-                @*een zoekbalk, misschien kan je deze nog gebruiken????   *@
-
-                @*<form class="form-inline mt-2 mt-md-0">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>*@
-
-
-                @*=========================================================================
-                    login, logout and register buttons on the right site of the navigationbar
-                    =========================================================================*@
-
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        @*<a id="btnMyBasket" class="nav-link" asp-controller="Basket">
-                                sdfsdfsdf
-                            </a>*@
-                        <a id="btnMyBasket" asp-controller="Basket" class="btn btn-dark btn-lg "> </a>
-                    </li>
-
-
-
-                    @*If the user is signed-in display Logout link*@
-                    @if (_signInManager.IsSignedIn(User))
-                    {
-                        <li class="nav-item">
-                            <form method="post" asp-controller="account" asp-action="logout">
-                                <button type="submit" style="width:auto"
-                                        class="nav-link btn btn-link ">
-                                    Logout @User.Identity.Name
-                                </button>
-                            </form>
-                        </li>
-                        @*<li class="nav-item">
-                                <a class="nav-link" asp-controller="account" asp-action="logout">
-                                    Logout @User.Identity.Name
-                                </a>
-                            </li>*@
-                    }
-                    else
-                    {
-
-
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="account" asp-action="RegisterClient">
-                                Register
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="account" asp-action="login">
-                                Login
-                            </a>
-                        </li>
-
-
-                    }
-                </ul>
+            <div class="d-inline">
+                <img src="/images/Logo/logo_grey_yellow_blue.png" alt="mtc_logo" class="img-fluid d-block" id="companyLogo" />
             </div>
-        </div>
+            @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>*@
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul id="menu-block" class="navbar-nav my-2 justify-content-center">
+            <li class="nav-item active mx-3">
+                <a class="nav-link" asp-controller="Home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
+            </li>
+
+            @*=============== here render the navigationmenu's ========================*@
+
+            @for (int i = 0; i < alleMainCategories.Count; i++)
+            {
+                <li class="nav-item dropdown navbar-dark mx-3">
+                    <a class="nav-link dropdown-toggle navbar-dark" role="button" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @alleMainCategories[i].Name
+                    </a>
+
+                    <ul class="dropdown-menu navbar-dark" id="sss" aria-labelledby="navbarDropdownMenuLink">
+                        @{
+                            renderSubCategorys(alleMainCategories[i].ID);
+                        }
+                    </ul>
+                </li>
+            }
+            @*============================================================================*@
+
+        </ul>
+       
+
+
+
+        @*een zoekbalk, misschien kan je deze nog gebruiken????   *@
+
+        @*<form class="form-inline mt-2 mt-md-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>*@
+
+
+        @*=========================================================================
+        login, logout and register buttons on the right site of the navigationbar
+        =========================================================================*@
+
+        <ul id="login-block" class="navbar-nav">
+            <li class="nav-item">
+                @*<a id="btnMyBasket" class="nav-link" asp-controller="Basket">
+                    sdfsdfsdf
+                </a>*@
+                <a id="btnMyBasket" asp-controller="Basket" class="btn btn-dark btn-lg"> </a>
+            </li>
+
+
+
+            @*If the user is signed-in display Logout link*@
+            @if (_signInManager.IsSignedIn(User))
+            {
+                <li class="nav-item">
+                    <form method="post" asp-controller="account" asp-action="logout">
+                        <button type="submit" style="width:auto"
+                                class="nav-link btn btn-link warmYellow">
+                            Logout @User.Identity.Name
+                        </button>
+                    </form>
+                </li>
+                @*<li class="nav-item">
+                    <a class="nav-link" asp-controller="account" asp-action="logout">
+                        Logout @User.Identity.Name
+                    </a>
+                </li>*@
+            }
+            else
+            {
+
+
+                <li class="nav-item">
+                    <a class="nav-link warmYellow" asp-controller="account" asp-action="RegisterClient">
+                        Register
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link warmYellow" asp-controller="account" asp-action="login">
+                        Login
+                    </a>
+                </li>
+
+
+            }
+        </ul>
+    </div>
+        
     </nav>@*einde tweede  nav*@
 
 
@@ -320,11 +352,13 @@
 
 
 
-    <div class="container" style="margin-top:20px">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    
+<main role="main" class="pb-3">
+    <div class="container product-card-container"  style="margin-top:20px">
+        @RenderBody()
     </div>
+</main>
+    
 
     <footer class="border-top footer text-muted">
         <div class="container">

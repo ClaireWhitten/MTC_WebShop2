@@ -61,12 +61,21 @@ function confirmReplenishStock() {
     });
 
     console.log(arrayOfOrders);
-    //post request to action containing array of orders
+
+    //post request ajax containing array of orders
     $.post('/OrderIn/ReplenishStock',
         { orders: arrayOfOrders },
         function (data, status) {
-            window.location = "/OrderIn/OverviewOrders";
+            window.location = "/OrderIn/ReplenishStock";
         }
     )
+
+
+
+
+
+
+
+    
 
 }
