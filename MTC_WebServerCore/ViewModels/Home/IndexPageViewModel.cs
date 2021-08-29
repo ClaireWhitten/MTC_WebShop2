@@ -9,5 +9,7 @@ namespace MTC_WebServerCore.ViewModels.Home
     public class IndexPageViewModel
     {
         public List<Product> ProductsToShow { get; set; } = new List<Product>();
+
+        public string SearchTerm { get; set; }
     }
 }

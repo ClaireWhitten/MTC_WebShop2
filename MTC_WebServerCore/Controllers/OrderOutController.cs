@@ -79,8 +79,11 @@ namespace MTC_WebServerCore.Controllers
 
                     await _repos.OrderOUTs.UpdateAsync(xxx.Data);
 
+                    var ordot = (await _repos.OrderOUTs.GetById_withOrderlineOutAndClient_Async(xxx.Data.Id)).Data;
+                    PDFInvoice.PDFinvoice.Create(ordot);
 
                     #region                        ==========================================email verzenden
+
                     StringBuilder sbBody = new StringBuilder();
 
                     sbBody.Append("<hr>");
@@ -94,7 +97,10 @@ namespace MTC_WebServerCore.Controllers
 
                     MTCmail mail = new MTCmail(item.EmailClient, "Order status gewijzigd naar klaargemaakt", sbBody.ToString());
 
+                    mail.AddAttachment(@"wwwroot\invoices\" + ordot.Id.ToString("D8") + ".pdf");
+
                     var emailResult = await mail.SendHtmlAsync();
+
                     #endregion
                 }
             }
@@ -214,6 +220,17 @@ namespace MTC_WebServerCore.Controllers
 
         #endregion
 
+        #region ================================================================================================================================================== Details
 
+
+        [HttpGet]
+        public async Task<IActionResult> Details([FromRoute]int id)
+        {
+            OrderOUT model =(await _repos.OrderOUTs.GetById_withAll_Async(id)).Data;
+            return View(model);
+        }
+
+
+        #endregion
     }
 }
