@@ -229,7 +229,8 @@ namespace MTC_WebServerCore.Controllers
                         CountOfProducts = item.CNT,
                         TTexclBtwThisProduct = ttExclForThisProduct,
                         TTbtwThisProduct = btwForThisProduct,
-                        TTinclBtwThisProduct = ttExclForThisProduct + btwForThisProduct
+                        TTinclBtwThisProduct = ttExclForThisProduct + btwForThisProduct,
+                        ProductImagesrc = tmpProduct.Images.Count > 0 ? string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(tmpProduct.Images.FirstOrDefault().Image)) : null,
                     };
 
                     terug.BasketProductsItem.Add(tmpPrdctItm);
